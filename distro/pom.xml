@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.github.jamesnetherton</groupId>
+        <artifactId>wildfly-liquibase</artifactId>
+        <version>0.1.0-SNAPSHOT</version>
+    </parent>
+
+    <groupId>com.github.jamesnetherton</groupId>
+    <artifactId>wildfly-liquibase-distro</artifactId>
+    <packaging>pom</packaging>
+
+    <properties>
+        <config.directory>${project.basedir}/src/configuration</config.directory>
+        <modules.directory>${project.build.directory}/modules</modules.directory>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.github.jamesnetherton</groupId>
+            <artifactId>wildfly-liquibase-subsystem</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-module-definitions</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy-resources</goal>
+                        </goals>
+                        <configuration>
+                            <resources>
+                                <resource>
+                                    <directory>src/modules</directory>
+                                    <filtering>true</filtering>
+                                </resource>
+                            </resources>
+                            <outputDirectory>${modules.directory}</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>copy-subsystem-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>com.github.jamesnetherton</groupId>
+                                    <artifactId>wildfly-liquibase-subsystem</artifactId>
+                                    <version>${project.version}</version>
+                                </artifactItem>
+                            </artifactItems>
+                            <outputDirectory>${modules.directory}/com/github/jamesnetherton/extension/liquibase/main</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-liquibase-dependencies</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.liquibase</groupId>
+                                    <artifactId>liquibase-core</artifactId>
+                                    <version>${version.org.liquibase}</version>
+                                </artifactItem>
+                            </artifactItems>
+                            <outputDirectory>${modules.directory}/org/liquibase/main</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <configuration>
+                    <descriptor>src/assembly/modules-assembly.xml</descriptor>
+                    <appendAssemblyId>false</appendAssemblyId>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>create-archive</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+</project>

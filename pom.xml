@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>com.github.jamesnetherton</groupId>
+    <artifactId>wildfly-liquibase</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>wildfly-liquibase</name>
+    <description>The WildFly Liquibase Subsystem</description>
+    <url>https://github.com/jamesnetherton/wildfly-liquibase</url>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <!-- Versions -->
+        <version.junit>4.12</version.junit>
+        <version.org.jboss.arquillian>1.1.14.Final</version.org.jboss.arquillian>
+        <version.org.liquibase>3.5.3</version.org.liquibase>
+        <version.org.slf4j>1.7.25</version.org.slf4j>
+        <version.org.wildfly>11.0.0.Final</version.org.wildfly>
+        <version.org.wildfly.arquillian>2.1.0.Final</version.org.wildfly.arquillian>
+
+        <!-- Plugin versions -->
+        <version.assembly.plugin>2.6</version.assembly.plugin>
+        <version.compiler.plugin>3.6.1</version.compiler.plugin>
+        <version.dependency.plugin>2.10</version.dependency.plugin>
+        <version.gpg.plugin>1.6</version.gpg.plugin>
+        <version.license.plugin>1.13</version.license.plugin>
+        <version.javadoc.plugin>3.0.0-M1</version.javadoc.plugin>
+        <version.release.plugin>2.5.3</version.release.plugin>
+        <version.resources.plugin>3.0.2</version.resources.plugin>
+        <version.source.plugin>3.0.1</version.source.plugin>
+        <version.surefire.plugin>2.20</version.surefire.plugin>
+    </properties>
+
+    <scm>
+        <connection>scm:git:git://github.com/jamesnetherton/wildfly-liquibase.git</connection>
+        <developerConnection>scm:git:git@github.com:jamesnetherton/wildfly-liquibase.git</developerConnection>
+        <url>${project.url}</url>
+        <tag>HEAD</tag>
+    </scm>
+
+    <developers>
+        <developer>
+            <name>James Netherton</name>
+            <url>https://github.com/jamesnetherton</url>
+            <timezone>0</timezone>
+        </developer>
+    </developers>
+
+    <issueManagement>
+        <url>https://github.com/jamesnetherton/wildfly-liquibase/issues</url>
+        <system>GitHub</system>
+    </issueManagement>
+
+    <licenses>
+        <license>
+            <name>Apache 2.0</name>
+            <url>https://opensource.org/licenses/Apache-2.0</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <distributionManagement>
+        <repository>
+            <id>oss-sonatype-staging</id>
+            <name>Sonatype Staging Repository</name>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+        </repository>
+        <snapshotRepository>
+            <id>oss-sonatype-snapshots</id>
+            <name>OSS Sonatype Nexus Snapshots</name>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+    </distributionManagement>
+
+    <modules>
+        <module>subsystem</module>
+        <module>distro</module>
+        <module>testextension</module>
+        <module>itests</module>
+    </modules>
+
+    <dependencyManagement>
+        <dependencies>
+            <!-- Arquillian -->
+            <dependency>
+                <groupId>org.jboss.arquillian</groupId>
+                <artifactId>arquillian-bom</artifactId>
+                <version>${version.org.jboss.arquillian}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+
+            <!-- Junit -->
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${version.junit}</version>
+            </dependency>
+
+            <!-- Liquibase -->
+            <dependency>
+                <groupId>org.liquibase</groupId>
+                <artifactId>liquibase-core</artifactId>
+                <version>${version.org.liquibase}</version>
+            </dependency>
+
+            <!-- SLF4J -->
+            <dependency>
+                <groupId>org.slf4j</groupId>
+                <artifactId>slf4j-api</artifactId>
+                <version>${version.org.slf4j}</version>
+            </dependency>
+
+            <!-- WildFly -->
+            <dependency>
+                <groupId>org.wildfly</groupId>
+                <artifactId>wildfly-parent</artifactId>
+                <version>${version.org.wildfly}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+            <dependency>
+                <groupId>org.wildfly</groupId>
+                <artifactId>wildfly-dist</artifactId>
+                <version>${version.org.wildfly}</version>
+                <type>tar.gz</type>
+            </dependency>
+
+            <!-- WildFly Arquillian-->
+            <dependency>
+                <groupId>org.wildfly.arquillian</groupId>
+                <artifactId>wildfly-arquillian-container-managed</artifactId>
+                <version>${version.org.wildfly.arquillian}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <artifactId>maven-assembly-plugin</artifactId>
+                    <version>${version.assembly.plugin}</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${version.compiler.plugin}</version>
+                    <configuration>
+                        <source>1.8</source>
+                        <target>1.8</target>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-dependency-plugin</artifactId>
+                    <version>${version.dependency.plugin}</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-release-plugin</artifactId>
+                    <version>${version.release.plugin}</version>
+                    <configuration>
+                        <arguments>-Dgpg.passphrase=${gpg.passphrase}</arguments>
+                        <tagNameFormat>@{project.version}</tagNameFormat>
+                        <releaseProfiles>release</releaseProfiles>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>${version.resources.plugin}</version>
+                </plugin>
+                <plugin>
+                    <artifactId>maven-surefire-plugin</artifactId>
+                    <version>${version.surefire.plugin}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>release</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-gpg-plugin</artifactId>
+                        <version>${version.gpg.plugin}</version>
+                        <configuration>
+                            <passphrase>${gpg.passphrase}</passphrase>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>sign</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-source-plugin</artifactId>
+                        <version>${version.source.plugin}</version>
+                        <executions>
+                            <execution>
+                                <id>attach-sources</id>
+                                <goals>
+                                    <goal>jar-no-fork</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-javadoc-plugin</artifactId>
+                        <version>${version.javadoc.plugin}</version>
+                        <configuration>
+                            <encoding>${project.build.sourceEncoding}</encoding>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>attach-javadocs</id>
+                                <goals>
+                                    <goal>jar</goal>
+                                </goals>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>licenseHeaders</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>license-maven-plugin</artifactId>
+                        <version>${version.license.plugin}</version>
+                        <configuration>
+                            <addJavaLicenseAfterPackage>false</addJavaLicenseAfterPackage>
+                            <canUpdateCopyright>true</canUpdateCopyright>
+                            <canUpdateDescription>true</canUpdateDescription>
+                            <organizationName>James Netherton</organizationName>
+                            <licenseName>apache_v2</licenseName>
+                            <inceptionYear>2017</inceptionYear>
+                            <roots>
+                                <root>src</root>
+                            </roots>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <goals>
+                                    <goal>update-file-header</goal>
+                                </goals>
+                                <phase>process-sources</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+
+</project>

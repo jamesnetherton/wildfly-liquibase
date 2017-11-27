@@ -1,0 +1,87 @@
+{
+  "databaseChangeLog": [
+    {
+      "property": {
+        "name": "datasource-ref",
+        "value": "#DATASOURCE_REF#"
+      }
+    },
+    {
+      "preConditions": [
+        {
+          "runningAs": {
+            "username": "SA"
+          }
+        }
+      ]
+    },
+    {
+      "changeSet": {
+        "id": "#ID#",
+        "author": "wildfly",
+        "changes": [
+          {
+            "createTable": {
+              "tableName": "#TABLE_NAME#",
+              "columns": [
+                {
+                  "column": {
+                    "name": "id",
+                    "type": "int",
+                    "autoIncrement": true,
+                    "constraints": {
+                      "primaryKey": true,
+                      "nullable": false
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "firstname",
+                    "type": "varchar(50)"
+                  }
+                },
+                {
+                  "column": {
+                    "name": "lastname",
+                    "type": "varchar(50)",
+                    "constraints": {
+                      "nullable": false
+                    }
+                  }
+                },
+                {
+                  "column": {
+                    "name": "state",
+                    "type": "char(2)"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
+      "changeSet": {
+        "id": "#ID#",
+        "author": "wildfly",
+        "changes": [
+          {
+            "addColumn": {
+              "tableName": "#TABLE_NAME#",
+              "columns": [
+                {
+                  "column": {
+                    "name": "username",
+                    "type": "varchar(8)"
+                  }
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  ]
+}

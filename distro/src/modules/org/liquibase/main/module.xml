@@ -1,0 +1,11 @@
+<?xml version="1.0" ?>
+<module xmlns="urn:jboss:module:1.5" name="org.liquibase">
+    <resources>
+        <resource-root path="liquibase-core-${version.org.liquibase}.jar"/>
+    </resources>
+    <dependencies>
+        <module name="javax.api"/>
+        <module name="javax.sql.api"/>
+        <module name="org.yaml.snakeyaml"/>
+    </dependencies>
+</module>
