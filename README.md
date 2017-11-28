@@ -15,6 +15,8 @@ wget https://github.com/jamesnetherton/wildfly-liquibase/releases/download/0.1.0
 unzip wildfly-liquibase-0.1.0.zip
 ```
 
+Check the release notes to ensure that the distribution is compatible with your WildFly version.
+
 ## Configuration
 
 ### Subsystem configuration
