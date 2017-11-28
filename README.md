@@ -1,5 +1,8 @@
 # wildfly-liquibase
 
+[![Build Status](https://travis-ci.org/jamesnetherton/wildfly-liquibase.svg?branch=master)](https://travis-ci.org/jamesnetherton/wildfly-liquibase)
+[![License](https://img.shields.io/:license-Apache2-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
+
 WildFly subsystem extension for Liquibase. Enables you to execute Liquibase change logs for your JavaEE applications without having to configure the `LiquibaseServletListener` or bundle Liquibase with your application.
 
 ## Installation
