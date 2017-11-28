@@ -11,7 +11,7 @@ Download one of the release distribution zip files and unpack it inside of your 
 
 ```
 cd $JBOSS_HOME
-wget https://github.com/wildfly-liquibase/releases/wildfly-liquibase-0.1.0.zip
+wget https://github.com/jamesnetherton/wildfly-liquibase/releases/download/0.1.0/wildfly-liquibase-0.1.0.zip
 unzip wildfly-liquibase-0.1.0.zip
 ```
 
