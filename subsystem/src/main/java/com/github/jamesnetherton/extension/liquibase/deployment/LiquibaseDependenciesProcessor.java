@@ -19,11 +19,7 @@
  */
 package com.github.jamesnetherton.extension.liquibase.deployment;
 
-import java.util.List;
-
-import com.github.jamesnetherton.extension.liquibase.LiquibaseConstants;
-import com.github.jamesnetherton.extension.liquibase.service.ChangeLogExecutionService;
-
+import org.jboss.as.ee.weld.WeldDeploymentMarker;
 import org.jboss.as.server.deployment.Attachments;
 import org.jboss.as.server.deployment.DeploymentPhaseContext;
 import org.jboss.as.server.deployment.DeploymentUnit;
@@ -33,7 +29,6 @@ import org.jboss.as.server.deployment.module.ModuleDependency;
 import org.jboss.as.server.deployment.module.ModuleSpecification;
 import org.jboss.as.server.moduleservice.ServiceModuleLoader;
 import org.jboss.modules.ModuleIdentifier;
-import org.jboss.vfs.VirtualFile;
 
 /**
  * {@link DeploymentUnitProcessor} which adds Liquibase module dependencies to the deployment
@@ -45,15 +40,16 @@ public class LiquibaseDependenciesProcessor implements DeploymentUnitProcessor{
 
         DeploymentUnit deploymentUnit = phaseContext.getDeploymentUnit();
 
-        List<VirtualFile> changeLogFiles = deploymentUnit.getAttachmentList(LiquibaseConstants.LIQUIBASE_CHANGELOGS);
-        if (changeLogFiles.isEmpty()) {
-            return;
-        }
-
         ServiceModuleLoader moduleLoader = deploymentUnit.getAttachment(Attachments.SERVICE_MODULE_LOADER);
         ModuleSpecification moduleSpec = deploymentUnit.getAttachment(Attachments.MODULE_SPECIFICATION);
-        ModuleIdentifier identifier = ModuleIdentifier.fromString("org.liquibase");
-        moduleSpec.addUserDependency(new ModuleDependency(moduleLoader, identifier, false, true, true, true));
+
+        ModuleIdentifier liquibaseCore = ModuleIdentifier.fromString("org.liquibase.core");
+        moduleSpec.addUserDependency(new ModuleDependency(moduleLoader, liquibaseCore, false, true, true, true));
+
+        if (WeldDeploymentMarker.isPartOfWeldDeployment(deploymentUnit)) {
+            ModuleIdentifier liquibaseCdi = ModuleIdentifier.fromString("org.liquibase.cdi");
+            moduleSpec.addUserDependency(new ModuleDependency(moduleLoader, liquibaseCdi, false, true, true, true));
+        }
     }
 
     @Override

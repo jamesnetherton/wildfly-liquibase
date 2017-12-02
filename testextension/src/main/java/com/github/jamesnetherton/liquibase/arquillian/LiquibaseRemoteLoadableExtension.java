@@ -33,7 +33,7 @@ public final class LiquibaseRemoteLoadableExtension implements RemoteLoadableExt
     private static Set<ModuleIdentifier> dependencies = new LinkedHashSet<>();
     static {
         dependencies.add(ModuleIdentifier.create("com.github.jamesnetherton.extension.liquibase"));
-        dependencies.add(ModuleIdentifier.create("org.liquibase"));
+        dependencies.add(ModuleIdentifier.create("org.liquibase.core"));
     }
 
     @Override
