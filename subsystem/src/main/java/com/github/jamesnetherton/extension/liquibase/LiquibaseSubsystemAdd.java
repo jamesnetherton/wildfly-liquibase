@@ -21,6 +21,7 @@ package com.github.jamesnetherton.extension.liquibase;
 
 import com.github.jamesnetherton.extension.liquibase.deployment.LiquibaseChangeLogExecutionProcessor;
 import com.github.jamesnetherton.extension.liquibase.deployment.LiquibaseChangeLogParseProcessor;
+import com.github.jamesnetherton.extension.liquibase.deployment.LiquibaseDependenciesProcessor;
 import com.github.jamesnetherton.extension.liquibase.service.ChangeLogModelUpdateService;
 
 import org.jboss.as.controller.AbstractBoottimeAddStepHandler;
@@ -35,7 +36,8 @@ import org.jboss.msc.service.ServiceName;
 
 class LiquibaseSubsystemAdd extends AbstractBoottimeAddStepHandler {
 
-    private static final int POST_MODULE_LIQUIBASE_CHANGE_LOG = Phase.POST_MODULE_PERMISSIONS_VALIDATION + 0x01;
+    private static final int PARSE_MODULE_LIQUIBASE_CHANGE_LOG = Phase.PARSE_SINGLETON_DEPLOYMENT + 0x01;
+    private static final int DEPENDENCIES_LIQUIBASE = Phase.DEPENDENCIES_SINGLETON_DEPLOYMENT + 0x01;
     private static final int INSTALL_LIQUIBASE_MIGRATION_EXECUTION = Phase.INSTALL_BUNDLE_ACTIVATE + 0x01;
 
     @Override
@@ -50,7 +52,8 @@ class LiquibaseSubsystemAdd extends AbstractBoottimeAddStepHandler {
 
         context.addStep(new AbstractDeploymentChainStep() {
             public void execute(DeploymentProcessorTarget processorTarget) {
-                processorTarget.addDeploymentProcessor(LiquibaseExtension.SUBSYSTEM_NAME, Phase.POST_MODULE, POST_MODULE_LIQUIBASE_CHANGE_LOG, new LiquibaseChangeLogParseProcessor());
+                processorTarget.addDeploymentProcessor(LiquibaseExtension.SUBSYSTEM_NAME, Phase.PARSE, PARSE_MODULE_LIQUIBASE_CHANGE_LOG, new LiquibaseChangeLogParseProcessor());
+                processorTarget.addDeploymentProcessor(LiquibaseExtension.SUBSYSTEM_NAME, Phase.DEPENDENCIES, DEPENDENCIES_LIQUIBASE, new LiquibaseDependenciesProcessor());
                 processorTarget.addDeploymentProcessor(LiquibaseExtension.SUBSYSTEM_NAME, Phase.INSTALL, INSTALL_LIQUIBASE_MIGRATION_EXECUTION, new LiquibaseChangeLogExecutionProcessor());
             }
         }, OperationContext.Stage.RUNTIME);

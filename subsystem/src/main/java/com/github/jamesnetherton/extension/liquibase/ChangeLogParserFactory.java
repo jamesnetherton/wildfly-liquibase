@@ -31,7 +31,7 @@ public final class ChangeLogParserFactory {
     private ChangeLogParserFactory(){
     }
 
-    public static ChangeLogParser createFactory(File changeLogFile) {
+    public static ChangeLogParser createParser(File changeLogFile) {
         if (changeLogFile.getName().endsWith(".json")) {
             return new JsonChangeLogParser();
         } else if(changeLogFile.getName().endsWith(".xml")) {

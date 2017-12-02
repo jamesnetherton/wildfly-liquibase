@@ -21,13 +21,14 @@ package com.github.jamesnetherton.extension.liquibase;
 
 import org.jboss.as.server.deployment.AttachmentKey;
 import org.jboss.as.server.deployment.AttachmentList;
+import org.jboss.vfs.VirtualFile;
 
 public interface LiquibaseConstants {
 
     /**
      * AttachmentList containing the String representations of the Liquibase change log definition
      */
-    AttachmentKey<AttachmentList<ChangeLogConfiguration>> LIQUIBASE_CHANGELOGS = AttachmentKey.createList(ChangeLogConfiguration.class);
+    AttachmentKey<AttachmentList<VirtualFile>> LIQUIBASE_CHANGELOGS = AttachmentKey.createList(VirtualFile.class);
 
     /**
      * Liquibase change log file pattern
