@@ -19,10 +19,25 @@
  */
 package com.github.jamesnetherton.extension.liquibase.deployment;
 
+import liquibase.changelog.ChangeLogParameters;
+import liquibase.changelog.DatabaseChangeLog;
+import liquibase.exception.ChangeLogParseException;
+import liquibase.parser.ChangeLogParser;
+import liquibase.resource.ClassLoaderResourceAccessor;
+import liquibase.resource.CompositeResourceAccessor;
+import liquibase.resource.FileSystemResourceAccessor;
+
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.List;
 
 import com.github.jamesnetherton.extension.liquibase.ChangeLogConfiguration;
+import com.github.jamesnetherton.extension.liquibase.ChangeLogConfigurationFactory;
+import com.github.jamesnetherton.extension.liquibase.ChangeLogParserFactory;
 import com.github.jamesnetherton.extension.liquibase.LiquibaseConstants;
+import com.github.jamesnetherton.extension.liquibase.ModelConstants;
 import com.github.jamesnetherton.extension.liquibase.service.ChangeLogExecutionService;
 
 import org.jboss.as.connector.subsystems.datasources.AbstractDataSourceService;
@@ -35,6 +50,7 @@ import org.jboss.as.server.deployment.DeploymentUnitProcessor;
 import org.jboss.modules.Module;
 import org.jboss.msc.service.ServiceBuilder;
 import org.jboss.msc.service.ServiceName;
+import org.jboss.vfs.VirtualFile;
 
 /**
  * {@link DeploymentUnitProcessor} which adds a {@link ChangeLogExecutionService} service dependency for
@@ -44,21 +60,35 @@ public class LiquibaseChangeLogExecutionProcessor implements DeploymentUnitProce
 
     @Override
     public void deploy(DeploymentPhaseContext phaseContext) throws DeploymentUnitProcessingException {
+
         DeploymentUnit deploymentUnit = phaseContext.getDeploymentUnit();
 
-        List<ChangeLogConfiguration> configurations = deploymentUnit.getAttachmentList(LiquibaseConstants.LIQUIBASE_CHANGELOGS);
-        if (configurations.isEmpty()) {
+        List<VirtualFile> changeLogFiles = deploymentUnit.getAttachmentList(LiquibaseConstants.LIQUIBASE_CHANGELOGS);
+        if (changeLogFiles.isEmpty()) {
             return;
         }
 
         Module module = deploymentUnit.getAttachment(Attachments.MODULE);
 
-        ServiceName serviceName = ChangeLogExecutionService.createServiceName(deploymentUnit.getName());
+        List<ChangeLogConfiguration> changeLogConfigurations = new ArrayList<>();
+        try {
+            for (VirtualFile virtualFile : changeLogFiles) {
+                File file = virtualFile.getPhysicalFile();
+                String changeLogDefinition = new String(Files.readAllBytes(file.toPath()), "UTF-8");
+                String datasourceRef = parseDataSourceRef(file, module.getClassLoader());
 
-        ChangeLogExecutionService service = new ChangeLogExecutionService(module.getClassLoader(), configurations);
+                ChangeLogConfiguration configuration = ChangeLogConfigurationFactory.createChangeLogConfiguration(file.getName(), changeLogDefinition, datasourceRef);
+                changeLogConfigurations.add(configuration);
+            }
+        } catch (IOException e) {
+            throw new DeploymentUnitProcessingException(e);
+        }
+
+        ServiceName serviceName = ChangeLogExecutionService.createServiceName(deploymentUnit.getName());
+        ChangeLogExecutionService service = new ChangeLogExecutionService(module.getClassLoader(), changeLogConfigurations);
         ServiceBuilder<ChangeLogExecutionService> builder = phaseContext.getServiceTarget().addService(serviceName, service);
 
-        for (ChangeLogConfiguration configuration : configurations) {
+        for (ChangeLogConfiguration configuration : changeLogConfigurations) {
             ContextNames.BindInfo bindInfo = ContextNames.bindInfoFor(configuration.getDatasourceRef());
             ServiceName dataSourceServiceName = AbstractDataSourceService.getServiceName(bindInfo);
             builder.addDependency(dataSourceServiceName);
@@ -69,5 +99,24 @@ public class LiquibaseChangeLogExecutionProcessor implements DeploymentUnitProce
 
     @Override
     public void undeploy(DeploymentUnit deploymentUnit) {
+    }
+
+    private String parseDataSourceRef(File file, ClassLoader classLoader) throws DeploymentUnitProcessingException {
+        ChangeLogParser parser = ChangeLogParserFactory.createParser(file);
+        if (parser == null) {
+            throw new DeploymentUnitProcessingException("Unable to find a suitable change log parser for " + file.getName());
+        }
+
+        try {
+            CompositeResourceAccessor resourceAccessor = new CompositeResourceAccessor(new FileSystemResourceAccessor(), new ClassLoaderResourceAccessor(classLoader));
+            DatabaseChangeLog changeLog = parser.parse(file.getAbsolutePath(), new ChangeLogParameters(), resourceAccessor);
+            Object datasourceRef = changeLog.getChangeLogParameters().getValue(ModelConstants.DATASOURCE_REF, changeLog);
+            if (datasourceRef == null) {
+                throw new DeploymentUnitProcessingException("Change log is missing a datasource-ref property");
+            }
+            return (String) datasourceRef;
+        } catch (ChangeLogParseException e) {
+            throw new DeploymentUnitProcessingException(e);
+        }
     }
 }
