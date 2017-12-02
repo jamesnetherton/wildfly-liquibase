@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<module xmlns="urn:jboss:module:1.5" name="org.liquibase">
+<module xmlns="urn:jboss:module:1.5" name="org.liquibase.core">
     <resources>
         <resource-root path="liquibase-core-${version.org.liquibase}.jar"/>
     </resources>

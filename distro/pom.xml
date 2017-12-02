@@ -26,6 +26,10 @@
         </dependency>
         <dependency>
             <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-cdi</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
         </dependency>
     </dependencies>
@@ -76,7 +80,7 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>copy-liquibase-dependencies</id>
+                        <id>copy-liquibase-cdi</id>
                         <phase>package</phase>
                         <goals>
                             <goal>copy</goal>
@@ -85,11 +89,33 @@
                             <artifactItems>
                                 <artifactItem>
                                     <groupId>org.liquibase</groupId>
+                                    <artifactId>liquibase-cdi</artifactId>
+                                    <version>${version.org.liquibase}</version>
+                                </artifactItem>
+                            </artifactItems>
+                            <outputDirectory>${modules.directory}/org/liquibase/cdi/main</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>copy-liquibase-core</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>copy</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.liquibase</groupId>
+                                    <artifactId>liquibase-cdi</artifactId>
+                                    <version>${version.org.liquibase}</version>
+                                </artifactItem>
+                                <artifactItem>
+                                    <groupId>org.liquibase</groupId>
                                     <artifactId>liquibase-core</artifactId>
                                     <version>${version.org.liquibase}</version>
                                 </artifactItem>
                             </artifactItems>
-                            <outputDirectory>${modules.directory}/org/liquibase/main</outputDirectory>
+                            <outputDirectory>${modules.directory}/org/liquibase/core/main</outputDirectory>
                         </configuration>
                     </execution>
                 </executions>

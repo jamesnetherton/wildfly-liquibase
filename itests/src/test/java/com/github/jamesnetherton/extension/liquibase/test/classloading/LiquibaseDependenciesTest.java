@@ -21,8 +21,6 @@ package com.github.jamesnetherton.extension.liquibase.test.classloading;
 
 import liquibase.changelog.DatabaseChangeLog;
 
-import com.github.jamesnetherton.liquibase.arquillian.ChangeLogDefinition;
-
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
@@ -33,9 +31,6 @@ import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
 public class LiquibaseDependenciesTest {
-
-    @ChangeLogDefinition
-    private String tableName;
 
     @Deployment
     public static Archive<?> deployment() {
