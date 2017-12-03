@@ -70,9 +70,6 @@ final class LiquibaseSubsystemParser implements Namespace10, XMLStreamConstants,
                         }
                     }
                 }
-                default: {
-                    continue;
-                }
             }
         }
     }

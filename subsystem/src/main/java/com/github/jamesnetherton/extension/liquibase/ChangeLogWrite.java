@@ -19,20 +19,14 @@
  */
 package com.github.jamesnetherton.extension.liquibase;
 
-import com.github.jamesnetherton.extension.liquibase.service.ChangeLogExecutionService;
 import com.github.jamesnetherton.extension.liquibase.service.ChangeLogModelUpdateService;
 
-import org.jboss.as.connector.subsystems.datasources.AbstractDataSourceService;
 import org.jboss.as.controller.AbstractWriteAttributeHandler;
 import org.jboss.as.controller.OperationContext;
 import org.jboss.as.controller.OperationFailedException;
-import org.jboss.as.controller.descriptions.ModelDescriptionConstants;
-import org.jboss.as.naming.deployment.ContextNames;
 import org.jboss.dmr.ModelNode;
-import org.jboss.msc.service.ServiceBuilder;
 import org.jboss.msc.service.ServiceController;
 import org.jboss.msc.service.ServiceName;
-import org.jboss.msc.service.ServiceTarget;
 
 final class ChangeLogWrite extends AbstractWriteAttributeHandler<Object> {
 

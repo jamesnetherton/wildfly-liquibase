@@ -22,7 +22,6 @@ package com.github.jamesnetherton.extension.liquibase;
 import java.io.IOException;
 
 import org.jboss.as.subsystem.test.AbstractSubsystemBaseTest;
-import org.junit.Test;
 
 public class SubsystemBaseParsingTestCase extends AbstractSubsystemBaseTest {
 
