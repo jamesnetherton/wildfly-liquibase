@@ -34,7 +34,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.jamesnetherton.extension.liquibase.ChangeLogConfiguration;
-import com.github.jamesnetherton.extension.liquibase.ChangeLogConfigurationFactory;
 import com.github.jamesnetherton.extension.liquibase.ChangeLogParserFactory;
 import com.github.jamesnetherton.extension.liquibase.LiquibaseConstants;
 import com.github.jamesnetherton.extension.liquibase.ModelConstants;
@@ -77,7 +76,13 @@ public class LiquibaseChangeLogExecutionProcessor implements DeploymentUnitProce
                 String changeLogDefinition = new String(Files.readAllBytes(file.toPath()), "UTF-8");
                 String datasourceRef = parseDataSourceRef(file, module.getClassLoader());
 
-                ChangeLogConfiguration configuration = ChangeLogConfigurationFactory.createChangeLogConfiguration(file.getName(), changeLogDefinition, datasourceRef);
+                ChangeLogConfiguration configuration = ChangeLogConfiguration.builder()
+                    .name(file.getName())
+                    .definition(changeLogDefinition)
+                    .datasourceRef(datasourceRef)
+                    .classLoader(module.getClassLoader())
+                    .build();
+
                 changeLogConfigurations.add(configuration);
             }
         } catch (IOException e) {
@@ -85,7 +90,7 @@ public class LiquibaseChangeLogExecutionProcessor implements DeploymentUnitProce
         }
 
         ServiceName serviceName = ChangeLogExecutionService.createServiceName(deploymentUnit.getName());
-        ChangeLogExecutionService service = new ChangeLogExecutionService(module.getClassLoader(), changeLogConfigurations);
+        ChangeLogExecutionService service = new ChangeLogExecutionService(changeLogConfigurations);
         ServiceBuilder<ChangeLogExecutionService> builder = phaseContext.getServiceTarget().addService(serviceName, service);
 
         for (ChangeLogConfiguration configuration : changeLogConfigurations) {

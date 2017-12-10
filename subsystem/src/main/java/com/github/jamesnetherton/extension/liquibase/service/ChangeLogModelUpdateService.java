@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.github.jamesnetherton.extension.liquibase.ChangeLogConfiguration;
-import com.github.jamesnetherton.extension.liquibase.ChangeLogConfigurationFactory;
 import com.github.jamesnetherton.extension.liquibase.ChangeLogFormat;
 import com.github.jamesnetherton.extension.liquibase.ChangeLogResource;
 import com.github.jamesnetherton.extension.liquibase.ModelConstants;
@@ -55,7 +54,14 @@ public class ChangeLogModelUpdateService extends AbstractService<ChangeLogModelU
         String datasourceRef = ChangeLogResource.DATASOURCE_REF.resolveModelAttribute(context, futureState).asString();
         String contextNames = ChangeLogResource.CONTEXT_NAMES.resolveModelAttribute(context, futureState).asString();
 
-        ChangeLogConfiguration configuration = ChangeLogConfigurationFactory.createChangeLogConfiguration(changeLogName, changeLogDefinition, datasourceRef, contextNames);
+        ChangeLogConfiguration configuration = ChangeLogConfiguration.builder()
+            .name(changeLogName)
+            .definition(changeLogDefinition)
+            .datasourceRef(datasourceRef)
+            .contextNames(contextNames)
+            .classLoader(ChangeLogModelUpdateService.class.getClassLoader())
+            .build();
+
         if (configuration.getFormat().equals(ChangeLogFormat.UNKNOWN)) {
             throw new OperationFailedException("Unable to determine change log format. Supported formats are JSON, YAML and XML");
         }
@@ -73,7 +79,7 @@ public class ChangeLogModelUpdateService extends AbstractService<ChangeLogModelU
                 // Datasource JNDI reference has changed. Remove service and create a new one
                 context.removeService(serviceName);
 
-                ChangeLogExecutionService service = new ChangeLogExecutionService(ChangeLogModelUpdateService.class.getClassLoader(), configurations);
+                ChangeLogExecutionService service = new ChangeLogExecutionService(configurations);
                 ServiceBuilder<ChangeLogExecutionService> builder = serviceTarget.addService(serviceName, service);
 
                 ContextNames.BindInfo bindInfo = ContextNames.bindInfoFor(configuration.getDatasourceRef());
@@ -94,7 +100,7 @@ public class ChangeLogModelUpdateService extends AbstractService<ChangeLogModelU
             // TODO: Maybe this should be a static method call?
 
             // No current state means we're adding change log configuration for the first time
-            ChangeLogExecutionService service = new ChangeLogExecutionService(ChangeLogModelUpdateService.class.getClassLoader(), configurations);
+            ChangeLogExecutionService service = new ChangeLogExecutionService(configurations);
             ServiceBuilder<ChangeLogExecutionService> builder = serviceTarget.addService(serviceName, service);
 
             ContextNames.BindInfo bindInfo = ContextNames.bindInfoFor(configuration.getDatasourceRef());

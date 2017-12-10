@@ -60,11 +60,9 @@ public final class ChangeLogExecutionService extends AbstractService<ChangeLogEx
             + "http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd\">\n";
     private static final String LIQUIBASE_ELEMENT_END = "</databaseChangeLog>";
 
-    private final ClassLoader classLoader;
     private List<ChangeLogConfiguration> configurations;
 
-    public ChangeLogExecutionService(ClassLoader classLoader, List<ChangeLogConfiguration> configurations) {
-        this.classLoader = classLoader;
+    public ChangeLogExecutionService(List<ChangeLogConfiguration> configurations) {
         this.configurations = configurations;
     }
 
@@ -87,7 +85,7 @@ public final class ChangeLogExecutionService extends AbstractService<ChangeLogEx
 
     public void executeChangeLog(ChangeLogConfiguration configuration) {
         try {
-            ResourceAccessor resourceAccessor = new WildFlyLiquibaseResourceAccessor(this.classLoader,configuration);
+            ResourceAccessor resourceAccessor = new WildFlyLiquibaseResourceAccessor(configuration);
 
             InitialContext initialContext = new InitialContext();
             DataSource datasource = (DataSource) initialContext.lookup(configuration.getDatasourceRef());
@@ -120,17 +118,15 @@ public final class ChangeLogExecutionService extends AbstractService<ChangeLogEx
 
     private final class WildFlyLiquibaseResourceAccessor implements ResourceAccessor {
 
-        private final ClassLoader classLoader;
         private final ChangeLogConfiguration configuration;
 
-        private WildFlyLiquibaseResourceAccessor(ClassLoader classLoader, ChangeLogConfiguration configuration) {
-            this.classLoader = classLoader;
+        private WildFlyLiquibaseResourceAccessor(ChangeLogConfiguration configuration) {
             this.configuration = configuration;
         }
 
         @Override
         public Set<InputStream> getResourcesAsStream(String path) throws IOException {
-            InputStream resource = classLoader.getResourceAsStream(path);
+            InputStream resource = configuration.getClassLoader().getResourceAsStream(path);
 
             if (resource == null && !path.equals(configuration.getFileName())) {
                 return null;
@@ -166,7 +162,7 @@ public final class ChangeLogExecutionService extends AbstractService<ChangeLogEx
 
         @Override
         public ClassLoader toClassLoader() {
-            return this.classLoader;
+            return configuration.getClassLoader();
         }
     }
 }

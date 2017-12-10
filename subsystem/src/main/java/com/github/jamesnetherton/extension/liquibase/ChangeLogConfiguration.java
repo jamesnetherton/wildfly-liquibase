@@ -19,12 +19,15 @@
  */
 package com.github.jamesnetherton.extension.liquibase;
 
+import java.util.Objects;
+
 public final class ChangeLogConfiguration {
 
     private String name;
     private String definition;
     private String datasourceRef;
     private String contextNames;
+    private ClassLoader classLoader;
 
     public String getName() {
         return name;
@@ -56,6 +59,14 @@ public final class ChangeLogConfiguration {
 
     public String getContextNames() {
         return contextNames;
+    }
+
+    public void setClassLoader(ClassLoader classLoader) {
+        this.classLoader = classLoader;
+    }
+
+    public ClassLoader getClassLoader() {
+        return classLoader;
     }
 
     public String getFileName() {
@@ -91,30 +102,82 @@ public final class ChangeLogConfiguration {
         }
     }
 
+    public static Builder builder() {
+        return new Builder();
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o)
             return true;
         if (o == null || getClass() != o.getClass())
             return false;
-
         ChangeLogConfiguration that = (ChangeLogConfiguration) o;
-
-        if (!name.equals(that.name))
-            return false;
-        if (!definition.equals(that.definition))
-            return false;
-        if (!datasourceRef.equals(that.datasourceRef))
-            return false;
-        return contextNames != null ? contextNames.equals(that.contextNames) : that.contextNames == null;
+        return Objects.equals(name, that.name) && Objects.equals(definition, that.definition) && Objects.equals(datasourceRef, that.datasourceRef) && Objects
+                .equals(contextNames, that.contextNames) && Objects.equals(classLoader, that.classLoader);
     }
 
     @Override
     public int hashCode() {
-        int result = name.hashCode();
-        result = 31 * result + definition.hashCode();
-        result = 31 * result + datasourceRef.hashCode();
-        result = 31 * result + (contextNames != null ? contextNames.hashCode() : 0);
-        return result;
+        return Objects.hash(name, definition, datasourceRef, contextNames, classLoader);
+    }
+
+    public static class Builder {
+        private String name;
+        private String definition;
+        private String datasourceRef;
+        private String contextNames;
+        private ClassLoader classLoader;
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder definition(String definition) {
+            this.definition = definition;
+            return this;
+        }
+
+        public Builder datasourceRef(String datasourceRef) {
+            this.datasourceRef = datasourceRef;
+            return this;
+        }
+
+        public Builder contextNames(String contextNames) {
+            this.contextNames = contextNames;
+            return this;
+        }
+
+        public Builder classLoader(ClassLoader classLoader) {
+            this.classLoader = classLoader;
+            return this;
+        }
+
+        public ChangeLogConfiguration build() {
+            if (this.name == null) {
+                throw new IllegalStateException("ChangeLogConfiguration name must be specified");
+            }
+
+            if (this.definition == null) {
+                throw new IllegalStateException("ChangeLogConfiguration definition must be specified");
+            }
+
+            if (this.datasourceRef == null) {
+                throw new IllegalStateException("ChangeLogConfiguration datasourceRef must be specified");
+            }
+
+            if (this.classLoader == null) {
+                throw new IllegalStateException("ChangeLogConfiguration classLoader must be specified");
+            }
+
+            ChangeLogConfiguration configuration = new ChangeLogConfiguration();
+            configuration.setName(this.name);
+            configuration.setDefinition(this.definition);
+            configuration.setDatasourceRef(this.datasourceRef);
+            configuration.setContextNames(this.contextNames);
+            configuration.setClassLoader(this.classLoader);
+            return configuration;
+        }
     }
 }
