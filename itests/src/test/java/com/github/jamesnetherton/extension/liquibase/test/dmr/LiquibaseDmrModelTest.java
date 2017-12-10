@@ -52,7 +52,7 @@ public class LiquibaseDmrModelTest extends LiquibaseTestSupport {
     }
 
     @Test
-    public void testDmrModeWithContext() throws Exception {
+    public void testDmrModelWithContext() throws Exception {
         try {
             executeCliScript(new File("target/test-classes/cli/changelog-add-with-context.cli"));
             assertTableModified("dmr_add_with_context", Arrays.asList("firstname", "id", "lastname", "state"));
@@ -61,5 +61,13 @@ public class LiquibaseDmrModelTest extends LiquibaseTestSupport {
         }
     }
 
-
+    @Test
+    public void testDmrModelWithNoFileNameExtension() throws Exception {
+        try {
+            executeCliScript(new File("target/test-classes/cli/changelog-add-with-no-filename-extension.cli"));
+            assertTableModified("dmr_add_name_with_no_filename_extension");
+        } finally {
+            executeCliScript(new File("target/test-classes/cli/changelog-remove-with-no-filename-extension-remove.cli"));
+        }
+    }
 }
