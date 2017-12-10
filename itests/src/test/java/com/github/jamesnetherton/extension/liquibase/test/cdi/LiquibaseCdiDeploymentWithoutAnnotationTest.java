@@ -19,8 +19,7 @@
  */
 package com.github.jamesnetherton.extension.liquibase.test.cdi;
 
-import com.github.jamesnetherton.extension.liquibase.test.cdi.producer.LiquibaseConfigurationProducer;
-import com.github.jamesnetherton.extension.liquibase.test.common.LiquibaseTestSupport;
+import liquibase.integration.cdi.CDILiquibaseConfig;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -28,22 +27,26 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
-public class LiquibaseCdiDeploymentTest extends LiquibaseTestSupport {
+public class LiquibaseCdiDeploymentWithoutAnnotationTest {
+
+    @Rule
+    public ExpectedException expected = ExpectedException.none();
 
     @Deployment
     public static Archive<?> deployment() {
         return ShrinkWrap.create(JavaArchive.class, "liquibase-cdi-deployment-test.jar")
-            .addClasses(LiquibaseTestSupport.class, LiquibaseConfigurationProducer.class)
-            .addAsResource("configs/cdi/changelog.xml", "/com/github/jamesnetherton/liquibase/test/changes.xml")
             .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
     @Test
-    public void testLiquibaseCdi() throws Exception {
-        assertTableModified("cdi_test");
+    public void testLiquibaseCdiModuleDependencyNotAdded() {
+        expected.expect(NoClassDefFoundError.class);
+        new CDILiquibaseConfig();
     }
 }

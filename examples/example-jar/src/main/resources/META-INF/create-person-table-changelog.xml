@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
+
+    <!--
+        Manadatory datasource-ref property to define which datasource we will be using.
+
+        In this example we use the WildFly H2 in-memory example datasource.
+    -->
+    <property name="datasource-ref" value="java:jboss/datasources/ExampleDS"/>
+
+    <preConditions>
+        <!-- Don't use SA in production. This is just for simplicity -->
+        <runningAs username="SA"/>
+    </preConditions>
+
+    <!-- Add 4 columns to table 'person' -->
+    <changeSet id="1" author="wildfly">
+        <createTable tableName="person">
+            <column name="id" type="int" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="firstname" type="varchar(50)"/>
+            <column name="lastname" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="state" type="char(2)"/>
+        </createTable>
+    </changeSet>
+
+    <!-- Add username column to table 'person' -->
+    <changeSet id="2" author="wildfly">
+        <addColumn tableName="person">
+            <column name="username" type="varchar(8)"/>
+        </addColumn>
+    </changeSet>
+
+    <!-- Add age column to table 'person' -->
+    <changeSet id="3" author="wildfly">
+        <addColumn tableName="person">
+            <column name="age" type="int"/>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

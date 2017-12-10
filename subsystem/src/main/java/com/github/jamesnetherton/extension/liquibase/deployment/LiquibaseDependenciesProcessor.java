@@ -19,15 +19,20 @@
  */
 package com.github.jamesnetherton.extension.liquibase.deployment;
 
+import java.util.List;
+
 import org.jboss.as.ee.weld.WeldDeploymentMarker;
 import org.jboss.as.server.deployment.Attachments;
 import org.jboss.as.server.deployment.DeploymentPhaseContext;
 import org.jboss.as.server.deployment.DeploymentUnit;
 import org.jboss.as.server.deployment.DeploymentUnitProcessingException;
 import org.jboss.as.server.deployment.DeploymentUnitProcessor;
+import org.jboss.as.server.deployment.annotation.CompositeIndex;
 import org.jboss.as.server.deployment.module.ModuleDependency;
 import org.jboss.as.server.deployment.module.ModuleSpecification;
 import org.jboss.as.server.moduleservice.ServiceModuleLoader;
+import org.jboss.jandex.AnnotationInstance;
+import org.jboss.jandex.DotName;
 import org.jboss.modules.ModuleIdentifier;
 
 /**
@@ -46,7 +51,10 @@ public class LiquibaseDependenciesProcessor implements DeploymentUnitProcessor{
         ModuleIdentifier liquibaseCore = ModuleIdentifier.fromString("org.liquibase.core");
         moduleSpec.addUserDependency(new ModuleDependency(moduleLoader, liquibaseCore, false, true, true, true));
 
-        if (WeldDeploymentMarker.isPartOfWeldDeployment(deploymentUnit)) {
+        CompositeIndex index = deploymentUnit.getAttachment(Attachments.COMPOSITE_ANNOTATION_INDEX);
+        List<AnnotationInstance> annotations = index.getAnnotations(DotName.createSimple("liquibase.integration.cdi.annotations.LiquibaseType"));
+
+        if (WeldDeploymentMarker.isPartOfWeldDeployment(deploymentUnit) && !annotations.isEmpty()) {
             ModuleIdentifier liquibaseCdi = ModuleIdentifier.fromString("org.liquibase.cdi");
             moduleSpec.addUserDependency(new ModuleDependency(moduleLoader, liquibaseCdi, false, true, true, true));
         }
