@@ -19,7 +19,7 @@ The WildFly server log should show the change log being executed:
 21:49:19,031 ERROR [stderr] (MSC service thread 1-6) INFO 27/11/17 21:49: liquibase: Successfully released change log lock
 ```
 
-Browse to http://localhost:8080/wildfly-liquibase-example and you'll see the names of the columns belonging to the 'person' table.
+Browse to http://localhost:8080/wildfly-liquibase-example-war and you'll see the names of the columns belonging to the 'person' table.
 
 ```
 21:49:19,196 INFO  [stdout] (ServerService Thread Pool -- 64) ======> age
