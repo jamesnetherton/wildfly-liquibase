@@ -47,7 +47,7 @@ public class LiquibaseDmrModelTest extends LiquibaseTestSupport {
             executeCliScript(new File("target/test-classes/cli/changelog-add.cli"));
             assertTableModified("dmr_add");
         } finally {
-            executeCliScript(new File("target/test-classes/cli/changelog-remove.cli"));
+            removeLiquibaseDmrModel("dmr-model-test.xml");
         }
     }
 
@@ -57,7 +57,7 @@ public class LiquibaseDmrModelTest extends LiquibaseTestSupport {
             executeCliScript(new File("target/test-classes/cli/changelog-add-with-context.cli"));
             assertTableModified("dmr_add_with_context", Arrays.asList("firstname", "id", "lastname", "state"));
         } finally {
-            executeCliScript(new File("target/test-classes/cli/changelog-remove-with-context.cli"));
+            removeLiquibaseDmrModel("dmr-model-with-context-test.xml");
         }
     }
 
@@ -67,7 +67,7 @@ public class LiquibaseDmrModelTest extends LiquibaseTestSupport {
             executeCliScript(new File("target/test-classes/cli/changelog-add-with-no-filename-extension.cli"));
             assertTableModified("dmr_add_name_with_no_filename_extension");
         } finally {
-            executeCliScript(new File("target/test-classes/cli/changelog-remove-with-no-filename-extension-remove.cli"));
+            removeLiquibaseDmrModel("dmr-model-with-no-file-extension");
         }
     }
 }
