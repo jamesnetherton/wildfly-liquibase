@@ -112,4 +112,4 @@ The change log definition body must be wraped within a `CDATA` block in order fo
 
 ## Examples
 
-Take a look at the [examples](https://github.com/jamesnetherton/wildfly-liquibase/examples) to see some basic use cases.
+Take a look at the [examples](https://github.com/jamesnetherton/wildfly-liquibase/tree/master/examples) to see some basic use cases.
