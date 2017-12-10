@@ -1,0 +1,1 @@
+/subsystem=liquibase/databaseChangeLog=dmr-model-with-no-file-extension/:remove

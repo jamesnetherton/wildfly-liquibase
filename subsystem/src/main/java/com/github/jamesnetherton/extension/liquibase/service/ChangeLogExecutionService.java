@@ -94,7 +94,7 @@ public final class ChangeLogExecutionService extends AbstractService<ChangeLogEx
             JdbcConnection connection = new JdbcConnection(datasource.getConnection());
 
             try {
-                Liquibase liquibase = new Liquibase(configuration.getFormat().getFileName(), resourceAccessor, connection);
+                Liquibase liquibase = new Liquibase(configuration.getFileName(), resourceAccessor, connection);
 
                 String contextNames = configuration.getContextNames();
                 if (contextNames != null && !contextNames.equals("undefined")) {
@@ -132,7 +132,7 @@ public final class ChangeLogExecutionService extends AbstractService<ChangeLogEx
         public Set<InputStream> getResourcesAsStream(String path) throws IOException {
             InputStream resource = classLoader.getResourceAsStream(path);
 
-            if (resource == null && !path.equals(configuration.getFormat().getFileName())) {
+            if (resource == null && !path.equals(configuration.getFileName())) {
                 return null;
             }
 
@@ -160,7 +160,7 @@ public final class ChangeLogExecutionService extends AbstractService<ChangeLogEx
         @Override
         public Set<String> list(String relativeTo, String path, boolean includeFiles, boolean includeDirectories, boolean recursive) throws IOException {
             HashSet<String> list = new HashSet<>();
-            list.add(configuration.getFormat().getFileName());
+            list.add(configuration.getFileName());
             return list;
         }
 

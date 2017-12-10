@@ -58,6 +58,18 @@ public final class ChangeLogConfiguration {
         return contextNames;
     }
 
+    public String getFileName() {
+        if (this.name == null) {
+            return null;
+        }
+
+        if (this.name.toLowerCase().matches(".*\\.(json|sql|xml|yaml|yml)")) {
+            return this.name;
+        }
+
+        return this.name + getFormat().getExtension();
+    }
+
     public ChangeLogFormat getFormat() {
         // Try to work out change log format from the name attribute
         ChangeLogFormat format = ChangeLogFormat.fromFileName(this.name);
