@@ -36,8 +36,12 @@ public final class ChangeLogDefinitionEnricher implements TestEnricher {
             for (Field field : clazz.getDeclaredFields()) {
                 ChangeLogDefinition definition = field.getAnnotation(ChangeLogDefinition.class);
                 if (definition != null && field.getType() == String.class) {
-                    String tableName = LiquibaseExtensionUtils.generateTableName(definition.name(), clazz.getName().hashCode());
-
+                    String tableName = LiquibaseExtensionUtils.generateTableName(definition.name(),
+                        definition.datasourceRef().hashCode(),
+                        definition.fileName().hashCode(),
+                        definition.format().hashCode(),
+                        definition.name().hashCode(),
+                        clazz.getName().hashCode());
                     field.setAccessible(true);
                     field.set(testClass, tableName);
                 }

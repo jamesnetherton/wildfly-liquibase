@@ -74,7 +74,7 @@ public class LiquibaseChangeLogExecutionProcessor implements DeploymentUnitProce
             for (VirtualFile virtualFile : changeLogFiles) {
                 File file = virtualFile.getPhysicalFile();
                 String changeLogDefinition = new String(Files.readAllBytes(file.toPath()), "UTF-8");
-                String datasourceRef = parseDataSourceRef(file, module.getClassLoader());
+                String datasourceRef = parseDataSourceRef(file, deploymentUnit.getName(), module.getClassLoader());
 
                 ChangeLogConfiguration configuration = ChangeLogConfiguration.builder()
                     .name(file.getName())
@@ -106,8 +106,12 @@ public class LiquibaseChangeLogExecutionProcessor implements DeploymentUnitProce
     public void undeploy(DeploymentUnit deploymentUnit) {
     }
 
-    private String parseDataSourceRef(File file, ClassLoader classLoader) throws DeploymentUnitProcessingException {
-        ChangeLogParser parser = ChangeLogParserFactory.createParser(file);
+    private String parseDataSourceRef(File file, String runtimeName, ClassLoader classLoader) throws DeploymentUnitProcessingException {
+        ChangeLogParser parser = ChangeLogParserFactory.createParser(file.getName());
+        if (parser == null) {
+            parser = ChangeLogParserFactory.createParser(runtimeName);
+        }
+
         if (parser == null) {
             throw new DeploymentUnitProcessingException("Unable to find a suitable change log parser for " + file.getName());
         }
