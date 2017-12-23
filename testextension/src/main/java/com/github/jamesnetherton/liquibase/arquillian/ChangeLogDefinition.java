@@ -34,5 +34,6 @@ public @interface ChangeLogDefinition {
     String name() default "default";
     String format() default "xml";
     String datasourceRef() default "java:jboss/datasources/ExampleDS";
+    String fileName() default "";
     boolean debug() default false;
 }

@@ -31,12 +31,12 @@ public final class ChangeLogParserFactory {
     private ChangeLogParserFactory(){
     }
 
-    public static ChangeLogParser createParser(File changeLogFile) {
-        if (changeLogFile.getName().endsWith(".json")) {
+    public static ChangeLogParser createParser(String changeLogFileName) {
+        if (changeLogFileName.endsWith(".json")) {
             return new JsonChangeLogParser();
-        } else if(changeLogFile.getName().endsWith(".xml")) {
+        } else if(changeLogFileName.endsWith(".xml")) {
             return new XMLChangeLogSAXParser();
-        } else if(changeLogFile.getName().endsWith(".yaml") || changeLogFile.getName().endsWith(".yml")) {
+        } else if(changeLogFileName.endsWith(".yaml") || changeLogFileName.endsWith(".yml")) {
             return new YamlChangeLogParser();
         } else {
             return null;

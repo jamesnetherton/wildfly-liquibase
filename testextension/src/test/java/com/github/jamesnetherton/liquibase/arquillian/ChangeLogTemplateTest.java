@@ -54,7 +54,7 @@ public class ChangeLogTemplateTest {
 
     private void assertChangeLogParse(String path) throws ChangeLogParseException {
         File file = new File(path);
-        ChangeLogParser parser = ChangeLogParserFactory.createParser(file);
+        ChangeLogParser parser = ChangeLogParserFactory.createParser(file.getName());
         DatabaseChangeLog changeLog = parser.parse(file.getAbsolutePath(), new ChangeLogParameters(), new FileSystemResourceAccessor());
         Assert.assertNotNull(changeLog);
     }

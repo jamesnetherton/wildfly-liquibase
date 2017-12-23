@@ -29,6 +29,6 @@ final class LiquibaseExtensionUtils {
         for (Integer value : hashValues) {
             hash += Math.abs(value);
         }
-        return String.format("%s_%d", prefix, hash);
+        return String.format("%s_%d", prefix, Math.abs(hash));
     }
 }

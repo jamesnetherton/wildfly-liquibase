@@ -44,7 +44,7 @@ Otherwise you can manually configure the Liquibase subsystem in one of the exist
 
 ### Change logs
 
-Change logs can be configured in two ways.
+Change logs can be configured in three ways.
 
 #### 1. Change log files within deployments
 
@@ -69,7 +69,11 @@ datasource JNDI binding in your change log file via a [change log parameter](htt
 </databaseChangeLog>
 ```
 
-#### 2. Change log files within Liquibase subsystem configuration
+#### 2. Standalone XML change log file deployment
+
+You can execute XML change logs without the requirement of a deployment archive wrapper. Simply place a file suffixed with `changelog.xml` into the WildFly deployments directory and the Liquibase subsystem will attempt to execute it.
+
+#### 3. Change log files within Liquibase subsystem configuration
 
 Change logs can be defined as part of the Liquibase subsystem configuration. When WildFly starts, it will attempt to apply change logs before any applications are deployed.
 

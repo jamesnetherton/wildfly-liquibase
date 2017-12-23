@@ -34,6 +34,7 @@ import org.jboss.arquillian.container.test.spi.client.deployment.ApplicationArch
 import org.jboss.arquillian.test.spi.TestClass;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
+import org.jboss.shrinkwrap.api.container.ClassContainer;
 import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
 
 /**
@@ -58,7 +59,12 @@ public final class LiquibaseApplicationArchiveProcessor implements ApplicationAr
         for (Field field : clazz.getDeclaredFields()) {
             ChangeLogDefinition definition = field.getAnnotation(ChangeLogDefinition.class);
             if (definition != null) {
-                String tableName = LiquibaseExtensionUtils.generateTableName(definition.name(), clazz.getName().hashCode());
+                String tableName = LiquibaseExtensionUtils.generateTableName(definition.name(),
+                    definition.datasourceRef().hashCode(),
+                    definition.fileName().hashCode(),
+                    definition.format().hashCode(),
+                    definition.name().hashCode(),
+                    clazz.getName().hashCode());
 
                 ChangeLogFormat format = ChangeLogFormat.valueOf(definition.format().toUpperCase());
 
@@ -76,7 +82,7 @@ public final class LiquibaseApplicationArchiveProcessor implements ApplicationAr
                     LiquibaseLogger.ROOT_LOGGER.info(changeLog);
                 }
 
-                String fileName = String.format("%s-%s", tableName, format.getFileName());
+                String fileName = definition.fileName().isEmpty() ? String.format("%s-%s", tableName, format.getFileName()) : definition.fileName();
                 applicationArchive.add(new StringAsset(changeLog), fileName);
             }
         }
