@@ -70,4 +70,28 @@ public class LiquibaseDmrModelTest extends LiquibaseTestSupport {
             removeLiquibaseDmrModel("dmr-model-with-no-file-extension");
         }
     }
+
+    @Test
+    public void testDmrModelWithDatasourceRefPlaceholder() throws Exception {
+        try {
+            System.setProperty("datasource.name", "java:jboss/datasources/ExampleDS");
+            executeCliScript(new File("target/test-classes/cli/changelog-add-with-datasource-ref-placeholder.cli"));
+            assertTableModified("dmr_add_name_with_datasource_ref_placeholder");
+        } finally {
+            removeLiquibaseDmrModel("dmr-model-with-datasource-ref-placeholder.xml");
+            System.clearProperty("datasource.name");
+        }
+    }
+
+    @Test
+    public void testDmrModelWithContextPlaceholder() throws Exception {
+        try {
+            System.setProperty("context.name", "context-placeholder-test");
+            executeCliScript(new File("target/test-classes/cli/changelog-add-with-context-placeholder.cli"));
+            assertTableModified("dmr_add_with_context", Arrays.asList("firstname", "id", "lastname", "state"));
+        } finally {
+            removeLiquibaseDmrModel("dmr-model-with-context-placeholder.xml");
+            System.clearProperty("context.name");
+        }
+    }
 }
