@@ -51,11 +51,12 @@ Change logs can be configured in three ways.
 You can package Liquibase change log files within your deployment. The following file extensions are supported:
 
 * .json
+* .sql
 * .xml
 * .yaml
 * .yml
 
-The Liquibase subsystem will search for change log files which match the regex `.*changelog.(json|xml|yaml|yml)$` and will attempt to apply them before the deployment is successfully installed.
+The Liquibase subsystem will search for change log files which match the regex `.*changelog.(json|sql|xml|yaml|yml)$` and will attempt to apply them before the deployment is successfully installed.
 
 In order for the Liquibase subsystem to discover your DataSource, you must add it to the WildFly datasources subsystem configuration. You must then reference the
 datasource JNDI binding in your change log file via a [change log parameter](http://www.liquibase.org/documentation/changelog_parameters.html) named `datasource-ref`.
@@ -69,6 +70,18 @@ datasource JNDI binding in your change log file via a [change log parameter](htt
 </databaseChangeLog>
 ```
 
+For [Liquibase formatted](http://www.liquibase.org/documentation/sql_format.html) SQL change log files, `datasource-ref` must be specified within an SQL comment block. For example:
+
+```sql
+--liquibase formatted sql
+
+--datasource-ref java:jboss/datasources/ExampleDS
+
+CREATE TABLE test (
+    ...
+);
+```
+
 #### 2. Standalone XML change log file deployment
 
 You can execute XML change logs without the requirement of a deployment archive wrapper. Simply place a file suffixed with `changelog.xml` into the WildFly deployments directory and the Liquibase subsystem will attempt to execute it.
@@ -77,7 +90,7 @@ You can execute XML change logs without the requirement of a deployment archive 
 
 Change logs can be defined as part of the Liquibase subsystem configuration. When WildFly starts, it will attempt to apply change logs before any applications are deployed.
 
-The change log definition body must be wraped within a `CDATA` block in order for it to be parsed correctly. Change log definitions can be defined in JSON, XML or YAML formats. You may specify multiple `<databaseChangeLog>` elements if you wish.
+The change log definition body must be wraped within a `CDATA` block in order for it to be parsed correctly. Change log definitions can be defined in JSON, SQL, XML or YAML formats. You may specify multiple `<databaseChangeLog>` elements if you wish.
 
 > When defining a change log as XML, the usual Liquibase namespace declarations are not required as these are automatically added for you.
 

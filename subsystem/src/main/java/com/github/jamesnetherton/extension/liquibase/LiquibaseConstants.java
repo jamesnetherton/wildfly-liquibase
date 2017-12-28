@@ -33,5 +33,5 @@ public interface LiquibaseConstants {
     /**
      * Liquibase change log file pattern
      */
-    String LIQUIBASE_CHANGELOG_PATTERN = ".*changelog.(json|xml|yaml|yml)$";
+    String LIQUIBASE_CHANGELOG_PATTERN = ".*changelog.(json|sql|xml|yaml|yml)$";
 }
