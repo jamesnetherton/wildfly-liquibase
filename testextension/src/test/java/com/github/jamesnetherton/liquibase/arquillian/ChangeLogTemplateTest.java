@@ -43,6 +43,11 @@ public class ChangeLogTemplateTest {
     }
 
     @Test
+    public void testParseSqlTemplate() throws ChangeLogParseException {
+        assertChangeLogParse("target/classes/changelogs/changelog.sql");
+    }
+
+    @Test
     public void testParseXmlTemplate() throws ChangeLogParseException {
         assertChangeLogParse("target/classes/changelogs/changelog.xml");
     }
