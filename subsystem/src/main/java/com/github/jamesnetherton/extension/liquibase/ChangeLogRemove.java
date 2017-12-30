@@ -19,19 +19,19 @@
  */
 package com.github.jamesnetherton.extension.liquibase;
 
-import com.github.jamesnetherton.extension.liquibase.service.ChangeLogExecutionService;
+import com.github.jamesnetherton.extension.liquibase.service.ChangeLogModelUpdateService;
+import com.github.jamesnetherton.extension.liquibase.service.ServiceHelper;
 
 import org.jboss.as.controller.AbstractRemoveStepHandler;
 import org.jboss.as.controller.OperationContext;
 import org.jboss.as.controller.OperationFailedException;
 import org.jboss.dmr.ModelNode;
-import org.jboss.msc.service.ServiceName;
 
 final class ChangeLogRemove extends AbstractRemoveStepHandler {
 
     @Override
     protected void performRuntime(OperationContext context, ModelNode operation, ModelNode model) throws OperationFailedException {
-        ServiceName serviceName = ChangeLogExecutionService.createServiceName(context.getCurrentAddressValue());
-        context.removeService(serviceName);
+        ChangeLogModelUpdateService service = ServiceHelper.getChangeLogModelUpdateService(context);
+        service.removeChangeLogModel(context, model);
     }
 }

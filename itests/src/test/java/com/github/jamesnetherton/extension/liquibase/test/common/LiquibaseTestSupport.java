@@ -66,19 +66,19 @@ public class LiquibaseTestSupport {
         Assert.assertEquals(expectedColumns, actualColumns);
     }
 
-    protected void removeLiquibaseDmrModel(String name) throws Exception {
-        executeCliCommand("/subsystem=liquibase/databaseChangeLog=" + name + "/:remove");
+    protected boolean removeLiquibaseDmrModel(String name) throws Exception {
+        return executeCliCommand("/subsystem=liquibase/databaseChangeLog=" + name + "/:remove");
     }
 
-    protected void executeCliScript(File scriptFile) throws Exception {
-        jbossCli("--file=" + scriptFile.getAbsolutePath());
+    protected boolean executeCliScript(File scriptFile) throws Exception {
+        return jbossCli("--file=" + scriptFile.getAbsolutePath());
     }
 
-    protected void executeCliCommand(String command) throws Exception {
-        jbossCli("--command=" + command);
+    protected boolean executeCliCommand(String command) throws Exception {
+        return jbossCli("--command=" + command);
     }
 
-    private void jbossCli(String command) throws Exception {
+    private boolean jbossCli(String command) throws Exception {
         String jbossHome = System.getProperty("jboss.home.dir");
         String os = System.getProperty("os.name").toLowerCase();
         String jbossCli = "jboss-cli";
@@ -95,5 +95,7 @@ public class LiquibaseTestSupport {
 
         Process process = builder.start();
         process.waitFor();
+
+        return process.exitValue() == 0;
     }
 }
