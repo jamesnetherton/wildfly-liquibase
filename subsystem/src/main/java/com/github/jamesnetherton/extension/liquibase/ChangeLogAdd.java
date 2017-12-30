@@ -20,14 +20,13 @@
 package com.github.jamesnetherton.extension.liquibase;
 
 import com.github.jamesnetherton.extension.liquibase.service.ChangeLogModelUpdateService;
+import com.github.jamesnetherton.extension.liquibase.service.ServiceHelper;
 
 import org.jboss.as.controller.AbstractAddStepHandler;
 import org.jboss.as.controller.OperationContext;
 import org.jboss.as.controller.OperationFailedException;
 import org.jboss.as.controller.registry.Resource;
 import org.jboss.dmr.ModelNode;
-import org.jboss.msc.service.ServiceController;
-import org.jboss.msc.service.ServiceName;
 
 final class ChangeLogAdd extends AbstractAddStepHandler {
 
@@ -40,14 +39,18 @@ final class ChangeLogAdd extends AbstractAddStepHandler {
 
     @Override
     protected void performRuntime(OperationContext context, ModelNode operation, ModelNode model) throws OperationFailedException {
-        ServiceName serviceName = ChangeLogModelUpdateService.createServiceName();
-        ServiceController<ChangeLogModelUpdateService> controller = (ServiceController<ChangeLogModelUpdateService>) context.getServiceRegistry(false).getService(serviceName);
-        ChangeLogModelUpdateService service = controller.getValue();
+        ChangeLogModelUpdateService service = ServiceHelper.getChangeLogModelUpdateService(context);
         service.updateChangeLogModel(context, operation, model);
     }
 
     @Override
     protected void rollbackRuntime(OperationContext context, ModelNode operation, Resource resource) {
         super.rollbackRuntime(context, operation, resource);
+        ChangeLogModelUpdateService service = ServiceHelper.getChangeLogModelUpdateService(context);
+        try {
+            service.removeChangeLogModel(context, operation);
+        } catch (OperationFailedException e) {
+            throw new IllegalStateException(e);
+        }
     }
 }

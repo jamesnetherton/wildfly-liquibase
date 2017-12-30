@@ -44,7 +44,7 @@ class LiquibaseSubsystemAdd extends AbstractBoottimeAddStepHandler {
     protected void performBoottime(OperationContext context, ModelNode operation, ModelNode model) throws OperationFailedException {
         LiquibaseLogger.ROOT_LOGGER.info("Activating Liquibase Subsystem");
 
-        ServiceName serviceName = ChangeLogModelUpdateService.createServiceName();
+        ServiceName serviceName = ChangeLogModelUpdateService.getServiceName();
         ChangeLogModelUpdateService service = new ChangeLogModelUpdateService();
 
         ServiceBuilder<ChangeLogModelUpdateService> builder = context.getServiceTarget().addService(serviceName, service);

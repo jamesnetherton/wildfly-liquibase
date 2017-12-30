@@ -106,11 +106,6 @@
                             <artifactItems>
                                 <artifactItem>
                                     <groupId>org.liquibase</groupId>
-                                    <artifactId>liquibase-cdi</artifactId>
-                                    <version>${version.org.liquibase}</version>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.liquibase</groupId>
                                     <artifactId>liquibase-core</artifactId>
                                     <version>${version.org.liquibase}</version>
                                 </artifactItem>

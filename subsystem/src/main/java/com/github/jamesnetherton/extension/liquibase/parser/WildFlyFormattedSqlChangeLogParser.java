@@ -33,9 +33,12 @@ import java.util.regex.Pattern;
 
 import com.github.jamesnetherton.extension.liquibase.ModelConstants;
 
+/**
+ * Extended {@link FormattedSqlChangeLogParser} to extract the datasource reference property from an SQL comment.
+ */
 public class WildFlyFormattedSqlChangeLogParser extends FormattedSqlChangeLogParser {
 
-    private static final Pattern datasourceRefPattern = Pattern.compile("\\-\\-[\\s]*" + ModelConstants.DATASOURCE_REF + "\\s(.*)", Pattern.CASE_INSENSITIVE);
+    private static final Pattern DATASOURCE_REF_PATTERN = Pattern.compile("\\-\\-[\\s]*" + ModelConstants.DATASOURCE_REF + "\\s(.*)", Pattern.CASE_INSENSITIVE);
 
     @Override
     public DatabaseChangeLog parse(String physicalChangeLogLocation, ChangeLogParameters changeLogParameters, ResourceAccessor resourceAccessor) throws ChangeLogParseException {
@@ -44,7 +47,7 @@ public class WildFlyFormattedSqlChangeLogParser extends FormattedSqlChangeLogPar
             reader = new BufferedReader(new UtfBomAwareReader(openChangeLogFile(physicalChangeLogLocation, resourceAccessor)));
             String line;
             while ((line = reader.readLine()) != null) {
-                Matcher matcher = datasourceRefPattern.matcher(line);
+                Matcher matcher = DATASOURCE_REF_PATTERN.matcher(line);
                 if (matcher.matches()) {
                     changeLogParameters.set(ModelConstants.DATASOURCE_REF, matcher.group(1).trim());
                     break;

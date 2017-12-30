@@ -29,6 +29,7 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
@@ -44,7 +45,8 @@ public class LiquibaseDmrModelTest extends LiquibaseTestSupport {
     @Test
     public void testDmrModel() throws Exception {
         try {
-            executeCliScript(new File("target/test-classes/cli/changelog-add.cli"));
+            boolean success = executeCliScript(new File("target/test-classes/cli/changelog-add.cli"));
+            Assert.assertTrue("Expected changelog-add.cli success but it failed", success);
             assertTableModified("dmr_add");
         } finally {
             removeLiquibaseDmrModel("dmr-model-test.xml");
@@ -54,7 +56,8 @@ public class LiquibaseDmrModelTest extends LiquibaseTestSupport {
     @Test
     public void testDmrModelWithContext() throws Exception {
         try {
-            executeCliScript(new File("target/test-classes/cli/changelog-add-with-context.cli"));
+            boolean success = executeCliScript(new File("target/test-classes/cli/changelog-add-with-context.cli"));
+            Assert.assertTrue("Expected changelog-add-with-context.cli success but it failed", success);
             assertTableModified("dmr_add_with_context", Arrays.asList("firstname", "id", "lastname", "state"));
         } finally {
             removeLiquibaseDmrModel("dmr-model-with-context-test.xml");
@@ -64,7 +67,8 @@ public class LiquibaseDmrModelTest extends LiquibaseTestSupport {
     @Test
     public void testDmrModelWithNoFileNameExtension() throws Exception {
         try {
-            executeCliScript(new File("target/test-classes/cli/changelog-add-with-no-filename-extension.cli"));
+            boolean success = executeCliScript(new File("target/test-classes/cli/changelog-add-with-no-filename-extension.cli"));
+            Assert.assertTrue("Expected changelog-add-with-no-filename-extension.cli success but it failed", success);
             assertTableModified("dmr_add_name_with_no_filename_extension");
         } finally {
             removeLiquibaseDmrModel("dmr-model-with-no-file-extension");
@@ -75,7 +79,8 @@ public class LiquibaseDmrModelTest extends LiquibaseTestSupport {
     public void testDmrModelWithDatasourceRefPlaceholder() throws Exception {
         try {
             System.setProperty("datasource.name", "java:jboss/datasources/ExampleDS");
-            executeCliScript(new File("target/test-classes/cli/changelog-add-with-datasource-ref-placeholder.cli"));
+            boolean success = executeCliScript(new File("target/test-classes/cli/changelog-add-with-datasource-ref-placeholder.cli"));
+            Assert.assertTrue("Expected changelog-add-with-datasource-ref-placeholder.cli success but it failed", success);
             assertTableModified("dmr_add_name_with_datasource_ref_placeholder");
         } finally {
             removeLiquibaseDmrModel("dmr-model-with-datasource-ref-placeholder.xml");
@@ -87,11 +92,18 @@ public class LiquibaseDmrModelTest extends LiquibaseTestSupport {
     public void testDmrModelWithContextPlaceholder() throws Exception {
         try {
             System.setProperty("context.name", "context-placeholder-test");
-            executeCliScript(new File("target/test-classes/cli/changelog-add-with-context-placeholder.cli"));
+            boolean success = executeCliScript(new File("target/test-classes/cli/changelog-add-with-context-placeholder.cli"));
+            Assert.assertTrue("Expected changelog-add-with-context-placeholder.cli success but it failed", success);
             assertTableModified("dmr_add_with_context", Arrays.asList("firstname", "id", "lastname", "state"));
         } finally {
             removeLiquibaseDmrModel("dmr-model-with-context-placeholder.xml");
             System.clearProperty("context.name");
         }
+    }
+
+    @Test
+    public void testDmrModelWithDuplicateDatasourceRef() throws Exception {
+        boolean success = executeCliScript(new File("target/test-classes/cli/changelog-add-with-duplicate-datasource-ref.cli"));
+        Assert.assertFalse("Expected changelog-add-with-duplicate-datasource-ref.cli to fail but it was successful", success);
     }
 }

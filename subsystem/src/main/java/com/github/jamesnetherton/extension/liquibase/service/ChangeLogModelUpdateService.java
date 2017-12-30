@@ -38,11 +38,14 @@ import org.jboss.msc.service.ServiceBuilder;
 import org.jboss.msc.service.ServiceController;
 import org.jboss.msc.service.ServiceName;
 import org.jboss.msc.service.ServiceTarget;
+import org.jboss.msc.service.StopContext;
 
 /**
  * Service which handles updates to the Liquibase subsystem DMR model.
  */
 public class ChangeLogModelUpdateService extends AbstractService<ChangeLogModelUpdateService> {
+
+    private final List<String> datasourceRefs = new ArrayList<>();
 
     public void updateChangeLogModel(OperationContext context, ModelNode operation, ModelNode model) throws OperationFailedException {
         updateChangeLogModel(context, operation, model, null);
@@ -54,6 +57,12 @@ public class ChangeLogModelUpdateService extends AbstractService<ChangeLogModelU
         String datasourceRef = ChangeLogResource.DATASOURCE_REF.resolveModelAttribute(context, futureState).asString();
         String contextNames = ChangeLogResource.CONTEXT_NAMES.resolveModelAttribute(context, futureState).asString();
 
+        synchronized (datasourceRefs) {
+            if (datasourceRefs.contains(datasourceRef)) {
+                throw new OperationFailedException("Multiple databaseChangeLog definitions for the same datasource-ref '" + datasourceRef + "' is not allowed");
+            }
+        }
+
         ChangeLogConfiguration configuration = ChangeLogConfiguration.builder()
             .name(changeLogName)
             .definition(changeLogDefinition)
@@ -63,7 +72,7 @@ public class ChangeLogModelUpdateService extends AbstractService<ChangeLogModelU
             .build();
 
         if (configuration.getFormat().equals(ChangeLogFormat.UNKNOWN)) {
-            throw new OperationFailedException("Unable to determine change log format. Supported formats are JSON, YAML and XML");
+            throw new OperationFailedException("Unable to determine change log format. Supported formats are JSON, SQL, YAML and XML");
         }
 
         List<ChangeLogConfiguration> configurations = new ArrayList<>();
@@ -108,15 +117,36 @@ public class ChangeLogModelUpdateService extends AbstractService<ChangeLogModelU
 
             builder.addDependency(dataSourceServiceName);
             builder.install();
+
+            synchronized (datasourceRefs) {
+                datasourceRefs.add(datasourceRef);
+            }
         }
     }
 
-    public static ServiceName createServiceName() {
+    public void removeChangeLogModel(OperationContext context, ModelNode model) throws OperationFailedException {
+        ServiceName serviceName = ChangeLogExecutionService.createServiceName(context.getCurrentAddressValue());
+        context.removeService(serviceName);
+
+        String datasourceRef = ChangeLogResource.DATASOURCE_REF.resolveModelAttribute(context, model).asString();
+        synchronized (datasourceRefs) {
+            datasourceRefs.remove(datasourceRef);
+        }
+    }
+
+    public static ServiceName getServiceName() {
         return ServiceName.JBOSS.append("liquibase", "changelog", "model", "update");
     }
 
     @Override
     public ChangeLogModelUpdateService getValue() throws IllegalStateException {
         return this;
+    }
+
+    @Override
+    public void stop(StopContext context) {
+        synchronized (datasourceRefs) {
+            datasourceRefs.clear();
+        }
     }
 }
