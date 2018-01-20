@@ -24,4 +24,6 @@ import org.slf4j.LoggerFactory;
 
 public interface LiquibaseLogger {
     Logger ROOT_LOGGER = LoggerFactory.getLogger(LiquibaseLogger.class.getPackage().getName());
+
+    String MESSAGE_DUPLICATE_DATASOURCE_REF = "Multiple change log definitions for datasource-ref '%s' are not allowed";
 }

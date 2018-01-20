@@ -19,7 +19,7 @@
  */
 package com.github.jamesnetherton.extension.liquibase;
 
-import com.github.jamesnetherton.extension.liquibase.service.ChangeLogModelUpdateService;
+import com.github.jamesnetherton.extension.liquibase.service.ChangeLogModelService;
 import com.github.jamesnetherton.extension.liquibase.service.ServiceHelper;
 
 import org.jboss.as.controller.AbstractWriteAttributeHandler;
@@ -38,20 +38,18 @@ final class ChangeLogWrite extends AbstractWriteAttributeHandler<Object> {
     @Override
     protected boolean applyUpdateToRuntime(OperationContext context, ModelNode operation, String attributeName, ModelNode resolvedValue, ModelNode currentValue,
             HandbackHolder<Object> handbackHolder) throws OperationFailedException {
-        // TODO: Fix updates
-        // updateRuntime(context, operation, resolvedValue, currentValue);
+         updateRuntime(context, operation, resolvedValue, currentValue);
         return false;
     }
 
     @Override
     protected void revertUpdateToRuntime(OperationContext context, ModelNode operation, String attributeName, ModelNode valueToRestore,
             ModelNode valueToRevert, Object handback) throws OperationFailedException {
-        // TODO: Fix updates
-        // updateRuntime(context, operation, valueToRestore, valueToRevert);
+         updateRuntime(context, operation, valueToRestore, valueToRevert);
     }
 
     private void updateRuntime(OperationContext context, ModelNode operation, ModelNode future, ModelNode current) throws OperationFailedException {
-        ChangeLogModelUpdateService service = ServiceHelper.getChangeLogModelUpdateService(context);
+        ChangeLogModelService service = ServiceHelper.getChangeLogModelUpdateService(context);
         service.updateChangeLogModel(context, operation, future, current);
     }
 }

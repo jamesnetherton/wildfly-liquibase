@@ -39,11 +39,12 @@ public class LiquibaseDmrModelTest extends LiquibaseTestSupport {
     @Deployment
     public static Archive<?> deployment() {
         return ShrinkWrap.create(JavaArchive.class, "liquibase-dmr-model-test.jar")
-            .addClass(LiquibaseTestSupport.class);
+            .addClass(LiquibaseTestSupport.class)
+            .addAsManifestResource("configs/ds/liquibase-example-ds.xml", "liquibase-example-ds.xml");
     }
 
     @Test
-    public void testDmrModel() throws Exception {
+    public void testDmrModelCreate() throws Exception {
         try {
             boolean success = executeCliScript(new File("target/test-classes/cli/changelog-add.cli"));
             Assert.assertTrue("Expected changelog-add.cli success but it failed", success);
@@ -54,7 +55,7 @@ public class LiquibaseDmrModelTest extends LiquibaseTestSupport {
     }
 
     @Test
-    public void testDmrModelWithContext() throws Exception {
+    public void testDmrModelCreateWithContext() throws Exception {
         try {
             boolean success = executeCliScript(new File("target/test-classes/cli/changelog-add-with-context.cli"));
             Assert.assertTrue("Expected changelog-add-with-context.cli success but it failed", success);
@@ -65,7 +66,7 @@ public class LiquibaseDmrModelTest extends LiquibaseTestSupport {
     }
 
     @Test
-    public void testDmrModelWithNoFileNameExtension() throws Exception {
+    public void testDmrModelCreateWithNoFileNameExtension() throws Exception {
         try {
             boolean success = executeCliScript(new File("target/test-classes/cli/changelog-add-with-no-filename-extension.cli"));
             Assert.assertTrue("Expected changelog-add-with-no-filename-extension.cli success but it failed", success);
@@ -76,7 +77,7 @@ public class LiquibaseDmrModelTest extends LiquibaseTestSupport {
     }
 
     @Test
-    public void testDmrModelWithDatasourceRefPlaceholder() throws Exception {
+    public void testDmrModelCreateWithDatasourceRefPlaceholder() throws Exception {
         try {
             System.setProperty("datasource.name", "java:jboss/datasources/ExampleDS");
             boolean success = executeCliScript(new File("target/test-classes/cli/changelog-add-with-datasource-ref-placeholder.cli"));
@@ -89,7 +90,7 @@ public class LiquibaseDmrModelTest extends LiquibaseTestSupport {
     }
 
     @Test
-    public void testDmrModelWithContextPlaceholder() throws Exception {
+    public void testDmrModelCreateWithContextPlaceholder() throws Exception {
         try {
             System.setProperty("context.name", "context-placeholder-test");
             boolean success = executeCliScript(new File("target/test-classes/cli/changelog-add-with-context-placeholder.cli"));
@@ -102,8 +103,40 @@ public class LiquibaseDmrModelTest extends LiquibaseTestSupport {
     }
 
     @Test
-    public void testDmrModelWithDuplicateDatasourceRef() throws Exception {
+    public void testDmrModelCreateWithDuplicateDatasourceRef() throws Exception {
         boolean success = executeCliScript(new File("target/test-classes/cli/changelog-add-with-duplicate-datasource-ref.cli"));
         Assert.assertFalse("Expected changelog-add-with-duplicate-datasource-ref.cli to fail but it was successful", success);
+    }
+
+    @Test
+    public void testDmrModelUpdate() throws Exception {
+        try {
+            boolean success = executeCliScript(new File("target/test-classes/cli/changelog-update.cli"));
+            Assert.assertTrue("Expected changelog-update.cli success but it failed", success);
+            assertTableModified("dmr_update");
+        } finally {
+            removeLiquibaseDmrModel("dmr-model-update-test.xml");
+        }
+    }
+
+    @Test
+    public void testDmrModelUpdateContextNames() throws Exception {
+        try {
+            boolean success = executeCliScript(new File("target/test-classes/cli/changelog-update-with-context.cli"));
+            Assert.assertTrue("Expected changelog-update-with-context.cli success but it failed", success);
+            assertTableModified("dmr_update_with_context", Arrays.asList("firstname", "id", "lastname", "state"));
+        } finally {
+            removeLiquibaseDmrModel("dmr-model-update-with-context-test.xml");
+        }
+    }
+
+    @Test
+    public void testDmrModelUpdateDatasourceRef() throws Exception {
+        try {
+            boolean success = executeCliScript(new File("target/test-classes/cli/changelog-update-with-datasource-ref.cli"));
+            Assert.assertFalse("Expected changelog-update-with-datasource-ref.cli to fail but it was successful", success);
+        } finally {
+            removeLiquibaseDmrModel("dmr-model-update-with-datasource-ref-test.xml");
+        }
     }
 }

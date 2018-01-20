@@ -31,23 +31,24 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
-public class LiquibaseMultipleConfigsTest extends LiquibaseTestSupport {
+public class LiquibaseMultipleConfigsDifferentDatasourceTest extends LiquibaseTestSupport {
 
     @ChangeLogDefinition(name = "config1")
     private String tableNameConfig1;
 
-    @ChangeLogDefinition(name = "config2")
+    @ChangeLogDefinition(name = "config2", datasourceRef = "java:jboss/datasources/LiquibaseDS")
     private String tableNameConfig2;
 
     @Deployment
     public static Archive<?> deployment() {
         return ShrinkWrap.create(JavaArchive.class, "liquibase-multi-config-test.jar")
-            .addClass(LiquibaseTestSupport.class);
+            .addClass(LiquibaseTestSupport.class)
+            .addAsManifestResource("configs/ds/liquibase-example-ds.xml", "liquibase-example-ds.xml");
     }
 
     @Test
-    public void testJarDeployment() throws Exception {
+    public void testMultipleConfigurationsWithDifferentDatasourceRef() throws Exception {
         assertTableModified(tableNameConfig1);
-        assertTableModified(tableNameConfig2);
+        assertTableModified(tableNameConfig2, DEFAULT_COLUMNS, "java:jboss/datasources/LiquibaseDS");
     }
 }

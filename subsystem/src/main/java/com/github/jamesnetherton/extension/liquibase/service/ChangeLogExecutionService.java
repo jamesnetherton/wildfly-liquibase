@@ -32,7 +32,6 @@ import java.io.InputStream;
 import java.nio.charset.Charset;
 import java.sql.SQLException;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import javax.naming.InitialContext;
@@ -46,7 +45,6 @@ import org.jboss.msc.service.AbstractService;
 import org.jboss.msc.service.ServiceName;
 import org.jboss.msc.service.StartContext;
 import org.jboss.msc.service.StartException;
-import org.jboss.msc.service.StopContext;
 
 /**
  * Service which executes a Liquibase change log based on the provided {@link ChangeLogConfiguration}.
@@ -60,22 +58,15 @@ public final class ChangeLogExecutionService extends AbstractService<ChangeLogEx
             + "http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd\">\n";
     private static final String LIQUIBASE_ELEMENT_END = "</databaseChangeLog>";
 
-    private List<ChangeLogConfiguration> configurations;
+    private final ChangeLogConfiguration configuration;
 
-    public ChangeLogExecutionService(List<ChangeLogConfiguration> configurations) {
-        this.configurations = configurations;
+    public ChangeLogExecutionService(ChangeLogConfiguration configuration) {
+        this.configuration = configuration;
     }
 
     @Override
     public void start(StartContext context) throws StartException {
-        for (ChangeLogConfiguration configuration : configurations) {
-            executeChangeLog(configuration);
-        }
-    }
-
-    @Override
-    public void stop(StopContext context) {
-        configurations.clear();
+        executeChangeLog(configuration);
     }
 
     @Override
@@ -110,10 +101,6 @@ public final class ChangeLogExecutionService extends AbstractService<ChangeLogEx
 
     public static ServiceName createServiceName(String suffix) {
         return ServiceName.JBOSS.append("liquibase", "changelog", "execution", suffix);
-    }
-
-    public void setConfigurations(List<ChangeLogConfiguration> configurations) {
-        this.configurations = configurations;
     }
 
     private final class WildFlyLiquibaseResourceAccessor implements ResourceAccessor {

@@ -21,18 +21,26 @@ package com.github.jamesnetherton.extension.liquibase.service;
  */
 
 import org.jboss.as.controller.OperationContext;
+import org.jboss.msc.service.AbstractService;
+import org.jboss.msc.service.ServiceBuilder;
 import org.jboss.msc.service.ServiceController;
 import org.jboss.msc.service.ServiceName;
+import org.jboss.msc.service.ServiceTarget;
 
 public final class ServiceHelper {
+
+    public static void installService(ServiceName serviceName, ServiceTarget serviceTarget, AbstractService<?> service) {
+        ServiceBuilder<?> builder = serviceTarget.addService(serviceName, service);
+        builder.install();
+    }
 
     public static <T> T getService(OperationContext context, ServiceName serviceName, Class<?> T) {
         ServiceController<T> controller = (ServiceController<T>) context.getServiceRegistry(false).getService(serviceName);
         return controller.getValue();
     }
 
-    public static ChangeLogModelUpdateService getChangeLogModelUpdateService(OperationContext context) {
-        ServiceName serviceName = ChangeLogModelUpdateService.getServiceName();
-        return getService(context, serviceName, ChangeLogModelUpdateService.class);
+    public static ChangeLogModelService getChangeLogModelUpdateService(OperationContext context) {
+        ServiceName serviceName = ChangeLogModelService.getServiceName();
+        return getService(context, serviceName, ChangeLogModelService.class);
     }
 }
