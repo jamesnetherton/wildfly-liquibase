@@ -35,6 +35,7 @@ import org.junit.Assert;
 
 public class LiquibaseTestSupport {
 
+    protected static final List<String> DEFAULT_COLUMNS = Arrays.asList("firstname", "id", "lastname", "state", "username");
     private static final String QUERY_TABLE_COLUMNS = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = ? ORDER BY COLUMN_NAME ASC";
 
     @ArquillianResource
@@ -45,13 +46,17 @@ public class LiquibaseTestSupport {
     }
 
     protected void assertTableModified(String tableName) throws Exception {
-        assertTableModified(tableName, Arrays.asList("firstname", "id", "lastname", "state", "username"));
+        assertTableModified(tableName, DEFAULT_COLUMNS);
     }
 
     protected void assertTableModified(String tableName, List<String> expectedColumns) throws Exception {
+        assertTableModified(tableName, expectedColumns, "java:jboss/datasources/ExampleDS");
+    }
+
+    protected void assertTableModified(String tableName, List<String> expectedColumns, String dsJndiName) throws Exception {
         List<String> actualColumns = new ArrayList<>();
 
-        DataSource dataSource = lookup("java:jboss/datasources/ExampleDS", DataSource.class);
+        DataSource dataSource = lookup(dsJndiName, DataSource.class);
         Connection connection = dataSource.getConnection();
 
         try (PreparedStatement statement = connection.prepareStatement(QUERY_TABLE_COLUMNS)) {

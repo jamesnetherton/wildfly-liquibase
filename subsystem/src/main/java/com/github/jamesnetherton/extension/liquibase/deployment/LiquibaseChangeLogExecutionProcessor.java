@@ -19,37 +19,24 @@
  */
 package com.github.jamesnetherton.extension.liquibase.deployment;
 
-import liquibase.changelog.ChangeLogParameters;
-import liquibase.changelog.DatabaseChangeLog;
-import liquibase.exception.ChangeLogParseException;
-import liquibase.parser.ChangeLogParser;
-import liquibase.resource.ClassLoaderResourceAccessor;
-import liquibase.resource.CompositeResourceAccessor;
-import liquibase.resource.FileSystemResourceAccessor;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.util.ArrayList;
 import java.util.List;
 
 import com.github.jamesnetherton.extension.liquibase.ChangeLogConfiguration;
-import com.github.jamesnetherton.extension.liquibase.ChangeLogParserFactory;
 import com.github.jamesnetherton.extension.liquibase.LiquibaseConstants;
-import com.github.jamesnetherton.extension.liquibase.ModelConstants;
 import com.github.jamesnetherton.extension.liquibase.service.ChangeLogExecutionService;
+import com.github.jamesnetherton.extension.liquibase.service.ChangeLogConfigurationRegistryService;
 
 import org.jboss.as.connector.subsystems.datasources.AbstractDataSourceService;
 import org.jboss.as.naming.deployment.ContextNames;
-import org.jboss.as.server.deployment.Attachments;
 import org.jboss.as.server.deployment.DeploymentPhaseContext;
 import org.jboss.as.server.deployment.DeploymentUnit;
 import org.jboss.as.server.deployment.DeploymentUnitProcessingException;
 import org.jboss.as.server.deployment.DeploymentUnitProcessor;
-import org.jboss.modules.Module;
 import org.jboss.msc.service.ServiceBuilder;
+import org.jboss.msc.service.ServiceController;
 import org.jboss.msc.service.ServiceName;
-import org.jboss.vfs.VirtualFile;
+import org.jboss.msc.service.ServiceRegistry;
+import static com.github.jamesnetherton.extension.liquibase.LiquibaseLogger.MESSAGE_DUPLICATE_DATASOURCE_REF;
 
 /**
  * {@link DeploymentUnitProcessor} which adds a {@link ChangeLogExecutionService} service dependency for
@@ -62,70 +49,49 @@ public class LiquibaseChangeLogExecutionProcessor implements DeploymentUnitProce
 
         DeploymentUnit deploymentUnit = phaseContext.getDeploymentUnit();
 
-        List<VirtualFile> changeLogFiles = deploymentUnit.getAttachmentList(LiquibaseConstants.LIQUIBASE_CHANGELOGS);
-        if (changeLogFiles.isEmpty()) {
-            return;
-        }
+        List<ChangeLogConfiguration> configurations = deploymentUnit.getAttachmentList(LiquibaseConstants.LIQUIBASE_CHANGELOGS);
 
-        Module module = deploymentUnit.getAttachment(Attachments.MODULE);
+        ChangeLogConfigurationRegistryService registryService = getRegistryService(phaseContext.getServiceRegistry());
 
-        List<ChangeLogConfiguration> changeLogConfigurations = new ArrayList<>();
-        try {
-            for (VirtualFile virtualFile : changeLogFiles) {
-                File file = virtualFile.getPhysicalFile();
-                String changeLogDefinition = new String(Files.readAllBytes(file.toPath()), "UTF-8");
-                String datasourceRef = parseDataSourceRef(file, deploymentUnit.getName(), module.getClassLoader());
+        for (ChangeLogConfiguration configuration : configurations) {
+            String datasourceRef = configuration.getDatasourceRef();
 
-                ChangeLogConfiguration configuration = ChangeLogConfiguration.builder()
-                    .name(file.getName())
-                    .definition(changeLogDefinition)
-                    .datasourceRef(datasourceRef)
-                    .classLoader(module.getClassLoader())
-                    .build();
-
-                changeLogConfigurations.add(configuration);
+            if (registryService.containsDatasourceRef(datasourceRef)) {
+                throw new DeploymentUnitProcessingException(String.format(MESSAGE_DUPLICATE_DATASOURCE_REF, datasourceRef));
             }
-        } catch (IOException e) {
-            throw new DeploymentUnitProcessingException(e);
-        }
 
-        ServiceName serviceName = ChangeLogExecutionService.createServiceName(deploymentUnit.getName());
-        ChangeLogExecutionService service = new ChangeLogExecutionService(changeLogConfigurations);
-        ServiceBuilder<ChangeLogExecutionService> builder = phaseContext.getServiceTarget().addService(serviceName, service);
+            ServiceName serviceName = ChangeLogExecutionService.createServiceName(datasourceRef);
+            ChangeLogExecutionService service = new ChangeLogExecutionService(configuration);
+            ServiceBuilder<ChangeLogExecutionService> builder = phaseContext.getServiceTarget().addService(serviceName, service);
 
-        for (ChangeLogConfiguration configuration : changeLogConfigurations) {
-            ContextNames.BindInfo bindInfo = ContextNames.bindInfoFor(configuration.getDatasourceRef());
+            ContextNames.BindInfo bindInfo = ContextNames.bindInfoFor(datasourceRef);
             ServiceName dataSourceServiceName = AbstractDataSourceService.getServiceName(bindInfo);
             builder.addDependency(dataSourceServiceName);
-        }
 
-        builder.install();
+            builder.install();
+
+            registryService.addConfiguration(getConfigurationKey(deploymentUnit, configuration), configuration);
+        }
     }
 
     @Override
     public void undeploy(DeploymentUnit deploymentUnit) {
+        List<ChangeLogConfiguration> configurations = deploymentUnit.getAttachmentList(LiquibaseConstants.LIQUIBASE_CHANGELOGS);
+
+        ChangeLogConfigurationRegistryService registryService = getRegistryService(deploymentUnit.getServiceRegistry());
+
+        for (ChangeLogConfiguration configuration : configurations) {
+            registryService.removeConfiguration(getConfigurationKey(deploymentUnit, configuration));
+        }
     }
 
-    private String parseDataSourceRef(File file, String runtimeName, ClassLoader classLoader) throws DeploymentUnitProcessingException {
-        ChangeLogParser parser = ChangeLogParserFactory.createParser(file.getName());
-        if (parser == null) {
-            parser = ChangeLogParserFactory.createParser(runtimeName);
-        }
+    private String getConfigurationKey(DeploymentUnit deploymentUnit, ChangeLogConfiguration configuration) {
+        return String.format("%s.%s", configuration.getName(), deploymentUnit.getName());
+    }
 
-        if (parser == null) {
-            throw new DeploymentUnitProcessingException("Unable to find a suitable change log parser for " + file.getName());
-        }
-
-        try {
-            CompositeResourceAccessor resourceAccessor = new CompositeResourceAccessor(new FileSystemResourceAccessor(), new ClassLoaderResourceAccessor(classLoader));
-            DatabaseChangeLog changeLog = parser.parse(file.getAbsolutePath(), new ChangeLogParameters(), resourceAccessor);
-            Object datasourceRef = changeLog.getChangeLogParameters().getValue(ModelConstants.DATASOURCE_REF, changeLog);
-            if (datasourceRef == null) {
-                throw new DeploymentUnitProcessingException("Change log is missing a datasource-ref property");
-            }
-            return (String) datasourceRef;
-        } catch (ChangeLogParseException e) {
-            throw new DeploymentUnitProcessingException(e);
-        }
+    private ChangeLogConfigurationRegistryService getRegistryService(ServiceRegistry serviceRegistry) {
+        ServiceController<ChangeLogConfigurationRegistryService> controller = (ServiceController<ChangeLogConfigurationRegistryService>) serviceRegistry.getRequiredService(
+                ChangeLogConfigurationRegistryService.getServiceName());
+        return controller.getValue();
     }
 }
