@@ -39,7 +39,7 @@ import org.jboss.msc.service.ServiceTarget;
 class LiquibaseSubsystemAdd extends AbstractBoottimeAddStepHandler {
 
     private static final int DEPENDENCIES_LIQUIBASE = Phase.DEPENDENCIES_SINGLETON_DEPLOYMENT + 0x01;
-    private static final int INSTALL_LIQUIBASE_CHANGE_LOG = Phase.INSTALL_BUNDLE_ACTIVATE + 0x01;
+    private static final int INSTALL_LIQUIBASE_CHANGE_LOG = Phase.INSTALL_MDB_DELIVERY_DEPENDENCIES + 0x01;
     private static final int INSTALL_LIQUIBASE_MIGRATION_EXECUTION = INSTALL_LIQUIBASE_CHANGE_LOG + 0x01;
 
     @Override

@@ -128,7 +128,7 @@ final class LiquibaseSubsystemParser implements Namespace10, XMLStreamConstants,
         propNode.get(ModelConstants.VALUE).set(changeLogDefinition);
 
         if (contextNames != null) {
-            ModelNode contextNamesNode = propNode.get(ModelConstants.CONTEXT_NAMES).set(contextNames);
+            propNode.get(ModelConstants.CONTEXT_NAMES).set(contextNames);
         }
 
         operations.add(propNode);
