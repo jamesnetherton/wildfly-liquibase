@@ -23,6 +23,7 @@ import liquibase.Contexts;
 import liquibase.LabelExpression;
 import liquibase.Liquibase;
 import liquibase.database.jvm.JdbcConnection;
+import liquibase.exception.DatabaseException;
 import liquibase.exception.LiquibaseException;
 import liquibase.resource.ResourceAccessor;
 
@@ -40,6 +41,7 @@ import javax.sql.DataSource;
 
 import com.github.jamesnetherton.extension.liquibase.ChangeLogConfiguration;
 import com.github.jamesnetherton.extension.liquibase.ChangeLogFormat;
+import com.github.jamesnetherton.extension.liquibase.LiquibaseLogger;
 
 import org.jboss.msc.service.AbstractService;
 import org.jboss.msc.service.ServiceName;
@@ -75,27 +77,33 @@ public final class ChangeLogExecutionService extends AbstractService<ChangeLogEx
     }
 
     public void executeChangeLog(ChangeLogConfiguration configuration) {
+        JdbcConnection connection = null;
+
         try {
             ResourceAccessor resourceAccessor = new WildFlyLiquibaseResourceAccessor(configuration);
 
             InitialContext initialContext = new InitialContext();
             DataSource datasource = (DataSource) initialContext.lookup(configuration.getDatasourceRef());
-            JdbcConnection connection = new JdbcConnection(datasource.getConnection());
+            connection = new JdbcConnection(datasource.getConnection());
 
-            try {
-                Liquibase liquibase = new Liquibase(configuration.getFileName(), resourceAccessor, connection);
+            Liquibase liquibase = new Liquibase(configuration.getFileName(), resourceAccessor, connection);
 
-                String contextNames = configuration.getContextNames();
-                if (contextNames != null && !contextNames.equals("undefined")) {
-                    liquibase.update(new Contexts(contextNames), new LabelExpression());
-                } else {
-                    liquibase.update(new Contexts(), new LabelExpression());
-                }
-            } finally {
-                connection.close();
+            String contextNames = configuration.getContextNames();
+            if (contextNames != null && !contextNames.equals("undefined")) {
+                liquibase.update(new Contexts(contextNames), new LabelExpression());
+            } else {
+                liquibase.update(new Contexts(), new LabelExpression());
             }
-        } catch (LiquibaseException | NamingException | SQLException e) {
+        } catch (NamingException | LiquibaseException | SQLException e) {
             throw new IllegalStateException(e);
+        } finally {
+            if (connection != null) {
+                try {
+                    connection.close();
+                } catch (DatabaseException e) {
+                    LiquibaseLogger.ROOT_LOGGER.warn("Failed to close database connection", e);
+                }
+            }
         }
     }
 
