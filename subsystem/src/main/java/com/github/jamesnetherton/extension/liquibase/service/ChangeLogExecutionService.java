@@ -89,7 +89,7 @@ public final class ChangeLogExecutionService extends AbstractService<ChangeLogEx
             Liquibase liquibase = new Liquibase(configuration.getFileName(), resourceAccessor, connection);
 
             String contextNames = configuration.getContextNames();
-            if (contextNames != null && !contextNames.equals("undefined")) {
+            if (contextNames != null) {
                 liquibase.update(new Contexts(contextNames), new LabelExpression());
             } else {
                 liquibase.update(new Contexts(), new LabelExpression());
