@@ -19,6 +19,9 @@
  */
 package com.github.jamesnetherton.extension.liquibase;
 
+import liquibase.servicelocator.PackageScanClassResolver;
+import liquibase.servicelocator.ServiceLocator;
+
 import com.github.jamesnetherton.extension.liquibase.deployment.LiquibaseChangeLogExecutionProcessor;
 import com.github.jamesnetherton.extension.liquibase.deployment.LiquibaseChangeLogParseProcessor;
 import com.github.jamesnetherton.extension.liquibase.deployment.LiquibaseDependenciesProcessor;
@@ -63,5 +66,17 @@ class LiquibaseSubsystemAdd extends AbstractBoottimeAddStepHandler {
                 processorTarget.addDeploymentProcessor(LiquibaseExtension.SUBSYSTEM_NAME, Phase.INSTALL, INSTALL_LIQUIBASE_MIGRATION_EXECUTION, new LiquibaseChangeLogExecutionProcessor());
             }
         }, OperationContext.Stage.RUNTIME);
+
+        // Avoid using TCCL for class loading
+        ServiceLocator.setInstance(new WildFlyLiquibaseServiceLocator());
+    }
+
+    static class WildFlyLiquibaseServiceLocator extends ServiceLocator {
+        @Override
+        protected PackageScanClassResolver defaultClassLoader() {
+            PackageScanClassResolver classResolver = super.defaultClassLoader();
+            classResolver.addClassLoader(ServiceLocator.class.getClassLoader());
+            return classResolver;
+        }
     }
 }
