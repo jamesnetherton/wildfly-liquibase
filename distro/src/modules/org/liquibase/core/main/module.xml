@@ -6,6 +6,7 @@
     <dependencies>
         <module name="javax.api"/>
         <module name="javax.sql.api"/>
+        <module name="org.slf4j"/>
         <module name="org.yaml.snakeyaml"/>
     </dependencies>
 </module>
