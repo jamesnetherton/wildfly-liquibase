@@ -15,7 +15,7 @@ import javax.sql.DataSource;
 @ApplicationScoped
 public class LiquibaseConfigurationProducer {
 
-    @Resource(name = "java:jboss/datasources/ExampleDS")
+    @Resource(lookup = "java:jboss/datasources/ExampleDS")
     private DataSource dataSource;
 
     @Produces
