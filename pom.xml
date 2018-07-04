@@ -18,7 +18,7 @@
         <!-- Versions -->
         <version.junit>4.12</version.junit>
         <version.org.jboss.arquillian>1.1.14.Final</version.org.jboss.arquillian>
-        <version.org.liquibase>3.6.1</version.org.liquibase>
+        <version.org.liquibase>3.6.2</version.org.liquibase>
         <version.org.slf4j>1.7.25</version.org.slf4j>
         <version.org.wildfly>13.0.0.Final</version.org.wildfly>
         <version.org.wildfly.arquillian>2.1.0.Final</version.org.wildfly.arquillian>
