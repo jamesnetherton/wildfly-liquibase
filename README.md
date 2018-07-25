@@ -12,8 +12,8 @@ Download one of the release distribution zip files and unpack it inside of your 
 
 ```
 cd $JBOSS_HOME
-wget https://github.com/jamesnetherton/wildfly-liquibase/releases/download/0.1.0/wildfly-liquibase-distro-0.1.0.zip 
-unzip wildfly-liquibase-0.1.0.zip
+wget https://github.com/jamesnetherton/wildfly-liquibase/releases/download/0.3.0/wildfly-liquibase-distro-0.3.0.zip
+unzip wildfly-liquibase-distro-0.3.0.zip
 ```
 
 Check the release notes to ensure that the distribution is compatible with your WildFly version.
