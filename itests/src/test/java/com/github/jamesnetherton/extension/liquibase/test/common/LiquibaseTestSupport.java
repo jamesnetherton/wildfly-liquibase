@@ -37,6 +37,7 @@ public class LiquibaseTestSupport {
 
     protected static final List<String> DEFAULT_COLUMNS = Arrays.asList("firstname", "id", "lastname", "state", "username");
     private static final String QUERY_TABLE_COLUMNS = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = ? ORDER BY COLUMN_NAME ASC";
+    private static final String DEFAULT_CLI_SCRIPT_TIMEOUT = "60000";
 
     @ArquillianResource
     private InitialContext context;
@@ -96,7 +97,7 @@ public class LiquibaseTestSupport {
 
         ProcessBuilder builder = new ProcessBuilder();
         builder.inheritIO();
-        builder.command(jbossHome + "/bin/" + jbossCli, "-c", command);
+        builder.command(jbossHome + "/bin/" + jbossCli, "-c", command, "--timeout=" + DEFAULT_CLI_SCRIPT_TIMEOUT);
 
         Process process = builder.start();
         process.waitFor();
