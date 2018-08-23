@@ -97,6 +97,7 @@ public class LiquibaseTestSupport {
 
         ProcessBuilder builder = new ProcessBuilder();
         builder.inheritIO();
+        builder.environment().put("NOPAUSE", "Y");
         builder.command(jbossHome + "/bin/" + jbossCli, "-c", command, "--timeout=" + DEFAULT_CLI_SCRIPT_TIMEOUT);
 
         Process process = builder.start();
