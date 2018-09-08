@@ -8,12 +8,12 @@
 
 ## Installation
 
-Download one of the release distribution zip files and unpack it inside of your WildFly installation directory.
+Download one of the [release](https://github.com/jamesnetherton/wildfly-liquibase/releases) distribution zip files and unpack it inside of your WildFly installation directory.
 
 ```
 cd $JBOSS_HOME
-wget https://github.com/jamesnetherton/wildfly-liquibase/releases/download/0.3.0/wildfly-liquibase-distro-0.3.0.zip
-unzip wildfly-liquibase-distro-0.3.0.zip
+wget https://github.com/jamesnetherton/wildfly-liquibase/releases/download/0.4.0/wildfly-liquibase-distro-0.4.0.zip
+unzip wildfly-liquibase-distro-0.4.0.zip
 ```
 
 Check the release notes to ensure that the distribution is compatible with your WildFly version.
@@ -126,6 +126,10 @@ The change log definition body must be wraped within a `CDATA` block in order fo
 |context-names | No | A comma separated list of Liquibase contexts to run in
 |datasource-ref | Yes | A reference to a DataSource JNDI binding configured in the WildFly datasources susbsystem
 |name | Yes | Unique identifier for the change log which is ideally a file name. You should include a file extension to help the Liquibase subsystem determine what type of content it is handling
+
+### CDI Support
+
+If the Liquibase subsystem detects that a deployment is CDI enabled, it will automatically  add a dependency on [Liquibase CDI](http://www.liquibase.org/documentation/cdi.html) for you. This provides the capability to load and execute change logs via CDI annotations.
 
 ## Examples
 
