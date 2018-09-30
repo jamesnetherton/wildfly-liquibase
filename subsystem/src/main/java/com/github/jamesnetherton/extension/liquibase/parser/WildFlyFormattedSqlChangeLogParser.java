@@ -42,9 +42,7 @@ public class WildFlyFormattedSqlChangeLogParser extends FormattedSqlChangeLogPar
 
     @Override
     public DatabaseChangeLog parse(String physicalChangeLogLocation, ChangeLogParameters changeLogParameters, ResourceAccessor resourceAccessor) throws ChangeLogParseException {
-        BufferedReader reader = null;
-        try {
-            reader = new BufferedReader(new UtfBomAwareReader(openChangeLogFile(physicalChangeLogLocation, resourceAccessor)));
+        try (BufferedReader reader = new BufferedReader(new UtfBomAwareReader(openChangeLogFile(physicalChangeLogLocation, resourceAccessor)))){
             String line;
             while ((line = reader.readLine()) != null) {
                 Matcher matcher = DATASOURCE_REF_PATTERN.matcher(line);
@@ -56,12 +54,6 @@ public class WildFlyFormattedSqlChangeLogParser extends FormattedSqlChangeLogPar
             return super.parse(physicalChangeLogLocation, changeLogParameters, resourceAccessor);
         } catch (IOException e) {
             throw new ChangeLogParseException(e);
-        } finally {
-            if (reader != null) {
-                try {
-                    reader.close();
-                } catch (IOException ignore) { }
-            }
         }
     }
 }

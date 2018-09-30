@@ -20,11 +20,6 @@
 package com.github.jamesnetherton.extension.liquibase;
 
 import liquibase.parser.ChangeLogParser;
-import liquibase.parser.core.json.JsonChangeLogParser;
-import liquibase.parser.core.xml.XMLChangeLogSAXParser;
-import liquibase.parser.core.yaml.YamlChangeLogParser;
-
-import com.github.jamesnetherton.extension.liquibase.parser.WildFlyFormattedSqlChangeLogParser;
 
 public final class ChangeLogParserFactory {
 
@@ -32,16 +27,6 @@ public final class ChangeLogParserFactory {
     }
 
     public static ChangeLogParser createParser(String changeLogFileName) {
-        if (changeLogFileName.endsWith(".json")) {
-            return new JsonChangeLogParser();
-        } else if (changeLogFileName.endsWith(".sql")) {
-          return new WildFlyFormattedSqlChangeLogParser();
-        } else if(changeLogFileName.endsWith(".xml")) {
-            return new XMLChangeLogSAXParser();
-        } else if(changeLogFileName.endsWith(".yaml") || changeLogFileName.endsWith(".yml")) {
-            return new YamlChangeLogParser();
-        } else {
-            return null;
-        }
+        return ChangeLogFormat.fromFileName(changeLogFileName).getParser();
     }
 }

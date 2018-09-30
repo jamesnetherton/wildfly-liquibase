@@ -29,6 +29,7 @@ import liquibase.resource.FileSystemResourceAccessor;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +40,8 @@ import com.github.jamesnetherton.extension.liquibase.LiquibaseConstants;
 import com.github.jamesnetherton.extension.liquibase.LiquibaseLogger;
 import com.github.jamesnetherton.extension.liquibase.ModelConstants;
 
+import org.jboss.as.ee.structure.DeploymentType;
+import org.jboss.as.ee.structure.DeploymentTypeMarker;
 import org.jboss.as.server.deployment.Attachments;
 import org.jboss.as.server.deployment.DeploymentPhaseContext;
 import org.jboss.as.server.deployment.DeploymentUnit;
@@ -58,12 +61,11 @@ public class LiquibaseChangeLogParseProcessor implements DeploymentUnitProcessor
     public void deploy(DeploymentPhaseContext phaseContext) throws DeploymentUnitProcessingException {
 
         DeploymentUnit deploymentUnit = phaseContext.getDeploymentUnit();
-        if (deploymentUnit.getName().endsWith(".ear")) {
+        if (DeploymentTypeMarker.isType(DeploymentType.EAR, deploymentUnit)) {
             return;
         }
 
         Module module = deploymentUnit.getAttachment(Attachments.MODULE);
-
         List<VirtualFile> changeLogFiles = new ArrayList<>();
 
         try {
@@ -88,7 +90,7 @@ public class LiquibaseChangeLogParseProcessor implements DeploymentUnitProcessor
 
             for (VirtualFile virtualFile : changeLogFiles) {
                 File file = virtualFile.getPhysicalFile();
-                String changeLogDefinition = new String(Files.readAllBytes(file.toPath()), "UTF-8");
+                String changeLogDefinition = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
                 String datasourceRef = parseDataSourceRef(file, deploymentUnit.getName(), module.getClassLoader());
 
                 ChangeLogConfiguration configuration = ChangeLogConfiguration.builder()

@@ -19,6 +19,13 @@
  */
 package com.github.jamesnetherton.extension.liquibase;
 
+import liquibase.parser.ChangeLogParser;
+import liquibase.parser.core.json.JsonChangeLogParser;
+import liquibase.parser.core.xml.XMLChangeLogSAXParser;
+import liquibase.parser.core.yaml.YamlChangeLogParser;
+
+import com.github.jamesnetherton.extension.liquibase.parser.WildFlyFormattedSqlChangeLogParser;
+
 public enum ChangeLogFormat {
     JSON(".json"),
     SQL(".sql"),
@@ -35,6 +42,20 @@ public enum ChangeLogFormat {
 
     public String getExtension() {
         return this.extension;
+    }
+
+    public ChangeLogParser getParser() {
+        if (this.equals(JSON)) {
+            return new JsonChangeLogParser();
+        } else if (this.equals(SQL)) {
+            return new WildFlyFormattedSqlChangeLogParser();
+        } else if(this.equals(XML)) {
+            return new XMLChangeLogSAXParser();
+        } else if(this.equals(YAML) || this.equals(YML)) {
+            return new YamlChangeLogParser();
+        } else {
+            return null;
+        }
     }
 
     public String getFileName() {

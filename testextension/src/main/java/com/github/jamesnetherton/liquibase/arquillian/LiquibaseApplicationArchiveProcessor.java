@@ -94,18 +94,12 @@ public final class LiquibaseApplicationArchiveProcessor implements ApplicationAr
 
         StringBuilder builder = new StringBuilder();
         String line;
-        try {
-            BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8));
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))){
             while ((line = reader.readLine()) != null) {
                 builder.append(line).append(System.lineSeparator());
             }
         } catch (IOException e) {
             throw new RuntimeException("Error reading InputStream " + in);
-        } finally {
-            try {
-                in.close();
-            } catch (IOException e) {
-            }
         }
         return builder.toString();
     }

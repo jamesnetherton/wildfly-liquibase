@@ -30,7 +30,7 @@ import liquibase.resource.ResourceAccessor;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.charset.Charset;
+import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
 import java.util.HashSet;
 import java.util.Set;
@@ -142,7 +142,7 @@ public final class ChangeLogExecutionService extends AbstractService<ChangeLogEx
                         definition += LIQUIBASE_ELEMENT_END;
                     }
                 }
-                resources.add(new ByteArrayInputStream(definition.getBytes(Charset.forName("UTF-8"))));
+                resources.add(new ByteArrayInputStream(definition.getBytes(StandardCharsets.UTF_8)));
             }
 
             return resources;

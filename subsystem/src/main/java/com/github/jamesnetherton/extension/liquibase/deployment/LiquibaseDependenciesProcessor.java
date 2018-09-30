@@ -40,6 +40,10 @@ import org.jboss.modules.ModuleIdentifier;
  */
 public class LiquibaseDependenciesProcessor implements DeploymentUnitProcessor{
 
+    private static final String MODULE_LIQUIBASE_CORE = "org.liquibase.core";
+    private static final String MODULE_LIQUIBASE_CDI = "org.liquibase.cdi";
+    private static final String LIQUIBASE_TYPE = "liquibase.integration.cdi.annotations.LiquibaseType";
+
     @Override
     public void deploy(DeploymentPhaseContext phaseContext) throws DeploymentUnitProcessingException {
 
@@ -48,14 +52,14 @@ public class LiquibaseDependenciesProcessor implements DeploymentUnitProcessor{
         ServiceModuleLoader moduleLoader = deploymentUnit.getAttachment(Attachments.SERVICE_MODULE_LOADER);
         ModuleSpecification moduleSpec = deploymentUnit.getAttachment(Attachments.MODULE_SPECIFICATION);
 
-        ModuleIdentifier liquibaseCore = ModuleIdentifier.fromString("org.liquibase.core");
+        ModuleIdentifier liquibaseCore = ModuleIdentifier.fromString(MODULE_LIQUIBASE_CORE);
         moduleSpec.addUserDependency(new ModuleDependency(moduleLoader, liquibaseCore, false, true, true, true));
 
         CompositeIndex index = deploymentUnit.getAttachment(Attachments.COMPOSITE_ANNOTATION_INDEX);
-        List<AnnotationInstance> annotations = index.getAnnotations(DotName.createSimple("liquibase.integration.cdi.annotations.LiquibaseType"));
+        List<AnnotationInstance> annotations = index.getAnnotations(DotName.createSimple(LIQUIBASE_TYPE));
 
         if (WeldDeploymentMarker.isPartOfWeldDeployment(deploymentUnit) && !annotations.isEmpty()) {
-            ModuleIdentifier liquibaseCdi = ModuleIdentifier.fromString("org.liquibase.cdi");
+            ModuleIdentifier liquibaseCdi = ModuleIdentifier.fromString(MODULE_LIQUIBASE_CDI);
             moduleSpec.addUserDependency(new ModuleDependency(moduleLoader, liquibaseCdi, false, true, true, true));
         }
     }
