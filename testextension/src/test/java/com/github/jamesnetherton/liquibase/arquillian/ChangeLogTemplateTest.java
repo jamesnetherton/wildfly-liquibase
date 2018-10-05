@@ -23,11 +23,11 @@ import liquibase.changelog.ChangeLogParameters;
 import liquibase.changelog.DatabaseChangeLog;
 import liquibase.exception.ChangeLogParseException;
 import liquibase.parser.ChangeLogParser;
-import liquibase.resource.FileSystemResourceAccessor;
 
 import java.io.File;
 
 import com.github.jamesnetherton.extension.liquibase.ChangeLogParserFactory;
+import com.github.jamesnetherton.extension.liquibase.resource.WildFlyLiquibaseFileSystemResourceAccessor;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -65,7 +65,7 @@ public class ChangeLogTemplateTest {
             throw new ChangeLogParseException("Failed to find a suitable parser for " + file.getName());
         }
 
-        DatabaseChangeLog changeLog = parser.parse(file.getAbsolutePath(), new ChangeLogParameters(), new FileSystemResourceAccessor());
+        DatabaseChangeLog changeLog = parser.parse(file.getAbsolutePath(), new ChangeLogParameters(), new WildFlyLiquibaseFileSystemResourceAccessor());
         Assert.assertNotNull(changeLog);
     }
 }
