@@ -28,12 +28,12 @@
         <version.compiler.plugin>3.8.0</version.compiler.plugin>
         <version.dependency.plugin>3.1.1</version.dependency.plugin>
         <version.gpg.plugin>1.6</version.gpg.plugin>
-        <version.license.plugin>1.13</version.license.plugin>
+        <version.license.plugin>1.16</version.license.plugin>
         <version.javadoc.plugin>3.0.1</version.javadoc.plugin>
         <version.release.plugin>2.5.3</version.release.plugin>
         <version.resources.plugin>3.1.0</version.resources.plugin>
         <version.source.plugin>3.0.1</version.source.plugin>
-        <version.surefire.plugin>2.22.0</version.surefire.plugin>
+        <version.surefire.plugin>3.0.0-M1</version.surefire.plugin>
     </properties>
 
     <scm>
