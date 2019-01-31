@@ -20,7 +20,7 @@
         <version.org.jboss.arquillian>1.1.14.Final</version.org.jboss.arquillian>
         <version.org.liquibase>3.6.2</version.org.liquibase>
         <version.org.slf4j>1.7.25</version.org.slf4j>
-        <version.org.wildfly>14.0.1.Final</version.org.wildfly>
+        <version.org.wildfly>15.0.1.Final</version.org.wildfly>
         <version.org.wildfly.arquillian>2.1.0.Final</version.org.wildfly.arquillian>
 
         <!-- Plugin versions -->
