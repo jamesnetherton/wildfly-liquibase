@@ -13,6 +13,7 @@
 
     <properties>
         <jboss.home>${project.build.directory}/wildfly-${version.org.wildfly}</jboss.home>
+        <javaVmExtraArguments></javaVmExtraArguments>
     </properties>
 
     <dependencies>
@@ -129,5 +130,14 @@
             </plugin>
         </plugins>
     </build>
-
+    <profiles>
+        <profile>
+            <activation>
+                <jdk>[9,)</jdk>
+            </activation>
+            <properties>
+                <javaVmExtraArguments>--add-modules=java.se</javaVmExtraArguments>
+            </properties>
+        </profile>
+    </profiles>
 </project>
