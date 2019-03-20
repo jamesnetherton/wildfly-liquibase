@@ -1,0 +1,24 @@
+        <subsystem xmlns="urn:com.github.jamesnetherton.liquibase:1.0">
+            <!-- Add your databaseChangeLog definitions here
+            <databaseChangeLog name="changelog.xml" datasource-ref="java:jboss/datasources/ExampleDS">
+                <![CDATA[
+                    <preConditions>
+                        <runningAs username="SA"/>
+                    </preConditions>
+
+                    <changeSet id="1" author="wildfly">
+                        <createTable tableName="person">
+                            <column name="id" type="int" autoIncrement="true">
+                                <constraints primaryKey="true" nullable="false"/>
+                            </column>
+                            <column name="firstname" type="varchar(50)"/>
+                            <column name="lastname" type="varchar(50)">
+                                <constraints nullable="false"/>
+                            </column>
+                            <column name="state" type="char(2)"/>
+                        </createTable>
+                    </changeSet>
+                ]]>
+            </databaseChangeLog>
+            -->
+        </subsystem>

@@ -10,10 +10,9 @@
     </parent>
 
     <artifactId>wildfly-liquibase-distro</artifactId>
-    <packaging>pom</packaging>
 
     <properties>
-        <config.directory>${project.basedir}/src/configuration</config.directory>
+        <config.directory>${project.build.directory}/configuration</config.directory>
         <modules.directory>${project.build.directory}/modules</modules.directory>
     </properties>
 
@@ -22,6 +21,10 @@
             <groupId>com.github.jamesnetherton</groupId>
             <artifactId>wildfly-liquibase-subsystem</artifactId>
             <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.jdom</groupId>
+            <artifactId>jdom</artifactId>
         </dependency>
         <dependency>
             <groupId>org.liquibase</groupId>
@@ -62,6 +65,24 @@
                 <artifactId>maven-dependency-plugin</artifactId>
                 <executions>
                     <execution>
+                        <id>unpack-wildfly-configuration</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>org.wildfly</groupId>
+                                    <artifactId>wildfly-dist</artifactId>
+                                    <type>tar.gz</type>
+                                    <includes>**/standalone/configuration/*.xml</includes>
+                                </artifactItem>
+                            </artifactItems>
+                            <outputDirectory>${project.build.directory}</outputDirectory>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>copy-subsystem-dependencies</id>
                         <phase>package</phase>
                         <goals>
@@ -73,43 +94,41 @@
                                     <groupId>com.github.jamesnetherton</groupId>
                                     <artifactId>wildfly-liquibase-subsystem</artifactId>
                                     <version>${project.version}</version>
+                                    <outputDirectory>${modules.directory}/com/github/jamesnetherton/extension/liquibase/main</outputDirectory>
                                 </artifactItem>
-                            </artifactItems>
-                            <outputDirectory>${modules.directory}/com/github/jamesnetherton/extension/liquibase/main</outputDirectory>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>copy-liquibase-cdi</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
                                 <artifactItem>
                                     <groupId>org.liquibase</groupId>
                                     <artifactId>liquibase-cdi</artifactId>
                                     <version>${version.org.liquibase}</version>
+                                    <outputDirectory>${modules.directory}/org/liquibase/cdi/main</outputDirectory>
                                 </artifactItem>
-                            </artifactItems>
-                            <outputDirectory>${modules.directory}/org/liquibase/cdi/main</outputDirectory>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>copy-liquibase-core</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
                                 <artifactItem>
                                     <groupId>org.liquibase</groupId>
                                     <artifactId>liquibase-core</artifactId>
                                     <version>${version.org.liquibase}</version>
+                                    <outputDirectory>${modules.directory}/org/liquibase/core/main</outputDirectory>
                                 </artifactItem>
                             </artifactItems>
-                            <outputDirectory>${modules.directory}/org/liquibase/core/main</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>apply-liquibase-config</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>com.github.jamesnetherton.extension.liquibase.config.WildFlyLiquibaseConfig</mainClass>
+                            <arguments>
+                                <argument>${project.build.directory}/wildfly-${version.org.wildfly}/standalone/configuration</argument>
+                                <argument>${config.directory}</argument>
+                            </arguments>
                         </configuration>
                     </execution>
                 </executions>

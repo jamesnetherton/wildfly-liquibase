@@ -27,6 +27,7 @@
         <version.assembly.plugin>3.1.0</version.assembly.plugin>
         <version.compiler.plugin>3.8.0</version.compiler.plugin>
         <version.dependency.plugin>3.1.1</version.dependency.plugin>
+        <version.exec.plugin>1.6.0</version.exec.plugin>
         <version.gpg.plugin>1.6</version.gpg.plugin>
         <version.license.plugin>1.16</version.license.plugin>
         <version.javadoc.plugin>3.0.1</version.javadoc.plugin>
@@ -184,6 +185,11 @@
                 </plugin>
                 <plugin>
                     <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>exec-maven-plugin</artifactId>
+                    <version>${version.exec.plugin}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
                     <artifactId>license-maven-plugin</artifactId>
                     <version>${version.license.plugin}</version>
                     <configuration>
@@ -196,7 +202,7 @@
                         </roots>
                         <excludes>
                             <exclude>**/changelogs/*</exclude>
-                            <excludes>**/configuration/standalone-liquibase.xml</excludes>
+                            <excludes>**/config/*.xml</excludes>
                             <excludes>**/modules/**/module.xml</excludes>
                         </excludes>
                     </configuration>
