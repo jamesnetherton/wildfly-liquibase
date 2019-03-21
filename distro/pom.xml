@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.github.jamesnetherton</groupId>
         <artifactId>wildfly-liquibase</artifactId>
-        <version>0.6.0-SNAPSHOT</version>
+        <version>0.6.0</version>
     </parent>
 
     <artifactId>wildfly-liquibase-distro</artifactId>
