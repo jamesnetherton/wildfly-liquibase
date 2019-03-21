@@ -25,7 +25,7 @@ import java.net.URISyntaxException;
 import java.net.URL;
 
 /**
- * Hack around {@link FileSystemResourceAccessor} not being compatible with Java versions >= 9
+ * Hack around {@link FileSystemResourceAccessor} not being compatible with Java 9 or later
  *
  * https://liquibase.jira.com/browse/CORE-3262
  */
