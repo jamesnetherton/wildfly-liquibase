@@ -134,3 +134,17 @@ If the Liquibase subsystem detects that a deployment is CDI enabled, it will aut
 ## Examples
 
 Take a look at the [examples](https://github.com/jamesnetherton/wildfly-liquibase/tree/master/examples) to see some basic use cases.
+
+## Docker Image
+
+To run wildfly-liquibase in a Docker container run:
+
+```
+docker run -ti --rm -p 8080:8080 -p 9990:9990 jamesnetherton/wildfly-liquibase:latest
+```
+
+By default this runs the server in standalone mode with the standalone-liquibase.xml configuration. To override this, simply specify a custom command line:
+
+```
+docker run -ti --rm jamesnetherton/wildfly-liquibase:latest /opt/jboss/wildfly/bin/standalone.sh -c standalone-full-liquibase.xml
+```
