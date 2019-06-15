@@ -18,9 +18,10 @@
         <!-- Versions -->
         <version.junit>4.12</version.junit>
         <version.org.jboss.arquillian>1.1.14.Final</version.org.jboss.arquillian>
+        <version.org.jdom>1.1.3</version.org.jdom>
         <version.org.liquibase>3.6.3</version.org.liquibase>
         <version.org.slf4j>1.7.25</version.org.slf4j>
-        <version.org.wildfly>16.0.0.Final</version.org.wildfly>
+        <version.org.wildfly>17.0.0.Final</version.org.wildfly>
         <version.org.wildfly.arquillian>2.1.0.Final</version.org.wildfly.arquillian>
 
         <!-- Plugin versions -->
@@ -94,6 +95,13 @@
                 <version>${version.org.jboss.arquillian}</version>
                 <type>pom</type>
                 <scope>import</scope>
+            </dependency>
+
+            <!-- JDom -->
+            <dependency>
+                <groupId>org.jdom</groupId>
+                <artifactId>jdom</artifactId>
+                <version>${version.org.jdom}</version>
             </dependency>
 
             <!-- Junit -->
