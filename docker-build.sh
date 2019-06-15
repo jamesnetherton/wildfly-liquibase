@@ -1,5 +1,13 @@
 #!/bin/bash
 
+POM_WF_VERSION=$(grep -oP '(?<=<version.org.wildfly>).*?(?=</version.org.wildfly>)' pom.xml)
+DOCKERFILE_WF_VERSION=$(grep FROM Dockerfile | cut -f2 -d:)
+
+if [[ "${POM_WF_VERSION}" != "${DOCKERFILE_WF_VERSION}" ]]; then
+  echo "Dockerfile WildFly base image tag '${DOCKERFILE_WF_VERSION}' does not match pom.xml WildFly version '${POM_WF_VERSION}'."
+  exit 1  
+fi
+
 if [[ "${TRAVIS_JDK_VERSION}" == "openjdk11" ]]; then
 
   if [[ ! -d ${TRAVIS_BUILD_DIR}/distro/target ]];
