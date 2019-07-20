@@ -30,6 +30,8 @@ public final class LiquibaseAuxiliaryArchiveAppender implements AuxiliaryArchive
     @Override
     public Archive<?> createAuxiliaryArchive() {
         return ShrinkWrap.create(JavaArchive.class, "liquibase-extension.jar")
+            // Add test support class
+            .addClass(LiquibaseTestSupport.class)
             // Add extension classes
             .addPackage(LiquibaseLoadableExtension.class.getPackage())
             // Add loadable extension

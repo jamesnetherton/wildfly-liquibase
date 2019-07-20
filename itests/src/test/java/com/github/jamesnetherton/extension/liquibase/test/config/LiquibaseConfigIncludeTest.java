@@ -19,7 +19,7 @@
  */
 package com.github.jamesnetherton.extension.liquibase.test.config;
 
-import com.github.jamesnetherton.extension.liquibase.test.common.LiquibaseTestSupport;
+import com.github.jamesnetherton.liquibase.arquillian.LiquibaseTestSupport;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -35,7 +35,6 @@ public class LiquibaseConfigIncludeTest extends LiquibaseTestSupport {
     @Deployment
     public static Archive<?> deployment() {
         return ShrinkWrap.create(JavaArchive.class, "liquibase-config-include-test.jar")
-            .addClass(LiquibaseTestSupport.class)
             .addAsResource("configs/include/changelog.xml", "/com/github/jamesnetherton/liquibase/test/changes.xml")
             .addAsResource("configs/include/changelog-include.xml", "include-changelog.xml");
     }

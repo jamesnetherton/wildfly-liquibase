@@ -19,7 +19,7 @@
  */
 package com.github.jamesnetherton.extension.liquibase.test.deployment;
 
-import com.github.jamesnetherton.extension.liquibase.test.common.LiquibaseTestSupport;
+import com.github.jamesnetherton.liquibase.arquillian.LiquibaseTestSupport;
 import com.github.jamesnetherton.liquibase.arquillian.ChangeLogDefinition;
 
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -38,8 +38,7 @@ public class LiquibaseYamlDeploymentTest extends LiquibaseTestSupport {
 
     @Deployment
     public static Archive<?> deployment() {
-        return ShrinkWrap.create(JavaArchive.class, "liquibase-yaml-deployment-test.jar")
-            .addClass(LiquibaseTestSupport.class);
+        return ShrinkWrap.create(JavaArchive.class, "liquibase-yaml-deployment-test.jar");
     }
 
     @Test

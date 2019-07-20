@@ -22,7 +22,7 @@ package com.github.jamesnetherton.extension.liquibase.test.dmr;
 import java.io.File;
 import java.util.Arrays;
 
-import com.github.jamesnetherton.extension.liquibase.test.common.LiquibaseTestSupport;
+import com.github.jamesnetherton.liquibase.arquillian.LiquibaseTestSupport;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -39,7 +39,6 @@ public class LiquibaseDmrModelTest extends LiquibaseTestSupport {
     @Deployment
     public static Archive<?> deployment() {
         return ShrinkWrap.create(JavaArchive.class, "liquibase-dmr-model-test.jar")
-            .addClass(LiquibaseTestSupport.class)
             .addAsManifestResource("configs/ds/liquibase-example-ds.xml", "liquibase-example-ds.xml");
     }
 

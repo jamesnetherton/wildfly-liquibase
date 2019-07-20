@@ -21,7 +21,7 @@ package com.github.jamesnetherton.extension.liquibase.test.deployment;
 
 import java.net.URL;
 
-import com.github.jamesnetherton.extension.liquibase.test.common.LiquibaseTestSupport;
+import com.github.jamesnetherton.liquibase.arquillian.LiquibaseTestSupport;
 import com.github.jamesnetherton.liquibase.arquillian.ChangeLogDefinition;
 
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -48,7 +48,6 @@ public class LiquibaseStandaloneChangeLogDeploymentTest extends LiquibaseTestSup
     @Deployment
     public static Archive<?> deployment() {
         return ShrinkWrap.create(JavaArchive.class, "liquibase-standalone-changelog-deployment-test.jar")
-            .addClass(LiquibaseTestSupport.class)
             .setManifest(new StringAsset("Manifest-Version: 1.0\nDependencies: org.jboss.as.controller-client\n"));
     }
 

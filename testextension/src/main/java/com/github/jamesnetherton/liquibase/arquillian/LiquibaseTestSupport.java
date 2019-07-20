@@ -17,7 +17,7 @@
  * limitations under the License.
  * #L%
  */
-package com.github.jamesnetherton.extension.liquibase.test.common;
+package com.github.jamesnetherton.liquibase.arquillian;
 
 import java.io.File;
 import java.sql.Connection;

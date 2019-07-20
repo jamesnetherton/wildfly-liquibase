@@ -19,7 +19,7 @@
  */
 package com.github.jamesnetherton.extension.liquibase.test.config;
 
-import com.github.jamesnetherton.extension.liquibase.test.common.LiquibaseTestSupport;
+import com.github.jamesnetherton.liquibase.arquillian.LiquibaseTestSupport;
 import com.github.jamesnetherton.liquibase.arquillian.ChangeLogDefinition;
 
 import org.jboss.arquillian.container.test.api.Deployment;
@@ -42,7 +42,6 @@ public class LiquibaseMultipleConfigsDifferentDatasourceTest extends LiquibaseTe
     @Deployment
     public static Archive<?> deployment() {
         return ShrinkWrap.create(JavaArchive.class, "liquibase-multi-config-test.jar")
-            .addClass(LiquibaseTestSupport.class)
             .addAsManifestResource("configs/ds/liquibase-example-ds.xml", "liquibase-example-ds.xml");
     }
 

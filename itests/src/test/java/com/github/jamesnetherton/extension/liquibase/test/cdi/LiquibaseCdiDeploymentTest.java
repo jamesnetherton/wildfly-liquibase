@@ -20,7 +20,7 @@
 package com.github.jamesnetherton.extension.liquibase.test.cdi;
 
 import com.github.jamesnetherton.extension.liquibase.test.cdi.producer.LiquibaseConfigurationProducer;
-import com.github.jamesnetherton.extension.liquibase.test.common.LiquibaseTestSupport;
+import com.github.jamesnetherton.liquibase.arquillian.LiquibaseTestSupport;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -37,7 +37,7 @@ public class LiquibaseCdiDeploymentTest extends LiquibaseTestSupport {
     @Deployment
     public static Archive<?> deployment() {
         return ShrinkWrap.create(JavaArchive.class, "liquibase-cdi-deployment-test.jar")
-            .addClasses(LiquibaseTestSupport.class, LiquibaseConfigurationProducer.class)
+            .addClass(LiquibaseConfigurationProducer.class)
             .addAsResource("configs/cdi/changelog.xml", "/com/github/jamesnetherton/liquibase/test/changes.xml")
             .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }

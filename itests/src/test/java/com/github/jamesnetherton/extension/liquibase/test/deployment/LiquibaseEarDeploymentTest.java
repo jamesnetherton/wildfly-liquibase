@@ -21,7 +21,7 @@ package com.github.jamesnetherton.extension.liquibase.test.deployment;
 
 import javax.ejb.Stateless;
 
-import com.github.jamesnetherton.extension.liquibase.test.common.LiquibaseTestSupport;
+import com.github.jamesnetherton.liquibase.arquillian.LiquibaseTestSupport;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -37,8 +37,7 @@ public class LiquibaseEarDeploymentTest extends LiquibaseTestSupport {
 
     @Deployment
     public static Archive<?> deployment() {
-        return ShrinkWrap.create(JavaArchive.class, "liquibase-ear-deployment-test.jar")
-            .addClass(LiquibaseTestSupport.class);
+        return ShrinkWrap.create(JavaArchive.class, "liquibase-ear-deployment-test.jar");
     }
 
     @Deployment(name = "liquibase-ear.ear", testable = false)
