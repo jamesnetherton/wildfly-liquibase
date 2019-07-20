@@ -89,6 +89,7 @@ public class LiquibaseChangeLogExecutionProcessor implements DeploymentUnitProce
         return String.format("%s.%s", configuration.getName(), deploymentUnit.getName());
     }
 
+    @SuppressWarnings("unchecked")
     private ChangeLogConfigurationRegistryService getRegistryService(ServiceRegistry serviceRegistry) {
         ServiceController<ChangeLogConfigurationRegistryService> controller = (ServiceController<ChangeLogConfigurationRegistryService>) serviceRegistry.getRequiredService(
                 ChangeLogConfigurationRegistryService.getServiceName());

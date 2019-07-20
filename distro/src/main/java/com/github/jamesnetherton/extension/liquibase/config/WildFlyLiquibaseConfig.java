@@ -38,7 +38,7 @@ public class WildFlyLiquibaseConfig {
     private static final String WILDFLY_LIQUIBASE_EXTENSION_XML = "extension.xml";
     private static final String WILDFLY_LIQUIBASE_SUBSYTEM_XML = "subsystem.xml";
 
-    public static void main(String args[]) {
+    public static void main(String[] args) {
 
         if (args.length != 2) {
             throw new RuntimeException("Usage WildFlyLiquibaseConfig <config source> <config target>");
@@ -67,7 +67,6 @@ public class WildFlyLiquibaseConfig {
         applyWildFlyLiquibaseExtension(document);
         applyWildFlyLiquibaseSubsystem(document);
         writeConfigChanges(configFilePath, document);
-        System.out.println("   " + configFilePath);
     }
 
     private static void applyWildFlyLiquibaseExtension(Document document) {
@@ -107,9 +106,9 @@ public class WildFlyLiquibaseConfig {
         return configDest.resolve(filePrefix + "-liquibase.xml");
     }
 
-    private static Path writeFile(Path path, String value, String encoding) throws IOException {
+    private static void writeFile(Path path, String value, String encoding) throws IOException {
         byte[] bytes = value.getBytes(encoding);
-        return Files.write(path, bytes, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
+        Files.write(path, bytes, StandardOpenOption.TRUNCATE_EXISTING, StandardOpenOption.CREATE);
     }
 
     private static void writeConfigChanges(Path configDest, Document document) throws IOException {

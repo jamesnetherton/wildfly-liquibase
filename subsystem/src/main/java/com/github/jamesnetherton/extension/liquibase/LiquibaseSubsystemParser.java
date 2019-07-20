@@ -28,6 +28,8 @@ import javax.xml.stream.XMLStreamException;
 import org.jboss.dmr.ModelNode;
 import org.jboss.staxmapper.XMLElementReader;
 import org.jboss.staxmapper.XMLExtendedStreamReader;
+import static com.github.jamesnetherton.extension.liquibase.Namespace.VERSION_1_0;
+import static com.github.jamesnetherton.extension.liquibase.Namespace10.Element.DATABASE_CHANGELOG;
 import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.ADD;
 import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.OP;
 import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.OP_ADDR;
@@ -57,18 +59,12 @@ final class LiquibaseSubsystemParser implements Namespace10, XMLStreamConstants,
         operations.add(subsystemAdd);
 
         while (reader.hasNext() && reader.nextTag() != END_ELEMENT) {
-            switch (Namespace.forUri(reader.getNamespaceURI())) {
-                case VERSION_1_0: {
-                    final Element element = Element.forName(reader.getLocalName());
-                    switch (element) {
-                        case DATABASE_CHANGELOG: {
-                            parseChangeLog(reader, address, operations);
-                            break;
-                        }
-                        default: {
-                            throw unexpectedElement(reader);
-                        }
-                    }
+            if (Namespace.forUri(reader.getNamespaceURI()).equals(VERSION_1_0)) {
+                final Element element = Element.forName(reader.getLocalName());
+                if (element.equals(DATABASE_CHANGELOG)) {
+                    parseChangeLog(reader, address, operations);
+                } else {
+                    throw unexpectedElement(reader);
                 }
             }
         }

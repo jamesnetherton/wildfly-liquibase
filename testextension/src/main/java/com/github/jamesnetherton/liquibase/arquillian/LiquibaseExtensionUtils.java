@@ -25,7 +25,7 @@ final class LiquibaseExtensionUtils {
     }
 
     public static String generateTableName(String prefix, Integer... hashValues) {
-        Integer hash = 0;
+        int hash = 0;
         for (Integer value : hashValues) {
             hash += Math.abs(value);
         }

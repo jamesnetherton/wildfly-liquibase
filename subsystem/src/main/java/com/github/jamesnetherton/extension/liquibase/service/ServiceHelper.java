@@ -34,6 +34,7 @@ public final class ServiceHelper {
         builder.install();
     }
 
+    @SuppressWarnings("unchecked")
     public static <T> T getService(OperationContext context, ServiceName serviceName, Class<?> T) {
         ServiceController<T> controller = (ServiceController<T>) context.getServiceRegistry(false).getService(serviceName);
         return controller.getValue();

@@ -71,7 +71,7 @@ public class ChangeLogModelService extends AbstractService<ChangeLogModelService
         installChangeLogExecutionService(serviceTarget, serviceName, configuration);
     }
 
-    public void updateChangeLogModel(OperationContext context, ModelNode operation, ModelNode futureState, ModelNode currentState) throws OperationFailedException {
+    public void updateChangeLogModel(OperationContext context, ModelNode operation) throws OperationFailedException {
         String changeLogName = operation.get(ModelDescriptionConstants.OP_ADDR).asObject().get(ModelConstants.DATABASE_CHANGELOG).asString();
         String value = operation.get(ModelDescriptionConstants.VALUE).asString();
 

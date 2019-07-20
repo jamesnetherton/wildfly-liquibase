@@ -50,6 +50,6 @@ final class ChangeLogWrite extends AbstractWriteAttributeHandler<Object> {
 
     private void updateRuntime(OperationContext context, ModelNode operation, ModelNode future, ModelNode current) throws OperationFailedException {
         ChangeLogModelService service = ServiceHelper.getChangeLogModelUpdateService(context);
-        service.updateChangeLogModel(context, operation, future, current);
+        service.updateChangeLogModel(context, operation);
     }
 }

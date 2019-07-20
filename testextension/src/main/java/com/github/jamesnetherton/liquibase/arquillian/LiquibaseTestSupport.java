@@ -42,6 +42,7 @@ public class LiquibaseTestSupport {
     @ArquillianResource
     private InitialContext context;
 
+    @SuppressWarnings("unchecked")
     protected <T> T lookup(String name, Class<?> T) throws Exception {
         return (T) context.lookup(name);
     }
