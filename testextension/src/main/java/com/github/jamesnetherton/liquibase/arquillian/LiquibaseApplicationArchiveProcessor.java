@@ -19,12 +19,8 @@
  */
 package com.github.jamesnetherton.liquibase.arquillian;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.lang.reflect.Field;
-import java.nio.charset.StandardCharsets;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import com.github.jamesnetherton.extension.liquibase.ChangeLogFormat;
@@ -68,7 +64,7 @@ public final class LiquibaseApplicationArchiveProcessor implements ApplicationAr
                 ChangeLogFormat format = ChangeLogFormat.valueOf(definition.format().toUpperCase());
 
                 InputStream inputStream = LiquibaseApplicationArchiveProcessor.class.getResourceAsStream("/changelogs/changelog" + format.getExtension());
-                String changeLog = inputStreamToString(inputStream);
+                String changeLog = TestExtensionUtils.inputStreamToString(inputStream);
 
                 changeLog = changeLog.replace("#TABLE_NAME#", tableName);
                 changeLog = changeLog.replace("#DATASOURCE_REF#", definition.datasourceRef());
@@ -85,22 +81,5 @@ public final class LiquibaseApplicationArchiveProcessor implements ApplicationAr
                 applicationArchive.add(new StringAsset(changeLog), fileName);
             }
         }
-    }
-
-    private String inputStreamToString(InputStream in) {
-        if (in == null) {
-            throw new IllegalArgumentException("InputStream cannot be null");
-        }
-
-        StringBuilder builder = new StringBuilder();
-        String line;
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(in, StandardCharsets.UTF_8))){
-            while ((line = reader.readLine()) != null) {
-                builder.append(line).append(System.lineSeparator());
-            }
-        } catch (IOException e) {
-            throw new RuntimeException("Error reading InputStream " + in);
-        }
-        return builder.toString();
     }
 }

@@ -20,21 +20,28 @@
 package com.github.jamesnetherton.liquibase.arquillian;
 
 import java.io.File;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import org.jboss.arquillian.test.api.ArquillianResource;
 import org.junit.Assert;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class LiquibaseTestSupport {
 
+    protected static final Logger LOG = LoggerFactory.getLogger(LiquibaseTestSupport.class);
     protected static final List<String> DEFAULT_COLUMNS = Arrays.asList("firstname", "id", "lastname", "state", "username");
     private static final String QUERY_TABLE_COLUMNS = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = ? ORDER BY COLUMN_NAME ASC";
     private static final String DEFAULT_CLI_SCRIPT_TIMEOUT = "60000";
@@ -83,6 +90,29 @@ public class LiquibaseTestSupport {
 
     protected boolean executeCliCommand(String command) throws Exception {
         return jbossCli("--command=" + command);
+    }
+
+    protected void executeSqlScript(InputStream script, String datasourceBinding) throws Exception {
+        if (script == null) {
+            throw new IllegalArgumentException("Script InputStream cannot be null");
+        }
+
+        try {
+            InitialContext initialContext = new InitialContext();
+            DataSource dataSource = (DataSource) initialContext.lookup(datasourceBinding);
+
+            try (Connection connection = dataSource.getConnection()) {
+                try (Statement statement = connection.createStatement()) {
+                    String sql = TestExtensionUtils.inputStreamToString(script);
+                    statement.execute(sql);
+                    LOG.info("\nExecuted database initialization script\n{}", sql);
+                }
+            } catch (SQLException e) {
+                throw new IllegalStateException(e);
+            }
+        } catch (NamingException e) {
+            throw new IllegalStateException(e);
+        }
     }
 
     private boolean jbossCli(String command) throws Exception {
