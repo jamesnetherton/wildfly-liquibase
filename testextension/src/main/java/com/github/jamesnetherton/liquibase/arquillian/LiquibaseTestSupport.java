@@ -66,14 +66,15 @@ public class LiquibaseTestSupport {
         List<String> actualColumns = new ArrayList<>();
 
         DataSource dataSource = lookup(dsJndiName, DataSource.class);
-        Connection connection = dataSource.getConnection();
 
-        try (PreparedStatement statement = connection.prepareStatement(QUERY_TABLE_COLUMNS)) {
-            statement.setString(1, tableName.toUpperCase());
+        try(Connection connection = dataSource.getConnection()) {
+            try (PreparedStatement statement = connection.prepareStatement(QUERY_TABLE_COLUMNS)) {
+                statement.setString(1, tableName.toUpperCase());
 
-            ResultSet resultSet = statement.executeQuery();
-            while (resultSet.next()) {
-                actualColumns.add(resultSet.getString("COLUMN_NAME").toLowerCase());
+                ResultSet resultSet = statement.executeQuery();
+                while (resultSet.next()) {
+                    actualColumns.add(resultSet.getString("COLUMN_NAME").toLowerCase());
+                }
             }
         }
 
