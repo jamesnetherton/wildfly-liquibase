@@ -25,6 +25,7 @@ import liquibase.exception.ChangeLogParseException;
 import liquibase.parser.ChangeLogParser;
 import liquibase.resource.ClassLoaderResourceAccessor;
 import liquibase.resource.CompositeResourceAccessor;
+import liquibase.resource.FileSystemResourceAccessor;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,7 +39,6 @@ import com.github.jamesnetherton.extension.liquibase.ChangeLogParserFactory;
 import com.github.jamesnetherton.extension.liquibase.LiquibaseConstants;
 import com.github.jamesnetherton.extension.liquibase.LiquibaseLogger;
 import com.github.jamesnetherton.extension.liquibase.ModelConstants;
-import com.github.jamesnetherton.extension.liquibase.resource.WildFlyLiquibaseFileSystemResourceAccessor;
 
 import org.jboss.as.ee.structure.DeploymentType;
 import org.jboss.as.ee.structure.DeploymentTypeMarker;
@@ -122,7 +122,7 @@ public class LiquibaseChangeLogParseProcessor implements DeploymentUnitProcessor
         }
 
         try {
-            CompositeResourceAccessor resourceAccessor = new CompositeResourceAccessor(new WildFlyLiquibaseFileSystemResourceAccessor(), new ClassLoaderResourceAccessor(classLoader));
+            CompositeResourceAccessor resourceAccessor = new CompositeResourceAccessor(new FileSystemResourceAccessor(), new ClassLoaderResourceAccessor(classLoader));
             DatabaseChangeLog changeLog = parser.parse(file.getAbsolutePath(), new ChangeLogParameters(), resourceAccessor);
             Object datasourceRef = changeLog.getChangeLogParameters().getValue(ModelConstants.DATASOURCE_REF, changeLog);
             if (datasourceRef == null) {
