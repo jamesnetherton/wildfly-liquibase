@@ -10,8 +10,7 @@ import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.sql.DataSource;
 
-@Startup
-@Singleton
+@Startup @Singleton
 public class ColumnReporter {
 
     private static final String QUERY = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'PERSON' ORDER BY COLUMN_NAME ASC";
@@ -21,10 +20,8 @@ public class ColumnReporter {
 
     @PostConstruct
     public void postConstruct() {
-        try {
-            Connection connection = dataSource.getConnection();
-
-            try(Statement statement = connection.createStatement()) {
+        try (Connection connection = dataSource.getConnection()) {
+            try (Statement statement = connection.createStatement()) {
                 ResultSet resultSet = statement.executeQuery(QUERY);
                 while (resultSet.next()) {
                     System.out.println("======> " + resultSet.getString("COLUMN_NAME").toLowerCase());

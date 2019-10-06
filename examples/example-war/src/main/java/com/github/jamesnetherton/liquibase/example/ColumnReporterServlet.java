@@ -23,9 +23,7 @@ public class ColumnReporterServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        try {
-            Connection connection = dataSource.getConnection();
-
+        try(Connection connection = dataSource.getConnection()) {
             try(Statement statement = connection.createStatement()) {
                 ResultSet resultSet = statement.executeQuery(QUERY);
                 while (resultSet.next()) {

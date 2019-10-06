@@ -21,9 +21,7 @@ public class ColumnReporter {
 
     @PostConstruct
     public void postConstruct() {
-        try {
-            Connection connection = dataSource.getConnection();
-
+        try(Connection connection = dataSource.getConnection()) {
             try(Statement statement = connection.createStatement()) {
                 ResultSet resultSet = statement.executeQuery(QUERY);
                 while (resultSet.next()) {

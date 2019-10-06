@@ -40,9 +40,8 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>javax.persistence</groupId>
-            <artifactId>javax.persistence-api</artifactId>
-            <scope>test</scope>
+            <groupId>jakarta.persistence</groupId>
+            <artifactId>jakarta.persistence-api</artifactId>
         </dependency>
         <dependency>
             <groupId>org.jboss.spec.javax.annotation</groupId>
@@ -56,7 +55,7 @@
         </dependency>
         <dependency>
             <groupId>org.jboss.spec.javax.transaction</groupId>
-            <artifactId>jboss-transaction-api_1.2_spec</artifactId>
+            <artifactId>jboss-transaction-api_1.3_spec</artifactId>
             <scope>test</scope>
         </dependency>
         <dependency>
@@ -136,6 +135,9 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <redirectTestOutputToFile>false</redirectTestOutputToFile>
+                    <excludes>
+                        <exclude>**/example/*Test.java</exclude>
+                    </excludes>
                 </configuration>
             </plugin>
         </plugins>
@@ -149,6 +151,86 @@
             <properties>
                 <javaVmExtraArguments>--add-modules=java.se</javaVmExtraArguments>
             </properties>
+        </profile>
+        <profile>
+            <id>debug</id>
+            <activation>
+                <property>
+                    <name>debug</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-antrun-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <phase>process-test-resources</phase>
+                                <goals>
+                                    <goal>run</goal>
+                                </goals>
+                                <configuration>
+                                    <target>
+                                        <echo message="Setting log level to DEBUG" />
+                                        <replaceregexp file="${jboss.home}/standalone/configuration/standalone-liquibase.xml" match="INFO" replace="DEBUG" byline="true" />
+                                    </target>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>examples</id>
+            <dependencies>
+                <dependency>
+                    <groupId>com.github.jamesnetherton</groupId>
+                    <artifactId>wildfly-liquibase-example-cdi</artifactId>
+                    <version>1.0.0</version>
+                </dependency>
+                <dependency>
+                    <groupId>com.github.jamesnetherton</groupId>
+                    <artifactId>wildfly-liquibase-example-jar</artifactId>
+                    <version>1.0.0</version>
+                </dependency>
+                <dependency>
+                    <groupId>com.github.jamesnetherton</groupId>
+                    <artifactId>wildfly-liquibase-example-war</artifactId>
+                    <version>1.0.0</version>
+                    <type>war</type>
+                </dependency>
+            </dependencies>
+            <build>
+                <plugins>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <excludes>
+                                <exclude>NONE</exclude>
+                            </excludes>
+                        </configuration>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>copy-examples</id>
+                                <goals>
+                                    <goal>copy-dependencies</goal>
+                                </goals>
+                                <configuration>
+                                    <includeGroupIds>com.github.jamesnetherton</includeGroupIds>
+                                    <includeTypes>jar,war</includeTypes>
+                                    <stripVersion>true</stripVersion>
+                                    <outputDirectory>${project.build.directory}/examples</outputDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
     </profiles>
 </project>

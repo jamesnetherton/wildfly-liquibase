@@ -78,6 +78,7 @@ public final class ChangeLogExecutionService extends AbstractService<ChangeLogEx
 
     public void executeChangeLog(ChangeLogConfiguration configuration) {
         JdbcConnection connection = null;
+        Liquibase liquibase = null;
 
         try {
             ResourceAccessor resourceAccessor = new WildFlyLiquibaseResourceAccessor(configuration);
@@ -86,7 +87,7 @@ public final class ChangeLogExecutionService extends AbstractService<ChangeLogEx
             DataSource datasource = (DataSource) initialContext.lookup(configuration.getDatasourceRef());
             connection = new JdbcConnection(datasource.getConnection());
 
-            Liquibase liquibase = new Liquibase(configuration.getFileName(), resourceAccessor, connection);
+            liquibase = new Liquibase(configuration.getFileName(), resourceAccessor, connection);
 
             String contextNames = configuration.getContextNames();
             if (contextNames != null) {
@@ -97,8 +98,16 @@ public final class ChangeLogExecutionService extends AbstractService<ChangeLogEx
         } catch (NamingException | LiquibaseException | SQLException e) {
             throw new IllegalStateException(e);
         } finally {
-            if (connection != null) {
+            if (liquibase != null && liquibase.getDatabase() != null) {
                 try {
+                    LiquibaseLogger.ROOT_LOGGER.info("Closing Liquibase database");
+                    liquibase.getDatabase().close();
+                } catch (DatabaseException e) {
+                    LiquibaseLogger.ROOT_LOGGER.warn("Failed to close Liquibase database", e);
+                }
+            } else if (connection != null) {
+                try {
+                    LiquibaseLogger.ROOT_LOGGER.info("Closing database connection");
                     connection.close();
                 } catch (DatabaseException e) {
                     LiquibaseLogger.ROOT_LOGGER.warn("Failed to close database connection", e);
