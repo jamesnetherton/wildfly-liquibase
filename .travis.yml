@@ -8,6 +8,9 @@ cache:
  directories:
   - $HOME/.m2
 
+before_cache:
+ - rm -rf $HOME/.m2/repository/com/github/jamesnetherton
+
 before_script:
  - ./mvnw process-sources -P licenseCheck
 
