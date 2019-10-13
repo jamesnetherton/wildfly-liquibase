@@ -53,12 +53,17 @@ public class WildFlyLiquibaseConfig {
 
         destPath.toFile().mkdirs();
         File source = new File(configSource);
-        for (File file : source.listFiles()) {
-            try {
-                applyWildFlyLiquibaseConfig(builder.build(file), destPath, file);
-            } catch (Exception e) {
-                throw new RuntimeException(e);
+        File[] files = source.listFiles();
+        if (files != null) {
+            for (File file : files) {
+                try {
+                    applyWildFlyLiquibaseConfig(builder.build(file), destPath, file);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
             }
+        } else {
+            throw new RuntimeException("No usable files found in source: " + configSource);
         }
     }
 

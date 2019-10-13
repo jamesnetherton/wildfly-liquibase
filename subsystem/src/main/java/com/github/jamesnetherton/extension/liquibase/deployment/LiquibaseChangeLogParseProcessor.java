@@ -75,12 +75,7 @@ public class LiquibaseChangeLogParseProcessor implements DeploymentUnitProcessor
 
                 changeLogFiles.add(virtualFile);
             } else {
-                VirtualFileFilter filter = new VirtualFileFilter() {
-                    public boolean accepts(VirtualFile child) {
-                        return child.isFile() && child.getName().matches(LiquibaseConstants.LIQUIBASE_CHANGELOG_PATTERN);
-                    }
-                };
-
+                VirtualFileFilter filter = file -> file.isFile() && file.getName().matches(LiquibaseConstants.LIQUIBASE_CHANGELOG_PATTERN);
                 VirtualFile rootFile = deploymentUnit.getAttachment(Attachments.DEPLOYMENT_ROOT).getRoot();
                 for (VirtualFile virtualFile : rootFile.getChildrenRecursively(filter)) {
                     LiquibaseLogger.ROOT_LOGGER.info("Found Liquibase changelog: {}", virtualFile.getName());

@@ -38,7 +38,7 @@ import com.github.jamesnetherton.extension.liquibase.ModelConstants;
  */
 public class WildFlyFormattedSqlChangeLogParser extends FormattedSqlChangeLogParser {
 
-    private static final Pattern DATASOURCE_REF_PATTERN = Pattern.compile("\\-\\-[\\s]*" + ModelConstants.DATASOURCE_REF + "\\s(.*)", Pattern.CASE_INSENSITIVE);
+    private static final Pattern DATASOURCE_REF_PATTERN = Pattern.compile("--[\\s]*" + ModelConstants.DATASOURCE_REF + "\\s(.*)", Pattern.CASE_INSENSITIVE);
 
     @Override
     public DatabaseChangeLog parse(String physicalChangeLogLocation, ChangeLogParameters changeLogParameters, ResourceAccessor resourceAccessor) throws ChangeLogParseException {

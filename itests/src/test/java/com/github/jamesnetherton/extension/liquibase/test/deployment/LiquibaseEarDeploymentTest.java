@@ -56,6 +56,6 @@ public class LiquibaseEarDeploymentTest extends LiquibaseTestSupport {
     }
 
     @Stateless
-    private class EjbBean {
+    private static class EjbBean {
     }
 }

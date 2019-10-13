@@ -120,7 +120,7 @@ public final class ChangeLogExecutionService extends AbstractService<ChangeLogEx
         return ServiceName.JBOSS.append("liquibase", "changelog", "execution", suffix);
     }
 
-    private final class WildFlyLiquibaseResourceAccessor implements ResourceAccessor {
+    private static final class WildFlyLiquibaseResourceAccessor implements ResourceAccessor {
 
         private final ChangeLogConfiguration configuration;
 
