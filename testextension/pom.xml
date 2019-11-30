@@ -52,10 +52,14 @@
             <groupId>org.wildfly.arquillian</groupId>
             <artifactId>wildfly-arquillian-protocol-jmx</artifactId>
         </dependency>
-
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
             <scope>test</scope>
         </dependency>
     </dependencies>
