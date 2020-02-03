@@ -33,6 +33,7 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.github.jamesnetherton.extension.liquibase.ChangeLogConfiguration;
 import com.github.jamesnetherton.extension.liquibase.ChangeLogParserFactory;
@@ -47,6 +48,9 @@ import org.jboss.as.server.deployment.DeploymentPhaseContext;
 import org.jboss.as.server.deployment.DeploymentUnit;
 import org.jboss.as.server.deployment.DeploymentUnitProcessingException;
 import org.jboss.as.server.deployment.DeploymentUnitProcessor;
+import org.jboss.as.web.common.WarMetaData;
+import org.jboss.metadata.javaee.spec.ParamValueMetaData;
+import org.jboss.metadata.web.spec.WebMetaData;
 import org.jboss.modules.Module;
 import org.jboss.vfs.VirtualFile;
 import org.jboss.vfs.VirtualFileFilter;
@@ -65,6 +69,19 @@ public class LiquibaseChangeLogParseProcessor implements DeploymentUnitProcessor
             return;
         }
 
+        Optional<String> changeLogContextParam = Optional.empty();
+        WarMetaData warMetaData = deploymentUnit.getAttachment(WarMetaData.ATTACHMENT_KEY);
+        if (warMetaData != null) {
+            WebMetaData webMetaData = warMetaData.getWebMetaData();
+            if (webMetaData != null) {
+                changeLogContextParam = webMetaData.getContextParams()
+                    .stream()
+                    .filter(paramValueMetaData -> paramValueMetaData.getParamName().equals("liquibase.changelog"))
+                    .map(ParamValueMetaData::getParamValue)
+                    .findFirst();
+            }
+        }
+
         Module module = deploymentUnit.getAttachment(Attachments.MODULE);
         List<VirtualFile> changeLogFiles = new ArrayList<>();
 
@@ -72,10 +89,10 @@ public class LiquibaseChangeLogParseProcessor implements DeploymentUnitProcessor
             if (deploymentUnit.getName().matches(LiquibaseConstants.LIQUIBASE_CHANGELOG_PATTERN)) {
                 VirtualFile virtualFile = deploymentUnit.getAttachment(Attachments.DEPLOYMENT_CONTENTS);
                 LiquibaseLogger.ROOT_LOGGER.info("Found Liquibase changelog: {}", virtualFile.getName());
-
                 changeLogFiles.add(virtualFile);
             } else {
-                VirtualFileFilter filter = file -> file.isFile() && file.getName().matches(LiquibaseConstants.LIQUIBASE_CHANGELOG_PATTERN);
+                String contextParam = changeLogContextParam.orElse("/");
+                VirtualFileFilter filter = file -> file.isFile() && file.getName().matches(LiquibaseConstants.LIQUIBASE_CHANGELOG_PATTERN) && !file.getPathName().endsWith(contextParam);
                 VirtualFile rootFile = deploymentUnit.getAttachment(Attachments.DEPLOYMENT_ROOT).getRoot();
                 for (VirtualFile virtualFile : rootFile.getChildrenRecursively(filter)) {
                     LiquibaseLogger.ROOT_LOGGER.info("Found Liquibase changelog: {}", virtualFile.getName());

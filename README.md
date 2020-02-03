@@ -131,6 +131,11 @@ The change log definition body must be wraped within a `CDATA` block in order fo
 
 If the Liquibase subsystem detects that a deployment is CDI enabled, it will automatically  add a dependency on [Liquibase CDI](http://www.liquibase.org/documentation/cdi.html) for you. This provides the capability to load and execute change logs via CDI annotations.
 
+### Servlet Listener
+
+If you prefer to use `LiquibaseServletListener`, the Liquibase subsystem automatically makes the
+listener class available to deployments. All you need to do is configure `web.xml` as per the [servlet listener documentation](https://www.liquibase.org/documentation/servlet_listener.html).
+
 ## Examples
 
 Take a look at the [examples](https://github.com/jamesnetherton/wildfly-liquibase/tree/master/examples) to see some basic use cases.

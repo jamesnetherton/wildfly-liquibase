@@ -77,11 +77,12 @@ public class LiquibaseChangeLogExecutionProcessor implements DeploymentUnitProce
     @Override
     public void undeploy(DeploymentUnit deploymentUnit) {
         List<ChangeLogConfiguration> configurations = deploymentUnit.getAttachmentList(LiquibaseConstants.LIQUIBASE_CHANGELOGS);
+        if (!configurations.isEmpty()) {
+            ChangeLogConfigurationRegistryService registryService = getRegistryService(deploymentUnit.getServiceRegistry());
 
-        ChangeLogConfigurationRegistryService registryService = getRegistryService(deploymentUnit.getServiceRegistry());
-
-        for (ChangeLogConfiguration configuration : configurations) {
-            registryService.removeConfiguration(getConfigurationKey(deploymentUnit, configuration));
+            for (ChangeLogConfiguration configuration : configurations) {
+                registryService.removeConfiguration(getConfigurationKey(deploymentUnit, configuration));
+            }
         }
     }
 
