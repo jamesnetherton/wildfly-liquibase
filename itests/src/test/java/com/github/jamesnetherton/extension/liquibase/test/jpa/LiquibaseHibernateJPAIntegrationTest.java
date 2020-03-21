@@ -26,6 +26,7 @@ import javax.transaction.UserTransaction;
 
 import com.github.jamesnetherton.extension.liquibase.test.jpa.init.DatabaseInitializer;
 import com.github.jamesnetherton.extension.liquibase.test.jpa.model.Order;
+import com.github.jamesnetherton.extension.liquibase.test.jpa.producer.LiquibaseConfigurationProducer;
 import com.github.jamesnetherton.liquibase.arquillian.LiquibaseTestSupport;
 import com.github.jamesnetherton.liquibase.arquillian.TestExtensionUtils;
 
@@ -35,10 +36,12 @@ import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.EmptyAsset;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
+@Ignore("https://github.com/jamesnetherton/wildfly-liquibase/issues/42")
 public class LiquibaseHibernateJPAIntegrationTest extends LiquibaseTestSupport {
 
     @PersistenceContext
@@ -58,9 +61,9 @@ public class LiquibaseHibernateJPAIntegrationTest extends LiquibaseTestSupport {
     @Deployment(order = 2)
     public static Archive<?> deployment() {
         return ShrinkWrap.create(JavaArchive.class, "liquibase-hibernate-jpa-test.jar")
-            .addClass(Order.class)
+            .addClasses(LiquibaseConfigurationProducer.class, Order.class)
             .addAsResource("jpa/persistence.xml", "META-INF/persistence.xml")
-            .addAsResource("configs/jpa/changelog.xml", "changelog.xml")
+            .addAsResource("configs/jpa/changelog.xml", "/com/github/jamesnetherton/liquibase/test/changes.xml")
             .addAsManifestResource(EmptyAsset.INSTANCE, "beans.xml");
     }
 
