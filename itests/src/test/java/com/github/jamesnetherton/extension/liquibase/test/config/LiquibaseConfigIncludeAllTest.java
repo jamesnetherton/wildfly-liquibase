@@ -30,18 +30,18 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
-public class LiquibaseConfigIncludeTest extends LiquibaseTestSupport {
+public class LiquibaseConfigIncludeAllTest extends LiquibaseTestSupport {
 
     @Deployment
     public static Archive<?> deployment() {
-        return ShrinkWrap.create(JavaArchive.class, "liquibase-config-include-test.jar")
-            .addAsResource("configs/include/simple/changes-1.xml", "/com/github/jamesnetherton/liquibase/test/changes-1.xml")
-            .addAsResource("configs/include/simple/changes-2.xml", "/com/github/jamesnetherton/liquibase/test2/changes-2.xml")
-            .addAsResource("configs/include/simple/changelog-include.xml", "/com/github/jamesnetherton/liquibase/include-changelog.xml");
+        return ShrinkWrap.create(JavaArchive.class, "liquibase-config-include-all-test.jar")
+            .addAsResource("configs/include/all/changelog.xml", "changelog.xml")
+            .addAsResource("configs/include/all/changelog-1.xml", "/com/github/jamesnetherton/liquibase/test/changes1.xml")
+            .addAsResource("configs/include/all/changelog-2.xml", "/com/github/jamesnetherton/liquibase/test/changes2.xml");
     }
 
     @Test
-    public void testConfigInclude() throws Exception {
-        assertTableModified("include_test");
+    public void testConfigIncludeAll() throws Exception {
+        assertTableModified("include_all_test");
     }
 }

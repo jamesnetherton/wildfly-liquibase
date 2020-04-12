@@ -43,8 +43,10 @@ public class LiquibaseTestSupport {
 
     protected static final Logger LOG = LoggerFactory.getLogger(LiquibaseTestSupport.class);
     protected static final List<String> DEFAULT_COLUMNS = Arrays.asList("firstname", "id", "lastname", "state", "username");
+    private static final String QUERY_TABLES = "SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES";
     private static final String QUERY_TABLE_COLUMNS = "SELECT COLUMN_NAME FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = ? ORDER BY COLUMN_NAME ASC";
     private static final String DEFAULT_CLI_SCRIPT_TIMEOUT = "60000";
+    private static final String EXAMPLE_DS = "java:jboss/datasources/ExampleDS";
 
     @ArquillianResource
     private InitialContext context;
@@ -54,12 +56,25 @@ public class LiquibaseTestSupport {
         return (T) context.lookup(name);
     }
 
+    protected void debugDatabase() throws Exception {
+        DataSource dataSource = lookup(EXAMPLE_DS, DataSource.class);
+        try(Connection connection = dataSource.getConnection()) {
+            try (PreparedStatement statement = connection.prepareStatement(QUERY_TABLES)) {
+                ResultSet resultSet = statement.executeQuery();
+                LOG.info("=========> Tables <=========");
+                while (resultSet.next()) {
+                    LOG.info(resultSet.getString("TABLE_NAME"));
+                }
+            }
+        }
+    }
+
     protected void assertTableModified(String tableName) throws Exception {
         assertTableModified(tableName, DEFAULT_COLUMNS);
     }
 
     protected void assertTableModified(String tableName, List<String> expectedColumns) throws Exception {
-        assertTableModified(tableName, expectedColumns, "java:jboss/datasources/ExampleDS");
+        assertTableModified(tableName, expectedColumns, EXAMPLE_DS);
     }
 
     protected void assertTableModified(String tableName, List<String> expectedColumns, String dsJndiName) throws Exception {

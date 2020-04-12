@@ -23,7 +23,6 @@ import liquibase.changelog.ChangeLogParameters;
 import liquibase.changelog.DatabaseChangeLog;
 import liquibase.exception.ChangeLogParseException;
 import liquibase.parser.ChangeLogParser;
-import liquibase.resource.ClassLoaderResourceAccessor;
 import liquibase.resource.CompositeResourceAccessor;
 import liquibase.resource.FileSystemResourceAccessor;
 
@@ -40,6 +39,7 @@ import com.github.jamesnetherton.extension.liquibase.ChangeLogParserFactory;
 import com.github.jamesnetherton.extension.liquibase.LiquibaseConstants;
 import com.github.jamesnetherton.extension.liquibase.LiquibaseLogger;
 import com.github.jamesnetherton.extension.liquibase.ModelConstants;
+import com.github.jamesnetherton.extension.liquibase.resource.VFSResourceAccessor;
 
 import org.jboss.as.ee.structure.DeploymentType;
 import org.jboss.as.ee.structure.DeploymentTypeMarker;
@@ -110,6 +110,7 @@ public class LiquibaseChangeLogParseProcessor implements DeploymentUnitProcessor
                     .definition(changeLogDefinition)
                     .datasourceRef(datasourceRef)
                     .classLoader(module.getClassLoader())
+                    .deploymentOrigin()
                     .build();
 
                 deploymentUnit.addToAttachmentList(LiquibaseConstants.LIQUIBASE_CHANGELOGS, configuration);
@@ -134,7 +135,7 @@ public class LiquibaseChangeLogParseProcessor implements DeploymentUnitProcessor
         }
 
         try {
-            CompositeResourceAccessor resourceAccessor = new CompositeResourceAccessor(new FileSystemResourceAccessor(), new ClassLoaderResourceAccessor(classLoader));
+            CompositeResourceAccessor resourceAccessor = new CompositeResourceAccessor(new FileSystemResourceAccessor(), new VFSResourceAccessor(classLoader));
             DatabaseChangeLog changeLog = parser.parse(file.getAbsolutePath(), new ChangeLogParameters(), resourceAccessor);
             Object datasourceRef = changeLog.getChangeLogParameters().getValue(ModelConstants.DATASOURCE_REF, changeLog);
             if (datasourceRef == null) {
@@ -143,6 +144,12 @@ public class LiquibaseChangeLogParseProcessor implements DeploymentUnitProcessor
             return (String) datasourceRef;
         } catch (ChangeLogParseException e) {
             throw new DeploymentUnitProcessingException(e);
+        }
+    }
+
+    private static final class WildFlyLiquibaseDeploymentResourceLoader extends VFSResourceAccessor {
+        public WildFlyLiquibaseDeploymentResourceLoader(ClassLoader classLoader) {
+            super(classLoader);
         }
     }
 }

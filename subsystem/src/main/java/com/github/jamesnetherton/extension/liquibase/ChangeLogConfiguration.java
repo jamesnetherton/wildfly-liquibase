@@ -28,6 +28,7 @@ public final class ChangeLogConfiguration {
     private String datasourceRef;
     private String contextNames;
     private ClassLoader classLoader;
+    private ConfigurationOrigin origin;
 
     public String getName() {
         return name;
@@ -67,6 +68,18 @@ public final class ChangeLogConfiguration {
 
     public ClassLoader getClassLoader() {
         return classLoader;
+    }
+
+    public void setOrigin(ConfigurationOrigin origin) {
+        this.origin = origin;
+    }
+
+    public ConfigurationOrigin getOrigin() {
+        return origin;
+    }
+
+    public boolean isSubsystemOrigin() {
+        return getOrigin().equals(ConfigurationOrigin.SUBSYSTEM);
     }
 
     public String getFileName() {
@@ -114,12 +127,12 @@ public final class ChangeLogConfiguration {
             return false;
         ChangeLogConfiguration that = (ChangeLogConfiguration) o;
         return Objects.equals(name, that.name) && Objects.equals(definition, that.definition) && Objects.equals(datasourceRef, that.datasourceRef) && Objects
-                .equals(contextNames, that.contextNames) && Objects.equals(classLoader, that.classLoader);
+                .equals(contextNames, that.contextNames) && Objects.equals(classLoader, that.classLoader) && origin == that.origin;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, definition, datasourceRef, contextNames, classLoader);
+        return Objects.hash(name, definition, datasourceRef, contextNames, classLoader, origin);
     }
 
     public static class Builder {
@@ -128,6 +141,7 @@ public final class ChangeLogConfiguration {
         private String datasourceRef;
         private String contextNames;
         private ClassLoader classLoader;
+        private ConfigurationOrigin origin;
 
         public Builder name(String name) {
             this.name = name;
@@ -154,6 +168,16 @@ public final class ChangeLogConfiguration {
             return this;
         }
 
+        public Builder deploymentOrigin() {
+            this.origin = ConfigurationOrigin.DEPLOYMENT;
+            return this;
+        }
+
+        public Builder subsystemOrigin() {
+            this.origin = ConfigurationOrigin.SUBSYSTEM;
+            return this;
+        }
+
         public ChangeLogConfiguration build() {
             if (this.name == null) {
                 throw new IllegalStateException("ChangeLogConfiguration name must be specified");
@@ -171,13 +195,23 @@ public final class ChangeLogConfiguration {
                 throw new IllegalStateException("ChangeLogConfiguration classLoader must be specified");
             }
 
+            if (this.origin == null) {
+                throw new IllegalStateException("ChangeLogConfiguration origin must be specified");
+            }
+
             ChangeLogConfiguration configuration = new ChangeLogConfiguration();
             configuration.setName(this.name);
             configuration.setDefinition(this.definition);
             configuration.setDatasourceRef(this.datasourceRef);
             configuration.setContextNames(this.contextNames);
             configuration.setClassLoader(this.classLoader);
+            configuration.setOrigin(this.origin);
             return configuration;
         }
+    }
+
+    enum ConfigurationOrigin {
+        DEPLOYMENT,
+        SUBSYSTEM
     }
 }

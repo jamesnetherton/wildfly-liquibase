@@ -27,21 +27,15 @@ import liquibase.exception.DatabaseException;
 import liquibase.exception.LiquibaseException;
 import liquibase.resource.ResourceAccessor;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.StandardCharsets;
 import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.Set;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import com.github.jamesnetherton.extension.liquibase.ChangeLogConfiguration;
-import com.github.jamesnetherton.extension.liquibase.ChangeLogFormat;
 import com.github.jamesnetherton.extension.liquibase.LiquibaseLogger;
+import com.github.jamesnetherton.extension.liquibase.resource.WildFlyLiquibaseResourceAccessor;
 
 import org.jboss.msc.service.AbstractService;
 import org.jboss.msc.service.ServiceName;
@@ -52,13 +46,6 @@ import org.jboss.msc.service.StartException;
  * Service which executes a Liquibase change log based on the provided {@link ChangeLogConfiguration}.
  */
 public final class ChangeLogExecutionService extends AbstractService<ChangeLogExecutionService> {
-
-    private static final String LIQUIBASE_ELEMENT_START = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
-            + "<databaseChangeLog xmlns=\"http://www.liquibase.org/xml/ns/dbchangelog\" \n" + "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" \n"
-            + "xmlns:ext=\"http://www.liquibase.org/xml/ns/dbchangelog-ext\" \n"
-            + "xsi:schemaLocation=\"http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd\n"
-            + "http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd\">\n";
-    private static final String LIQUIBASE_ELEMENT_END = "</databaseChangeLog>";
 
     private final ChangeLogConfiguration configuration;
 
@@ -118,55 +105,5 @@ public final class ChangeLogExecutionService extends AbstractService<ChangeLogEx
 
     public static ServiceName createServiceName(String suffix) {
         return ServiceName.JBOSS.append("liquibase", "changelog", "execution", suffix);
-    }
-
-    private static final class WildFlyLiquibaseResourceAccessor implements ResourceAccessor {
-
-        private final ChangeLogConfiguration configuration;
-
-        private WildFlyLiquibaseResourceAccessor(ChangeLogConfiguration configuration) {
-            this.configuration = configuration;
-        }
-
-        @Override
-        public Set<InputStream> getResourcesAsStream(String path) throws IOException {
-            InputStream resource = configuration.getClassLoader().getResourceAsStream(path);
-
-            if (resource == null && !path.equals(configuration.getFileName())) {
-                return null;
-            }
-
-            Set<InputStream> resources = new HashSet<>();
-
-            if (resource != null) {
-                resources.add(resource);
-            } else {
-                String definition = configuration.getDefinition();
-                if (configuration.getFormat().equals(ChangeLogFormat.XML)) {
-                    if (!definition.contains("http://www.liquibase.org/xml/ns/dbchangelog")) {
-                        definition = LIQUIBASE_ELEMENT_START + definition;
-                    }
-
-                    if (!definition.contains(LIQUIBASE_ELEMENT_END)) {
-                        definition += LIQUIBASE_ELEMENT_END;
-                    }
-                }
-                resources.add(new ByteArrayInputStream(definition.getBytes(StandardCharsets.UTF_8)));
-            }
-
-            return resources;
-        }
-
-        @Override
-        public Set<String> list(String relativeTo, String path, boolean includeFiles, boolean includeDirectories, boolean recursive) throws IOException {
-            HashSet<String> list = new HashSet<>();
-            list.add(configuration.getFileName());
-            return list;
-        }
-
-        @Override
-        public ClassLoader toClassLoader() {
-            return configuration.getClassLoader();
-        }
     }
 }

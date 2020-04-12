@@ -23,7 +23,7 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
     <property name="datasource-ref" value="java:jboss/datasources/ExampleDS"/>
 
@@ -31,8 +31,8 @@
         <runningAs username="SA"/>
     </preConditions>
 
-    <changeSet id="ear-change-1" author="wildfly">
-        <createTable tableName="include_test">
+    <changeSet id="include-all-change-1" author="wildfly">
+        <createTable tableName="include_all_test">
             <column name="id" type="int" autoIncrement="true">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
@@ -44,9 +44,4 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="ear-change-2" author="wildfly">
-        <addColumn tableName="include_test">
-            <column name="username" type="varchar(8)"/>
-        </addColumn>
-    </changeSet>
 </databaseChangeLog>

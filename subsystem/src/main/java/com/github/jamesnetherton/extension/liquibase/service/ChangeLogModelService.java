@@ -59,6 +59,7 @@ public class ChangeLogModelService extends AbstractService<ChangeLogModelService
             .datasourceRef(datasourceRef)
             .contextNames(contextNames)
             .classLoader(ChangeLogModelService.class.getClassLoader())
+            .subsystemOrigin()
             .build();
 
         if (configuration.getFormat().equals(ChangeLogFormat.UNKNOWN)) {

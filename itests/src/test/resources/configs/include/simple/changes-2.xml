@@ -1,9 +1,8 @@
-<?xml version="1.0" encoding="UTF-8"?>
 <!--
   #%L
   wildfly-liquibase-itests
   %%
-  Copyright (C) 2017 James Netherton
+  Copyright (C) 2017 - 2020 James Netherton
   %%
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
@@ -25,5 +24,16 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
-    <include file="/com/github/jamesnetherton/liquibase/test/changes.xml"/>
+    <property name="datasource-ref" value="java:jboss/datasources/ExampleDS"/>
+
+    <preConditions>
+        <runningAs username="SA"/>
+    </preConditions>
+
+    <changeSet id="include-change-2" author="wildfly">
+        <addColumn tableName="include_test">
+            <column name="username" type="varchar(8)"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>
