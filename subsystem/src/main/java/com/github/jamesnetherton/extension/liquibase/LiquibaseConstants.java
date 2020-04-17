@@ -19,6 +19,8 @@
  */
 package com.github.jamesnetherton.extension.liquibase;
 
+import com.github.jamesnetherton.extension.liquibase.ChangeLogConfiguration.BuilderCollection;
+
 import org.jboss.as.server.deployment.AttachmentKey;
 import org.jboss.as.server.deployment.AttachmentList;
 
@@ -28,6 +30,11 @@ public interface LiquibaseConstants {
      * AttachmentList containing {@link ChangeLogConfiguration} instances
      */
     AttachmentKey<AttachmentList<ChangeLogConfiguration>> LIQUIBASE_CHANGELOGS = AttachmentKey.createList(ChangeLogConfiguration.class);
+
+    /**
+     * Attachment containing a collection {@link ChangeLogConfiguration.Builder} instances
+     */
+    AttachmentKey<BuilderCollection> LIQUIBASE_CHANGELOG_BUILDERS = AttachmentKey.create(BuilderCollection.class);
 
     /**
      * Liquibase change log file pattern

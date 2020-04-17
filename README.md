@@ -84,7 +84,23 @@ CREATE TABLE test (
 
 #### 2. Standalone XML change log file deployment
 
-You can execute XML change logs without the requirement of a deployment archive wrapper. Simply place a file suffixed with `changelog.xml` into the WildFly deployments directory and the Liquibase subsystem will attempt to execute it.
+You can execute XML change logs without the requirement of a deployment archive wrapper. Simply place a file suffixed with `changelog.xml` into the WildFly deployments directory, and the Liquibase subsystem will attempt to execute it.
+
+To configure the various aspects of Liquibase change log execution, you can provide an **_optional_** `META-INF/jboss-all.xml` or `WEB-INF/jboss.all.xml`.
+
+For example to define the contexts that are enabled for specific change log files:
+
+```xml
+<?xml version="1.0" encoding="UTF-8"?>
+<jboss xmlns="urn:jboss:1.0">
+    <liquibase xmlns="urn:com.github.jamesnetherton.liquibase:1.0" changelog="changelog.xml">
+        <contexts>context1,context2</contexts>
+    </liquibase>
+    <liquibase xmlns="urn:com.github.jamesnetherton.liquibase:1.0" changelog="other-changelog.xml">
+        <contexts>contextA,contextB</contexts>
+    </liquibase>
+</jboss>
+```
 
 #### 3. Change log files within Liquibase subsystem configuration
 

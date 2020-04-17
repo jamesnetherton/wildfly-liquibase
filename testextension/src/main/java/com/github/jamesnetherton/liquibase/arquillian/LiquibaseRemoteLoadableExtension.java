@@ -30,10 +30,10 @@ import org.jboss.modules.ModuleIdentifier;
 
 public final class LiquibaseRemoteLoadableExtension implements RemoteLoadableExtension, DependenciesProvider {
 
-    private static Set<ModuleIdentifier> dependencies = new LinkedHashSet<>();
+    private static final Set<ModuleIdentifier> DEPENDENCIES = new LinkedHashSet<>();
     static {
-        dependencies.add(ModuleIdentifier.create("com.github.jamesnetherton.extension.liquibase"));
-        dependencies.add(ModuleIdentifier.create("org.liquibase.core"));
+        DEPENDENCIES.add(ModuleIdentifier.create("com.github.jamesnetherton.extension.liquibase"));
+        DEPENDENCIES.add(ModuleIdentifier.create("org.liquibase.core"));
     }
 
     @Override
@@ -43,6 +43,6 @@ public final class LiquibaseRemoteLoadableExtension implements RemoteLoadableExt
 
     @Override
     public Set<ModuleIdentifier> getDependencies() {
-        return Collections.unmodifiableSet(dependencies);
+        return Collections.unmodifiableSet(DEPENDENCIES);
     }
 }

@@ -35,6 +35,8 @@ import java.util.List;
 import java.util.Optional;
 
 import com.github.jamesnetherton.extension.liquibase.ChangeLogConfiguration;
+import com.github.jamesnetherton.extension.liquibase.ChangeLogConfiguration.Builder;
+import com.github.jamesnetherton.extension.liquibase.ChangeLogConfiguration.BuilderCollection;
 import com.github.jamesnetherton.extension.liquibase.ChangeLogParserFactory;
 import com.github.jamesnetherton.extension.liquibase.LiquibaseConstants;
 import com.github.jamesnetherton.extension.liquibase.LiquibaseLogger;
@@ -100,13 +102,21 @@ public class LiquibaseChangeLogParseProcessor implements DeploymentUnitProcessor
                 }
             }
 
+            BuilderCollection builderCollection = deploymentUnit.getAttachment(LiquibaseConstants.LIQUIBASE_CHANGELOG_BUILDERS);
+
             for (VirtualFile virtualFile : changeLogFiles) {
                 File file = virtualFile.getPhysicalFile();
                 String changeLogDefinition = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
                 String datasourceRef = parseDataSourceRef(file, deploymentUnit.getName(), module.getClassLoader());
 
-                ChangeLogConfiguration configuration = ChangeLogConfiguration.builder()
-                    .name(file.getName())
+                Builder builder;
+                if (builderCollection == null) {
+                    builder = ChangeLogConfiguration.builder();
+                } else {
+                    builder = builderCollection.getOrCreateBuilder(file.getName());
+                }
+
+                ChangeLogConfiguration configuration = builder.name(file.getName())
                     .definition(changeLogDefinition)
                     .datasourceRef(datasourceRef)
                     .classLoader(module.getClassLoader())

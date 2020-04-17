@@ -19,6 +19,9 @@
  */
 package com.github.jamesnetherton.extension.liquibase;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 import java.util.Objects;
 
 public final class ChangeLogConfiguration {
@@ -207,6 +210,31 @@ public final class ChangeLogConfiguration {
             configuration.setClassLoader(this.classLoader);
             configuration.setOrigin(this.origin);
             return configuration;
+        }
+
+        private String getName() {
+            return this.name;
+        }
+    }
+
+    public static class BuilderCollection {
+        private final List<Builder> builders = new ArrayList<>();
+
+        public List<Builder> getBuilders() {
+            return Collections.unmodifiableList(builders);
+        }
+
+        public void addBuilder(Builder builder) {
+            builders.add(builder);
+        }
+
+        public Builder getOrCreateBuilder(String name) {
+            for (Builder builder : builders) {
+                if (builder.getName().equals(name)) {
+                    return builder;
+                }
+            }
+            return builder();
         }
     }
 

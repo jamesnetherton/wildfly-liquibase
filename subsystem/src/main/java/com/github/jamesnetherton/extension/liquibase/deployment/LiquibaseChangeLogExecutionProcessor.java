@@ -50,6 +50,9 @@ public class LiquibaseChangeLogExecutionProcessor implements DeploymentUnitProce
         DeploymentUnit deploymentUnit = phaseContext.getDeploymentUnit();
 
         List<ChangeLogConfiguration> configurations = deploymentUnit.getAttachmentList(LiquibaseConstants.LIQUIBASE_CHANGELOGS);
+        if (configurations.isEmpty()) {
+            return;
+        }
 
         ChangeLogConfigurationRegistryService registryService = getRegistryService(phaseContext.getServiceRegistry());
 
