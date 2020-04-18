@@ -23,5 +23,6 @@ public interface ModelConstants {
     String CONTEXT_NAMES = "context-names";
     String DATABASE_CHANGELOG = "databaseChangeLog";
     String DATASOURCE_REF = "datasource-ref";
+    String LABELS = "labels";
     String VALUE = "value";
 }

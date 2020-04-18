@@ -65,6 +65,17 @@ public class LiquibaseDmrModelTest extends LiquibaseTestSupport {
     }
 
     @Test
+    public void testDmrModelCreateWithLabel() throws Exception {
+        try {
+            boolean success = executeCliScript(new File("target/test-classes/cli/changelog-add-with-label.cli"));
+            Assert.assertTrue("Expected changelog-add-with-label.cli success but it failed", success);
+            assertTableModified("dmr_add_with_label", Arrays.asList("firstname", "id", "lastname", "state"));
+        } finally {
+            removeLiquibaseDmrModel("dmr-model-with-label-test.xml");
+        }
+    }
+
+    @Test
     public void testDmrModelCreateWithNoFileNameExtension() throws Exception {
         try {
             boolean success = executeCliScript(new File("target/test-classes/cli/changelog-add-with-no-filename-extension.cli"));
@@ -102,6 +113,19 @@ public class LiquibaseDmrModelTest extends LiquibaseTestSupport {
     }
 
     @Test
+    public void testDmrModelCreateWithLabelPlaceholder() throws Exception {
+        try {
+            System.setProperty("label.name", "label-placeholder-test");
+            boolean success = executeCliScript(new File("target/test-classes/cli/changelog-add-with-label-placeholder.cli"));
+            Assert.assertTrue("Expected changelog-add-with-label-placeholder.cli success but it failed", success);
+            assertTableModified("dmr_add_with_label", Arrays.asList("firstname", "id", "lastname", "state"));
+        } finally {
+            removeLiquibaseDmrModel("dmr-model-with-label-placeholder.xml");
+            System.clearProperty("label.name");
+        }
+    }
+
+    @Test
     public void testDmrModelCreateWithDuplicateDatasourceRef() throws Exception {
         boolean success = executeCliScript(new File("target/test-classes/cli/changelog-add-with-duplicate-datasource-ref.cli"));
         Assert.assertFalse("Expected changelog-add-with-duplicate-datasource-ref.cli to fail but it was successful", success);
@@ -126,6 +150,17 @@ public class LiquibaseDmrModelTest extends LiquibaseTestSupport {
             assertTableModified("dmr_update_with_context", Arrays.asList("firstname", "id", "lastname", "state"));
         } finally {
             removeLiquibaseDmrModel("dmr-model-update-with-context-test.xml");
+        }
+    }
+
+    @Test
+    public void testDmrModelUpdateLabels() throws Exception {
+        try {
+            boolean success = executeCliScript(new File("target/test-classes/cli/changelog-update-with-label.cli"));
+            Assert.assertTrue("Expected changelog-update-with-label.cli success but it failed", success);
+            assertTableModified("dmr_update_with_label", Arrays.asList("firstname", "id", "lastname", "state"));
+        } finally {
+            removeLiquibaseDmrModel("dmr-model-update-with-label-test.xml");
         }
     }
 

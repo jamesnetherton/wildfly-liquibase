@@ -47,6 +47,12 @@ public final class ChangeLogResource extends SimpleResourceDefinition {
         .setRequired(false)
         .build();
 
+    public static final SimpleAttributeDefinition LABELS = new SimpleAttributeDefinitionBuilder(ModelConstants.LABELS, ModelType.STRING)
+        .addFlag(AttributeAccess.Flag.RESTART_RESOURCE_SERVICES)
+        .setAllowExpression(true)
+        .setRequired(false)
+        .build();
+
     ChangeLogResource() {
         super(CHANGE_LOG_PATH,
               LiquibaseResourceDescriptionResolvers.getResolver(ModelConstants.DATABASE_CHANGELOG),
@@ -59,5 +65,6 @@ public final class ChangeLogResource extends SimpleResourceDefinition {
         resourceRegistration.registerReadWriteAttribute(VALUE, null, ChangeLogWrite.INSTANCE);
         resourceRegistration.registerReadWriteAttribute(DATASOURCE_REF, null, ChangeLogWrite.INSTANCE);
         resourceRegistration.registerReadWriteAttribute(CONTEXT_NAMES, null, ChangeLogWrite.INSTANCE);
+        resourceRegistration.registerReadWriteAttribute(LABELS, null, ChangeLogWrite.INSTANCE);
     }
 }

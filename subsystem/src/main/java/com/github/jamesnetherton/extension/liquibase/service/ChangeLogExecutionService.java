@@ -74,14 +74,11 @@ public final class ChangeLogExecutionService extends AbstractService<ChangeLogEx
             DataSource datasource = (DataSource) initialContext.lookup(configuration.getDatasourceRef());
             connection = new JdbcConnection(datasource.getConnection());
 
-            liquibase = new Liquibase(configuration.getFileName(), resourceAccessor, connection);
+            Contexts contexts = new Contexts(configuration.getContextNames());
+            LabelExpression labelExpression = new LabelExpression(configuration.getLabels());
 
-            String contextNames = configuration.getContextNames();
-            if (contextNames != null) {
-                liquibase.update(new Contexts(contextNames), new LabelExpression());
-            } else {
-                liquibase.update(new Contexts(), new LabelExpression());
-            }
+            liquibase = new Liquibase(configuration.getFileName(), resourceAccessor, connection);
+            liquibase.update(contexts, labelExpression);
         } catch (NamingException | LiquibaseException | SQLException e) {
             throw new IllegalStateException(e);
         } finally {

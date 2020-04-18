@@ -75,6 +75,7 @@ final class LiquibaseSubsystemParser implements Namespace10, XMLStreamConstants,
         String changeLogName = null;
         String datasourceRef = null;
         String contextNames = null;
+        String labels = null;
 
         for (int i = 0; i < reader.getAttributeCount(); i++) {
             requireNoNamespaceAttribute(reader, i);
@@ -90,6 +91,9 @@ final class LiquibaseSubsystemParser implements Namespace10, XMLStreamConstants,
                     break;
                 case CONTEXT_NAMES:
                     contextNames = attrValue;
+                    break;
+                case LABELS:
+                    labels = attrValue;
                     break;
                 default:
                     throw unexpectedAttribute(reader, i);
@@ -125,6 +129,10 @@ final class LiquibaseSubsystemParser implements Namespace10, XMLStreamConstants,
 
         if (contextNames != null) {
             propNode.get(ModelConstants.CONTEXT_NAMES).set(contextNames);
+        }
+
+        if (labels != null) {
+            propNode.get(ModelConstants.LABELS).set(contextNames);
         }
 
         operations.add(propNode);

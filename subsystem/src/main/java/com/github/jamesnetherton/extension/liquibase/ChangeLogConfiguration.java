@@ -30,6 +30,7 @@ public final class ChangeLogConfiguration {
     private String definition;
     private String datasourceRef;
     private String contextNames;
+    private String labels;
     private ClassLoader classLoader;
     private ConfigurationOrigin origin;
 
@@ -63,6 +64,14 @@ public final class ChangeLogConfiguration {
 
     public String getContextNames() {
         return contextNames;
+    }
+
+    public void setLabels(String labels) {
+        this.labels = labels;
+    }
+
+    public String getLabels() {
+        return labels;
     }
 
     public void setClassLoader(ClassLoader classLoader) {
@@ -130,12 +139,13 @@ public final class ChangeLogConfiguration {
             return false;
         ChangeLogConfiguration that = (ChangeLogConfiguration) o;
         return Objects.equals(name, that.name) && Objects.equals(definition, that.definition) && Objects.equals(datasourceRef, that.datasourceRef) && Objects
-                .equals(contextNames, that.contextNames) && Objects.equals(classLoader, that.classLoader) && origin == that.origin;
+                .equals(contextNames, that.contextNames) && Objects.equals(labels, that.labels) && Objects.equals(classLoader, that.classLoader)
+                && origin == that.origin;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, definition, datasourceRef, contextNames, classLoader, origin);
+        return Objects.hash(name, definition, datasourceRef, contextNames, labels, classLoader, origin);
     }
 
     public static class Builder {
@@ -143,6 +153,7 @@ public final class ChangeLogConfiguration {
         private String definition;
         private String datasourceRef;
         private String contextNames;
+        private String labels;
         private ClassLoader classLoader;
         private ConfigurationOrigin origin;
 
@@ -163,6 +174,11 @@ public final class ChangeLogConfiguration {
 
         public Builder contextNames(String contextNames) {
             this.contextNames = contextNames;
+            return this;
+        }
+
+        public Builder labels(String labels) {
+            this.labels = labels;
             return this;
         }
 
@@ -207,6 +223,7 @@ public final class ChangeLogConfiguration {
             configuration.setDefinition(this.definition);
             configuration.setDatasourceRef(this.datasourceRef);
             configuration.setContextNames(this.contextNames);
+            configuration.setLabels(this.labels);
             configuration.setClassLoader(this.classLoader);
             configuration.setOrigin(this.origin);
             return configuration;

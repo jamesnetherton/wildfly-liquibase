@@ -35,6 +35,7 @@ final class ChangeLogAdd extends AbstractAddStepHandler {
         ChangeLogResource.VALUE.validateAndSet(operation, model);
         ChangeLogResource.DATASOURCE_REF.validateAndSet(operation, model);
         ChangeLogResource.CONTEXT_NAMES.validateAndSet(operation, model);
+        ChangeLogResource.LABELS.validateAndSet(operation, model);
     }
 
     @Override

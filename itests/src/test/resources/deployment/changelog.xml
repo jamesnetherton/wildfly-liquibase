@@ -40,7 +40,6 @@
             <column name="lastname" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
-            <column name="state" type="char(2)"/>
         </createTable>
     </changeSet>
 
@@ -50,9 +49,27 @@
         </addColumn>
     </changeSet>
 
-    <changeSet id="jboss-all-change-3" author="wildfly" context="test3">
+    <changeSet id="jboss-all-change-3" author="wildfly" labels="prod">
+        <addColumn tableName="jboss_all_test_1">
+            <column name="state" type="char(2)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="jboss-all-change-4" author="wildfly" context="test3">
         <addColumn tableName="jboss_all_test_1">
             <column name="country_code" type="char(2)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="jboss-all-change-5" author="wildfly" labels="dev">
+        <addColumn tableName="jboss_all_test_1">
+            <column name="dev_column" type="char(1)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="jboss-all-change-6" author="wildfly" labels="qa">
+        <addColumn tableName="jboss_all_test_1">
+            <column name="qa_column" type="char(1)"/>
         </addColumn>
     </changeSet>
 </databaseChangeLog>

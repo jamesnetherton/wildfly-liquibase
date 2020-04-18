@@ -32,7 +32,7 @@ final class ChangeLogWrite extends AbstractWriteAttributeHandler<Object> {
     static final ChangeLogWrite INSTANCE = new ChangeLogWrite();
 
     private ChangeLogWrite() {
-        super(ChangeLogResource.VALUE, ChangeLogResource.DATASOURCE_REF, ChangeLogResource.CONTEXT_NAMES);
+        super(ChangeLogResource.VALUE, ChangeLogResource.DATASOURCE_REF, ChangeLogResource.CONTEXT_NAMES, ChangeLogResource.LABELS);
     }
 
     @Override

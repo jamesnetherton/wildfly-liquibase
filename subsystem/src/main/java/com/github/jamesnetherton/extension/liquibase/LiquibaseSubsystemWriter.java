@@ -48,6 +48,7 @@ final class LiquibaseSubsystemWriter implements XMLStreamConstants, XMLElementWr
                 String val = properties.get(key).get(ModelConstants.VALUE).asString();
                 String datasourceRef = properties.get(key).get(ModelConstants.DATASOURCE_REF).asString();
                 String contextNames = properties.get(key).get(ModelConstants.CONTEXT_NAMES).asStringOrNull();
+                String labels = properties.get(key).get(ModelConstants.LABELS).asStringOrNull();
 
                 writer.writeStartElement(Namespace10.Element.DATABASE_CHANGELOG.getLocalName());
                 writer.writeAttribute(Namespace10.Attribute.NAME.getLocalName(), key);
@@ -55,6 +56,10 @@ final class LiquibaseSubsystemWriter implements XMLStreamConstants, XMLElementWr
 
                 if (contextNames != null) {
                     writer.writeAttribute(Namespace10.Attribute.CONTEXT_NAMES.getLocalName(), contextNames);
+                }
+
+                if (labels != null) {
+                    writer.writeAttribute(Namespace10.Attribute.LABELS.getLocalName(), labels);
                 }
 
                 writer.writeCharacters(val);

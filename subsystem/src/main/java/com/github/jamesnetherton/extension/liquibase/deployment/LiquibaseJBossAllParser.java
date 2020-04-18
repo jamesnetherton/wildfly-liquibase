@@ -51,6 +51,7 @@ public class LiquibaseJBossAllParser implements JBossAllXMLParser<BuilderCollect
     enum Element {
         LIQUIBASE(ROOT_ELEMENT),
         CONTEXTS(new QName(NAMESPACE_1_0, "contexts")),
+        LABELS(new QName(NAMESPACE_1_0, "labels")),
         UNKNOWN(null);
 
         private static final Map<QName, Element> elements;
@@ -128,19 +129,21 @@ public class LiquibaseJBossAllParser implements JBossAllXMLParser<BuilderCollect
 
         while (reader.hasNext()) {
             switch (reader.nextTag()) {
-                case XMLStreamConstants.END_ELEMENT: {
-                    result.addBuilder(builder);
-                    return;
-                }
                 case XMLStreamConstants.START_ELEMENT: {
                     final Element element = Element.of(reader.getName());
                     switch (element) {
                         case CONTEXTS:
-                            parseContextsElement(reader, builder);
+                            builder.contextNames(parseElement(reader, builder));
+                            break;
+                        case LABELS:
+                            builder.labels(parseElement(reader, builder));
                             break;
                         default:
                             throw unexpectedContent(reader);
                     }
+                    break;
+                }
+                case XMLStreamConstants.END_ELEMENT: {
                     break;
                 }
                 default: {
@@ -149,15 +152,15 @@ public class LiquibaseJBossAllParser implements JBossAllXMLParser<BuilderCollect
             }
         }
 
-        throw endOfDocument(reader.getLocation());
+        result.addBuilder(builder);
     }
 
-    private void parseContextsElement(XMLExtendedStreamReader reader, Builder result) throws XMLStreamException {
+    private String parseElement(XMLExtendedStreamReader reader, Builder result) throws XMLStreamException {
         switch (reader.next()) {
             case XMLStreamConstants.CHARACTERS:
-                result.contextNames(reader.getText());
+                return reader.getText();
             case XMLStreamConstants.END_ELEMENT:
-                return;
+                return null;
             default:
                 throw unexpectedContent(reader);
         }

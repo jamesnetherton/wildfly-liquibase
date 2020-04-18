@@ -21,5 +21,6 @@
 <jboss xmlns="urn:jboss:1.0">
     <liquibase xmlns="urn:com.github.jamesnetherton.liquibase:1.0" changelog="changelog.xml">
         <contexts>test1,test2</contexts>
+        <labels>prod</labels>
     </liquibase>
 </jboss>
