@@ -38,21 +38,14 @@ public final class WildFlyLiquibaseResourceAccessor extends VFSResourceAccessor 
         + "http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd\">\n";
     private static final String LIQUIBASE_ELEMENT_END = "</databaseChangeLog>";
 
-    private final ChangeLogConfiguration configuration;
-
     public WildFlyLiquibaseResourceAccessor(ChangeLogConfiguration configuration) {
-        super(configuration.getClassLoader());
-        this.configuration = configuration;
+        super(configuration);
     }
 
     @Override
     public Set<InputStream> getResourcesAsStream(String path) throws IOException {
         Set<InputStream> resources = new HashSet<>();
         InputStream resource = configuration.getClassLoader().getResourceAsStream(path);
-
-        if (resource == null && !path.equals(configuration.getFileName())) {
-            return null;
-        }
 
         if (resource == null) {
             String definition = configuration.getDefinition();
@@ -65,10 +58,26 @@ public final class WildFlyLiquibaseResourceAccessor extends VFSResourceAccessor 
                     definition += LIQUIBASE_ELEMENT_END;
                 }
             }
-            resources.add(new ByteArrayInputStream(definition.getBytes(StandardCharsets.UTF_8)));
+
+            if (path.equals(configuration.getFileName())) {
+                resources.add(new ByteArrayInputStream(definition.getBytes(StandardCharsets.UTF_8)));
+            } else {
+                resources = super.getResourcesAsStream(path);
+                if (resources == null || resources.isEmpty()) {
+                    // Attempt to work out the 'relative to' change log path
+                    String parentPath =  configuration.getPath().replace("/content/" + configuration.getDeployment(), "");
+                    parentPath = parentPath.replace(configuration.getFileName(), "");
+                    resource = configuration.getClassLoader().getResourceAsStream(parentPath + path);
+                    if (resource != null) {
+                        resources = new HashSet<>();
+                        resources.add(resource);
+                    }
+                }
+            }
         } else {
             resources.add(resource);
         }
+
         return resources;
     }
 }

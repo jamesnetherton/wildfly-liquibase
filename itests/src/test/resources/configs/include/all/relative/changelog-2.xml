@@ -23,8 +23,18 @@
         xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
+         http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <include file="/com/github/jamesnetherton/liquibase/test/changes-1.xml"/>
-    <include file="test2/changes-2.xml" relativeToChangelogFile="true"/>
+    <property name="datasource-ref" value="java:jboss/datasources/ExampleDS"/>
+
+    <preConditions>
+        <runningAs username="SA"/>
+    </preConditions>
+
+    <changeSet id="include-all-relative-change-2" author="wildfly">
+        <addColumn tableName="include_all_relative_test">
+            <column name="username" type="varchar(8)"/>
+        </addColumn>
+    </changeSet>
+
 </databaseChangeLog>

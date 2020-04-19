@@ -25,6 +25,8 @@ import liquibase.Liquibase;
 import liquibase.database.jvm.JdbcConnection;
 import liquibase.exception.DatabaseException;
 import liquibase.exception.LiquibaseException;
+import liquibase.resource.CompositeResourceAccessor;
+import liquibase.resource.FileSystemResourceAccessor;
 import liquibase.resource.ResourceAccessor;
 
 import java.sql.SQLException;
@@ -68,7 +70,7 @@ public final class ChangeLogExecutionService extends AbstractService<ChangeLogEx
         Liquibase liquibase = null;
 
         try {
-            ResourceAccessor resourceAccessor = new WildFlyLiquibaseResourceAccessor(configuration);
+            ResourceAccessor resourceAccessor = new CompositeResourceAccessor(new FileSystemResourceAccessor(), new WildFlyLiquibaseResourceAccessor(configuration));
 
             InitialContext initialContext = new InitialContext();
             DataSource datasource = (DataSource) initialContext.lookup(configuration.getDatasourceRef());

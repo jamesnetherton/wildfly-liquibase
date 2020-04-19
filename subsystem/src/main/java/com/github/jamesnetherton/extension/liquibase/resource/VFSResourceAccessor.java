@@ -21,19 +21,47 @@ package com.github.jamesnetherton.extension.liquibase.resource;
 
 import liquibase.resource.ClassLoaderResourceAccessor;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
+
+import com.github.jamesnetherton.extension.liquibase.ChangeLogConfiguration;
 
 import org.jboss.vfs.VFS;
 import org.jboss.vfs.VirtualFile;
 
 public class VFSResourceAccessor extends ClassLoaderResourceAccessor {
 
-    public VFSResourceAccessor(ClassLoader classLoader) {
-        super(classLoader);
+    protected final ChangeLogConfiguration configuration;
+    private static final String VFS_CONTENTS_PATH_MARKER = "contents";
+
+    public VFSResourceAccessor(ChangeLogConfiguration configuration) {
+        super(configuration.getClassLoader());
+        this.configuration = configuration;
+    }
+
+    @Override
+    public Set<InputStream> getResourcesAsStream(String path) throws IOException {
+        // TODO: Improve this as it could potentially fail in some edge case scenarios
+        if (path.contains("/vfs/")) {
+            Set<InputStream> resources = new HashSet<>();
+            int index = path.indexOf(VFS_CONTENTS_PATH_MARKER);
+            if (index > -1) {
+                ClassLoader classLoader = toClassLoader();
+                String resolvedPath = path.substring(index + VFS_CONTENTS_PATH_MARKER.length());
+                InputStream resource = classLoader.getResourceAsStream(resolvedPath);
+                if (resource != null) {
+                    resources.add(resource);
+                }
+            }
+            return resources;
+        }
+        return super.getResourcesAsStream(path);
     }
 
     @Override
@@ -41,7 +69,10 @@ public class VFSResourceAccessor extends ClassLoaderResourceAccessor {
         ClassLoader classLoader = toClassLoader();
 
         if (relativeTo != null) {
-            URL parentUrl = classLoader.getResource(relativeTo);
+            String tempPath =  configuration.getPath().replace("/content/" + configuration.getDeployment(), "");
+            final String parentPath = tempPath.replace(configuration.getFileName(), "");
+            URL parentUrl = classLoader.getResource(parentPath + path);
+
             if (parentUrl == null) {
                 throw new IllegalStateException("Cannot locate resource parent of " + relativeTo);
             }
@@ -59,7 +90,7 @@ public class VFSResourceAccessor extends ClassLoaderResourceAccessor {
             return changeLogFiles.getChildren()
                 .stream()
                 .map(VirtualFile::getName)
-                .map(name -> path + name)
+                .map(name -> parentPath + path + name)
                 .collect(Collectors.toSet());
         }
 
@@ -78,5 +109,4 @@ public class VFSResourceAccessor extends ClassLoaderResourceAccessor {
             .map(name -> path + name)
             .collect(Collectors.toSet());
     }
-
 }

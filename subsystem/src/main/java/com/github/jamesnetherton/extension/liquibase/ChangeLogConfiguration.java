@@ -27,6 +27,8 @@ import java.util.Objects;
 public final class ChangeLogConfiguration {
 
     private String name;
+    private String path;
+    private String deployment;
     private String definition;
     private String datasourceRef;
     private String contextNames;
@@ -40,6 +42,22 @@ public final class ChangeLogConfiguration {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public String getDeployment() {
+        return deployment;
+    }
+
+    public void setDeployment(String deployment) {
+        this.deployment = deployment;
     }
 
     public String getDefinition() {
@@ -138,18 +156,20 @@ public final class ChangeLogConfiguration {
         if (o == null || getClass() != o.getClass())
             return false;
         ChangeLogConfiguration that = (ChangeLogConfiguration) o;
-        return Objects.equals(name, that.name) && Objects.equals(definition, that.definition) && Objects.equals(datasourceRef, that.datasourceRef) && Objects
-                .equals(contextNames, that.contextNames) && Objects.equals(labels, that.labels) && Objects.equals(classLoader, that.classLoader)
-                && origin == that.origin;
+        return Objects.equals(name, that.name) && Objects.equals(path, that.path) && Objects.equals(deployment, that.deployment) && Objects
+                .equals(definition, that.definition) && Objects.equals(datasourceRef, that.datasourceRef) && Objects.equals(contextNames, that.contextNames) && Objects
+                .equals(labels, that.labels) && Objects.equals(classLoader, that.classLoader) && origin == that.origin;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, definition, datasourceRef, contextNames, labels, classLoader, origin);
+        return Objects.hash(name, path, deployment, definition, datasourceRef, contextNames, labels, classLoader, origin);
     }
 
     public static class Builder {
         private String name;
+        private String path;
+        private String deployment;
         private String definition;
         private String datasourceRef;
         private String contextNames;
@@ -159,6 +179,16 @@ public final class ChangeLogConfiguration {
 
         public Builder name(String name) {
             this.name = name;
+            return this;
+        }
+
+        public Builder path(String path) {
+            this.path = path;
+            return this;
+        }
+
+        public Builder deployment(String deployment) {
+            this.deployment = deployment;
             return this;
         }
 
@@ -220,6 +250,8 @@ public final class ChangeLogConfiguration {
 
             ChangeLogConfiguration configuration = new ChangeLogConfiguration();
             configuration.setName(this.name);
+            configuration.setPath(this.path);
+            configuration.setDeployment(this.deployment);
             configuration.setDefinition(this.definition);
             configuration.setDatasourceRef(this.datasourceRef);
             configuration.setContextNames(this.contextNames);

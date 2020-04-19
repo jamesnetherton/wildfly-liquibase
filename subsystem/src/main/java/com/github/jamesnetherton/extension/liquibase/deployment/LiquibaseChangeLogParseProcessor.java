@@ -107,7 +107,7 @@ public class LiquibaseChangeLogParseProcessor implements DeploymentUnitProcessor
             for (VirtualFile virtualFile : changeLogFiles) {
                 File file = virtualFile.getPhysicalFile();
                 String changeLogDefinition = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
-                String datasourceRef = parseDataSourceRef(file, deploymentUnit.getName(), module.getClassLoader());
+                String datasourceRef = parseDataSourceRef(virtualFile, deploymentUnit.getName(), module.getClassLoader());
 
                 Builder builder;
                 if (builderCollection == null) {
@@ -117,6 +117,8 @@ public class LiquibaseChangeLogParseProcessor implements DeploymentUnitProcessor
                 }
 
                 ChangeLogConfiguration configuration = builder.name(file.getName())
+                    .path(virtualFile.getPathName())
+                    .deployment(deploymentUnit.getName())
                     .definition(changeLogDefinition)
                     .datasourceRef(datasourceRef)
                     .classLoader(module.getClassLoader())
@@ -134,7 +136,7 @@ public class LiquibaseChangeLogParseProcessor implements DeploymentUnitProcessor
     public void undeploy(DeploymentUnit deploymentUnit) {
     }
 
-    private String parseDataSourceRef(File file, String runtimeName, ClassLoader classLoader) throws DeploymentUnitProcessingException {
+    private String parseDataSourceRef(VirtualFile file, String runtimeName, ClassLoader classLoader) throws DeploymentUnitProcessingException {
         ChangeLogParser parser = ChangeLogParserFactory.createParser(file.getName());
         if (parser == null) {
             parser = ChangeLogParserFactory.createParser(runtimeName);
@@ -145,21 +147,23 @@ public class LiquibaseChangeLogParseProcessor implements DeploymentUnitProcessor
         }
 
         try {
-            CompositeResourceAccessor resourceAccessor = new CompositeResourceAccessor(new FileSystemResourceAccessor(), new VFSResourceAccessor(classLoader));
-            DatabaseChangeLog changeLog = parser.parse(file.getAbsolutePath(), new ChangeLogParameters(), resourceAccessor);
+            //TODO: Refactor this. Creating ChangeLogConfiguration just to satisfy VFSResourceAccessor is wasteful
+            ChangeLogConfiguration configuration = new ChangeLogConfiguration();
+            configuration.setName(file.getName());
+            configuration.setPath(file.getPathName());
+            configuration.setDeployment(runtimeName);
+            configuration.setClassLoader(classLoader);
+
+            CompositeResourceAccessor resourceAccessor = new CompositeResourceAccessor(new FileSystemResourceAccessor(), new VFSResourceAccessor(configuration));
+            DatabaseChangeLog changeLog = parser.parse(file.getPhysicalFile().getAbsolutePath(), new ChangeLogParameters(), resourceAccessor);
             Object datasourceRef = changeLog.getChangeLogParameters().getValue(ModelConstants.DATASOURCE_REF, changeLog);
             if (datasourceRef == null) {
                 throw new DeploymentUnitProcessingException("Change log is missing a datasource-ref property");
             }
             return (String) datasourceRef;
-        } catch (ChangeLogParseException e) {
+        } catch (ChangeLogParseException | IOException e) {
             throw new DeploymentUnitProcessingException(e);
         }
     }
 
-    private static final class WildFlyLiquibaseDeploymentResourceLoader extends VFSResourceAccessor {
-        public WildFlyLiquibaseDeploymentResourceLoader(ClassLoader classLoader) {
-            super(classLoader);
-        }
-    }
 }
