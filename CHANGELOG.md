@@ -1,5 +1,46 @@
 ### Changelog
 
+#### WildFly Liquibase 0.8.0
+
+**Enhancements**
+
+* [#42][42] wildfly-liquibase doesn't work with hibernate.hbm2ddl.auto set to validate
+* [#49][49] Upgrade to Liquibase 3.8.3
+* [#50][50] Upgrade to Liquibase 3.8.4
+* [#51][51] Upgrade to Liquibase 3.8.5
+* [#52][52] Create project changelog
+* [#53][53] Add support for LiquibaseServletListener
+* [#55][55] Upgrade to Liquibase 3.8.6
+* [#57][57] Upgrade to WildFly 19.0.0.Final
+* [#58][58] Upgrade Liquibase to 3.8.8
+* [#60][60] No ability to specify 'contexts' when deploying jar with *changelog.xml
+* [#61][61] Upgrade Liquibase to 3.8.9
+* [#62][62] Add support for labels
+
+For details see [0.8.0 Enhancements](https://github.com/jamesnetherton/wildfly-liquibase/issues?q=milestone%3A"0.8.0"+label%3Aenhancement)
+
+**Bugs**
+
+* [#59][59] 'includeAll' cause infinite loop
+* [#63][63] relativeToChangelogFile attribute cannot handle VFS paths
+
+For details see [0.8.0 Bugs](https://github.com/jamesnetherton/wildfly-liquibase/issues?q=milestone%3A"0.8.0"+label%3Abug)
+
+[42]: https://github.com/jamesnetherton/wildfly-liquibase/issues/42
+[49]: https://github.com/jamesnetherton/wildfly-liquibase/issues/49
+[50]: https://github.com/jamesnetherton/wildfly-liquibase/issues/50
+[51]: https://github.com/jamesnetherton/wildfly-liquibase/issues/51
+[52]: https://github.com/jamesnetherton/wildfly-liquibase/issues/52
+[53]: https://github.com/jamesnetherton/wildfly-liquibase/issues/53
+[55]: https://github.com/jamesnetherton/wildfly-liquibase/issues/55
+[57]: https://github.com/jamesnetherton/wildfly-liquibase/issues/57
+[58]: https://github.com/jamesnetherton/wildfly-liquibase/issues/58
+[60]: https://github.com/jamesnetherton/wildfly-liquibase/issues/60
+[61]: https://github.com/jamesnetherton/wildfly-liquibase/issues/61
+[62]: https://github.com/jamesnetherton/wildfly-liquibase/issues/62
+[59]: https://github.com/jamesnetherton/wildfly-liquibase/issues/59
+[63]: https://github.com/jamesnetherton/wildfly-liquibase/issues/63
+
 #### WildFly Liquibase 0.7.0
 
 **Enhancements**
