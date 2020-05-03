@@ -19,8 +19,9 @@
  */
 package com.github.jamesnetherton.extension.liquibase.test.deployment;
 
-import com.github.jamesnetherton.liquibase.arquillian.LiquibaseTestSupport;
 import com.github.jamesnetherton.liquibase.arquillian.ChangeLogDefinition;
+import com.github.jamesnetherton.liquibase.arquillian.LiquibaseTestSupport;
+import com.github.jamesnetherton.liquibase.arquillian.ResourceLocation;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -31,18 +32,18 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 
 @RunWith(Arquillian.class)
-public class LiquibaseWarDeploymentTest extends LiquibaseTestSupport {
+public class LiquibaseWarMetaInfDeploymentTest extends LiquibaseTestSupport {
 
-    @ChangeLogDefinition
-    private String tableName;
+    @ChangeLogDefinition(resourceLocation = ResourceLocation.META_INF)
+    private String tableNameMetaInf;
 
     @Deployment
     public static Archive<?> deployment() {
-        return ShrinkWrap.create(WebArchive.class, "liquibase-war-deployment-test.war");
+        return ShrinkWrap.create(WebArchive.class, "liquibase-war-metainf-deployment-test.war");
     }
 
     @Test
-    public void testWarDeployment() throws Exception {
-        assertTableModified(tableName);
+    public void testWarDeploymentMetaInfResource() throws Exception {
+        assertTableModified(tableNameMetaInf);
     }
 }

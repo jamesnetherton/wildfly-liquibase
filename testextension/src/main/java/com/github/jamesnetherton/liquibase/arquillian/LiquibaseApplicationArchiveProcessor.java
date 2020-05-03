@@ -31,6 +31,8 @@ import org.jboss.arquillian.test.spi.TestClass;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
 import org.jboss.shrinkwrap.api.spec.EnterpriseArchive;
+import org.jboss.shrinkwrap.api.spec.JavaArchive;
+import org.jboss.shrinkwrap.api.spec.WebArchive;
 
 /**
  * {@link ApplicationArchiveProcessor} for automatically adding Liquibase change log file(s) to a test deployment.
@@ -73,12 +75,36 @@ public final class LiquibaseApplicationArchiveProcessor implements ApplicationAr
                     changeLog = changeLog.replaceFirst("#ID#", String.valueOf(CHANGESET_ID.incrementAndGet()));
                 }
 
-                if (definition.debug()) {
-                    LiquibaseLogger.ROOT_LOGGER.info(changeLog);
+                String fileName = definition.fileName().isEmpty() ? String.format("%s-%s", tableName, format.getFileName()) : definition.fileName();
+                StringAsset asset = new StringAsset(changeLog);
+                if (applicationArchive instanceof JavaArchive) {
+                    JavaArchive javaArchive = (JavaArchive) applicationArchive;
+                    if (definition.resourceLocation().equals(ResourceLocation.CLASSPATH)) {
+                        javaArchive.addAsResource(asset, fileName);
+                    } else if (definition.resourceLocation().equals(ResourceLocation.META_INF)) {
+                        javaArchive.addAsManifestResource(asset, fileName);
+                    } else {
+                        javaArchive.add(asset, fileName);
+                    }
+                } else if (applicationArchive instanceof WebArchive) {
+                    WebArchive webArchive = (WebArchive) applicationArchive;
+                    if (definition.resourceLocation().equals(ResourceLocation.CLASSPATH)) {
+                        webArchive.addAsResource(asset, fileName);
+                    } else if (definition.resourceLocation().equals(ResourceLocation.META_INF)) {
+                        webArchive.addAsManifestResource(asset, fileName);
+                    } else if (definition.resourceLocation().equals(ResourceLocation.WEB_INF)) {
+                        webArchive.addAsWebInfResource(asset, fileName);
+                    } else {
+                        webArchive.add(asset, fileName);
+                    }
+                } else {
+                    applicationArchive.add(asset, fileName);
                 }
 
-                String fileName = definition.fileName().isEmpty() ? String.format("%s-%s", tableName, format.getFileName()) : definition.fileName();
-                applicationArchive.add(new StringAsset(changeLog), fileName);
+                if (definition.debug()) {
+                    LiquibaseLogger.ROOT_LOGGER.info(applicationArchive.toString(true));
+                    LiquibaseLogger.ROOT_LOGGER.info(changeLog);
+                }
             }
         }
     }
