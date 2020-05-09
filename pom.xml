@@ -23,7 +23,7 @@
         <version.org.liquibase>3.8.9</version.org.liquibase>
         <version.org.slf4j>1.7.30</version.org.slf4j>
         <version.org.snakeyaml>1.26</version.org.snakeyaml>
-        <version.org.wildfly>19.0.0.Final</version.org.wildfly>
+        <version.org.wildfly>19.1.0.Final</version.org.wildfly>
         <version.org.wildfly.arquillian>2.2.0.Final</version.org.wildfly.arquillian>
 
         <!-- Plugin versions -->
