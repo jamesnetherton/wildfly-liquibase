@@ -107,7 +107,7 @@ public class LiquibaseChangeLogParseProcessor implements DeploymentUnitProcessor
             for (VirtualFile virtualFile : changeLogFiles) {
                 File file = virtualFile.getPhysicalFile();
                 String changeLogDefinition = new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8);
-                String datasourceRef = parseDataSourceRef(virtualFile, deploymentUnit.getName(), module.getClassLoader());
+                String dataSource = parseDataSource(virtualFile, deploymentUnit.getName(), module.getClassLoader());
 
                 Builder builder;
                 if (builderCollection == null) {
@@ -120,7 +120,7 @@ public class LiquibaseChangeLogParseProcessor implements DeploymentUnitProcessor
                     .path(virtualFile.getPathName())
                     .deployment(deploymentUnit.getName())
                     .definition(changeLogDefinition)
-                    .datasourceRef(datasourceRef)
+                    .dataSource(dataSource)
                     .classLoader(module.getClassLoader())
                     .deploymentOrigin()
                     .build();
@@ -136,7 +136,7 @@ public class LiquibaseChangeLogParseProcessor implements DeploymentUnitProcessor
     public void undeploy(DeploymentUnit deploymentUnit) {
     }
 
-    private String parseDataSourceRef(VirtualFile file, String runtimeName, ClassLoader classLoader) throws DeploymentUnitProcessingException {
+    private String parseDataSource(VirtualFile file, String runtimeName, ClassLoader classLoader) throws DeploymentUnitProcessingException {
         ChangeLogParser parser = ChangeLogParserFactory.createParser(file.getName());
         if (parser == null) {
             parser = ChangeLogParserFactory.createParser(runtimeName);
@@ -156,11 +156,11 @@ public class LiquibaseChangeLogParseProcessor implements DeploymentUnitProcessor
 
             CompositeResourceAccessor resourceAccessor = new CompositeResourceAccessor(new FileSystemResourceAccessor(), new VFSResourceAccessor(configuration));
             DatabaseChangeLog changeLog = parser.parse(file.getPhysicalFile().getAbsolutePath(), new ChangeLogParameters(), resourceAccessor);
-            Object datasourceRef = changeLog.getChangeLogParameters().getValue(ModelConstants.DATASOURCE_REF, changeLog);
-            if (datasourceRef == null) {
-                throw new DeploymentUnitProcessingException("Change log is missing a datasource-ref property");
+            Object dataSource = changeLog.getChangeLogParameters().getValue(ModelConstants.DATASOURCE, changeLog);
+            if (dataSource == null) {
+                throw new DeploymentUnitProcessingException("Change log is missing a datasource property");
             }
-            return (String) datasourceRef;
+            return (String) dataSource;
         } catch (ChangeLogParseException | IOException e) {
             throw new DeploymentUnitProcessingException(e);
         }

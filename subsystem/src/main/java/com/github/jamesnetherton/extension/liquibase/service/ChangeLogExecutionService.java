@@ -73,7 +73,7 @@ public final class ChangeLogExecutionService extends AbstractService<ChangeLogEx
             ResourceAccessor resourceAccessor = new CompositeResourceAccessor(new FileSystemResourceAccessor(), new WildFlyLiquibaseResourceAccessor(configuration));
 
             InitialContext initialContext = new InitialContext();
-            DataSource datasource = (DataSource) initialContext.lookup(configuration.getDatasourceRef());
+            DataSource datasource = (DataSource) initialContext.lookup(configuration.getDataSource());
             connection = new JdbcConnection(datasource.getConnection());
 
             Contexts contexts = new Contexts(configuration.getContextNames());

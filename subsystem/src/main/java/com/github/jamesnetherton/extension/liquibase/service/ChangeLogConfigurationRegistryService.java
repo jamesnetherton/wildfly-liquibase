@@ -44,11 +44,11 @@ public class ChangeLogConfigurationRegistryService extends AbstractService<Chang
         }
     }
 
-    public boolean containsDatasourceRef(String datasourceRef) {
+    public boolean containsDatasource(String dataSource) {
         synchronized (configurationMap) {
             return configurationMap.values()
                 .stream()
-                .anyMatch((configuration -> configuration.getDatasourceRef().equals(datasourceRef)));
+                .anyMatch((configuration -> configuration.getDataSource().equals(dataSource)));
         }
     }
 

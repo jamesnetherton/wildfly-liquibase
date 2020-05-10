@@ -26,7 +26,7 @@
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
     <!--  This should get ignored as the subsystem should not process this changelog when the LiquibaseServletListener is active -->
-    <property name="datasource-ref" value="java:jboss/datasources/InvalidDS"/>
+    <property name="datasource" value="java:jboss/datasources/InvalidDS"/>
 
     <preConditions>
         <runningAs username="SA"/>

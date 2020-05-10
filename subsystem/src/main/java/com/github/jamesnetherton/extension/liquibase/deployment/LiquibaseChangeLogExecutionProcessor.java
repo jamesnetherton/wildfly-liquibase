@@ -36,7 +36,7 @@ import org.jboss.msc.service.ServiceBuilder;
 import org.jboss.msc.service.ServiceController;
 import org.jboss.msc.service.ServiceName;
 import org.jboss.msc.service.ServiceRegistry;
-import static com.github.jamesnetherton.extension.liquibase.LiquibaseLogger.MESSAGE_DUPLICATE_DATASOURCE_REF;
+import static com.github.jamesnetherton.extension.liquibase.LiquibaseLogger.MESSAGE_DUPLICATE_DATASOURCE;
 
 /**
  * {@link DeploymentUnitProcessor} which adds a {@link ChangeLogExecutionService} service dependency for
@@ -57,17 +57,17 @@ public class LiquibaseChangeLogExecutionProcessor implements DeploymentUnitProce
         ChangeLogConfigurationRegistryService registryService = getRegistryService(phaseContext.getServiceRegistry());
 
         for (ChangeLogConfiguration configuration : configurations) {
-            String datasourceRef = configuration.getDatasourceRef();
+            String dataSource = configuration.getDataSource();
 
-            if (registryService.containsDatasourceRef(datasourceRef)) {
-                throw new DeploymentUnitProcessingException(String.format(MESSAGE_DUPLICATE_DATASOURCE_REF, datasourceRef));
+            if (registryService.containsDatasource(dataSource)) {
+                throw new DeploymentUnitProcessingException(String.format(MESSAGE_DUPLICATE_DATASOURCE, dataSource));
             }
 
-            ServiceName serviceName = ChangeLogExecutionService.createServiceName(datasourceRef);
+            ServiceName serviceName = ChangeLogExecutionService.createServiceName(dataSource);
             ChangeLogExecutionService service = new ChangeLogExecutionService(configuration);
             ServiceBuilder<ChangeLogExecutionService> builder = phaseContext.getServiceTarget().addService(serviceName, service);
 
-            ContextNames.BindInfo bindInfo = ContextNames.bindInfoFor(datasourceRef);
+            ContextNames.BindInfo bindInfo = ContextNames.bindInfoFor(dataSource);
             ServiceName dataSourceServiceName = AbstractDataSourceService.getServiceName(bindInfo);
             builder.addDependency(dataSourceServiceName);
 

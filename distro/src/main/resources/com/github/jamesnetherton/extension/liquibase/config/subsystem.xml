@@ -1,6 +1,6 @@
         <subsystem xmlns="urn:com.github.jamesnetherton.liquibase:1.0">
             <!-- Add your databaseChangeLog definitions here
-            <databaseChangeLog name="changelog.xml" datasource-ref="java:jboss/datasources/ExampleDS">
+            <databaseChangeLog name="changelog.xml" datasource="java:jboss/datasources/ExampleDS">
                 <![CDATA[
                     <preConditions>
                         <runningAs username="SA"/>

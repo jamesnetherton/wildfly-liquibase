@@ -2,8 +2,8 @@
   "databaseChangeLog": [
     {
       "property": {
-        "name": "datasource-ref",
-        "value": "#DATASOURCE_REF#"
+        "name": "datasource",
+        "value": "#DATASOURCE#"
       }
     },
     {

@@ -6,11 +6,11 @@
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd">
 
     <!--
-        Manadatory datasource-ref property to define which datasource we will be using.
+        Mandatory property to define which datasource we will be using.
 
         In this example we use the WildFly H2 in-memory example datasource.
     -->
-    <property name="datasource-ref" value="java:jboss/datasources/ExampleDS"/>
+    <property name="datasource" value="java:jboss/datasources/ExampleDS"/>
 
     <preConditions>
         <!-- Don't use SA in production. This is just for simplicity -->

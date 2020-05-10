@@ -51,7 +51,7 @@ public class LiquibaseMultipleConfigsSameDatasourceTest extends LiquibaseTestSup
     }
 
     @Test
-    public void testMultipleConfigurationsWithSameDatasourceRef() {
+    public void testMultipleConfigurationsWithSameDatasource() {
         try {
             deployer.deploy("invalid.jar");
             Assert.fail("Expected DeploymentUnitProcessingException to be thrown");

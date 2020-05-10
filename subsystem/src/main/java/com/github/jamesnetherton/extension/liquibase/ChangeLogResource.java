@@ -36,7 +36,7 @@ public final class ChangeLogResource extends SimpleResourceDefinition {
         .setAllowExpression(false)
         .build();
 
-    public static final SimpleAttributeDefinition DATASOURCE_REF = new SimpleAttributeDefinitionBuilder(ModelConstants.DATASOURCE_REF, ModelType.STRING)
+    public static final SimpleAttributeDefinition DATASOURCE = new SimpleAttributeDefinitionBuilder(ModelConstants.DATASOURCE, ModelType.STRING)
         .addFlag(AttributeAccess.Flag.RESTART_RESOURCE_SERVICES)
         .setAllowExpression(true)
         .build();
@@ -63,7 +63,7 @@ public final class ChangeLogResource extends SimpleResourceDefinition {
     @Override
     public void registerAttributes(ManagementResourceRegistration resourceRegistration) {
         resourceRegistration.registerReadWriteAttribute(VALUE, null, ChangeLogWrite.INSTANCE);
-        resourceRegistration.registerReadWriteAttribute(DATASOURCE_REF, null, ChangeLogWrite.INSTANCE);
+        resourceRegistration.registerReadWriteAttribute(DATASOURCE, null, ChangeLogWrite.INSTANCE);
         resourceRegistration.registerReadWriteAttribute(CONTEXT_NAMES, null, ChangeLogWrite.INSTANCE);
         resourceRegistration.registerReadWriteAttribute(LABELS, null, ChangeLogWrite.INSTANCE);
     }

@@ -1,6 +1,6 @@
 --liquibase formatted sql
 
---datasource-ref #DATASOURCE_REF#
+--datasource #DATASOURCE#
 
 --changeset changeset:#ID# author:wildfly
 CREATE TABLE #TABLE_NAME# (

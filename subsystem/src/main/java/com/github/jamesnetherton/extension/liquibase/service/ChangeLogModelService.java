@@ -34,7 +34,7 @@ import org.jboss.msc.service.AbstractService;
 import org.jboss.msc.service.ServiceBuilder;
 import org.jboss.msc.service.ServiceName;
 import org.jboss.msc.service.ServiceTarget;
-import static com.github.jamesnetherton.extension.liquibase.LiquibaseLogger.MESSAGE_DUPLICATE_DATASOURCE_REF;
+import static com.github.jamesnetherton.extension.liquibase.LiquibaseLogger.MESSAGE_DUPLICATE_DATASOURCE;
 
 /**
  * Service which handles updates to the Liquibase subsystem DMR model.
@@ -50,14 +50,14 @@ public class ChangeLogModelService extends AbstractService<ChangeLogModelService
     public void createChangeLogModel(OperationContext context, ModelNode operation, ModelNode model) throws OperationFailedException {
         String changeLogName = operation.get(ModelDescriptionConstants.OP_ADDR).asObject().get(ModelConstants.DATABASE_CHANGELOG).asString();
         String changeLogDefinition = ChangeLogResource.VALUE.resolveModelAttribute(context, model).asString();
-        String datasourceRef = ChangeLogResource.DATASOURCE_REF.resolveModelAttribute(context, model).asString();
+        String dataSource = ChangeLogResource.DATASOURCE.resolveModelAttribute(context, model).asString();
         String contextNames = ChangeLogResource.CONTEXT_NAMES.resolveModelAttribute(context, model).asString();
         String labels = ChangeLogResource.LABELS.resolveModelAttribute(context, model).asString();
 
         ChangeLogConfiguration configuration = ChangeLogConfiguration.builder()
             .name(changeLogName)
             .definition(changeLogDefinition)
-            .datasourceRef(datasourceRef)
+            .dataSource(dataSource)
             .contextNames(contextNames)
             .labels(labels)
             .classLoader(ChangeLogModelService.class.getClassLoader())
@@ -69,7 +69,7 @@ public class ChangeLogModelService extends AbstractService<ChangeLogModelService
         }
 
         ServiceTarget serviceTarget = context.getServiceTarget();
-        ServiceName serviceName = ChangeLogExecutionService.createServiceName(datasourceRef);
+        ServiceName serviceName = ChangeLogExecutionService.createServiceName(dataSource);
 
         installChangeLogExecutionService(serviceTarget, serviceName, configuration);
     }
@@ -83,14 +83,14 @@ public class ChangeLogModelService extends AbstractService<ChangeLogModelService
             throw new OperationFailedException("Unable to update change log model. Existing configuration is null.");
         }
 
-        String oldDatasourceRef = configuration.getDatasourceRef();
+        String oldDataSource = configuration.getDataSource();
 
         switch (operation.get(ModelDescriptionConstants.NAME).asString()) {
             case ModelConstants.CONTEXT_NAMES:
                 configuration.setContextNames(value);
                 break;
-            case ModelConstants.DATASOURCE_REF:
-                configuration.setDatasourceRef(value);
+            case ModelConstants.DATASOURCE:
+                configuration.setDataSource(value);
                 break;
             case ModelConstants.LABELS:
                 configuration.setLabels(value);
@@ -104,12 +104,12 @@ public class ChangeLogModelService extends AbstractService<ChangeLogModelService
             throw new OperationFailedException("Unable to determine change log format. Supported formats are JSON, SQL, YAML and XML");
         }
 
-        String datasourceRef = configuration.getDatasourceRef();
-        if (!oldDatasourceRef.equals(datasourceRef)) {
-            throw new OperationFailedException("Modifying the change log datasource-ref property is not supported");
+        String dataSource = configuration.getDataSource();
+        if (!oldDataSource.equals(dataSource)) {
+            throw new OperationFailedException("Modifying the change log datasource property is not supported");
         }
 
-        ServiceName serviceName = ChangeLogExecutionService.createServiceName(datasourceRef);
+        ServiceName serviceName = ChangeLogExecutionService.createServiceName(dataSource);
         ServiceTarget serviceTarget = context.getServiceTarget();
 
         context.removeService(serviceName);
@@ -119,8 +119,8 @@ public class ChangeLogModelService extends AbstractService<ChangeLogModelService
 
     public void removeChangeLogModel(OperationContext context, ModelNode model) throws OperationFailedException {
         String runtimeName = context.getCurrentAddressValue();
-        String datasourceRef = ChangeLogResource.DATASOURCE_REF.resolveModelAttribute(context, model).asString();
-        ServiceName serviceName = ChangeLogExecutionService.createServiceName(datasourceRef);
+        String dataSource = ChangeLogResource.DATASOURCE.resolveModelAttribute(context, model).asString();
+        ServiceName serviceName = ChangeLogExecutionService.createServiceName(dataSource);
         context.removeService(serviceName);
         registryService.removeConfiguration(runtimeName);
     }
@@ -135,14 +135,14 @@ public class ChangeLogModelService extends AbstractService<ChangeLogModelService
     }
 
     private void installChangeLogExecutionService(ServiceTarget serviceTarget, ServiceName serviceName, ChangeLogConfiguration configuration) throws OperationFailedException {
-        if (registryService.containsDatasourceRef(configuration.getDatasourceRef())) {
-            throw new OperationFailedException(String.format(MESSAGE_DUPLICATE_DATASOURCE_REF, configuration.getDatasourceRef()));
+        if (registryService.containsDatasource(configuration.getDataSource())) {
+            throw new OperationFailedException(String.format(MESSAGE_DUPLICATE_DATASOURCE, configuration.getDataSource()));
         }
 
         ChangeLogExecutionService service = new ChangeLogExecutionService(configuration);
         ServiceBuilder<ChangeLogExecutionService> builder = serviceTarget.addService(serviceName, service);
 
-        ContextNames.BindInfo bindInfo = ContextNames.bindInfoFor(configuration.getDatasourceRef());
+        ContextNames.BindInfo bindInfo = ContextNames.bindInfoFor(configuration.getDataSource());
         ServiceName dataSourceServiceName = AbstractDataSourceService.getServiceName(bindInfo);
 
         builder.addDependency(dataSourceServiceName);

@@ -57,7 +57,7 @@ public final class LiquibaseApplicationArchiveProcessor implements ApplicationAr
             ChangeLogDefinition definition = field.getAnnotation(ChangeLogDefinition.class);
             if (definition != null) {
                 String tableName = LiquibaseExtensionUtils.generateTableName(definition.name(),
-                    definition.datasourceRef().hashCode(),
+                    definition.dataSource().hashCode(),
                     definition.fileName().hashCode(),
                     definition.format().hashCode(),
                     definition.name().hashCode(),
@@ -69,7 +69,7 @@ public final class LiquibaseApplicationArchiveProcessor implements ApplicationAr
                 String changeLog = TestExtensionUtils.inputStreamToString(inputStream);
 
                 changeLog = changeLog.replace("#TABLE_NAME#", tableName);
-                changeLog = changeLog.replace("#DATASOURCE_REF#", definition.datasourceRef());
+                changeLog = changeLog.replace("#DATASOURCE#", definition.dataSource());
 
                 while (changeLog.contains("#ID#")) {
                     changeLog = changeLog.replaceFirst("#ID#", String.valueOf(CHANGESET_ID.incrementAndGet()));

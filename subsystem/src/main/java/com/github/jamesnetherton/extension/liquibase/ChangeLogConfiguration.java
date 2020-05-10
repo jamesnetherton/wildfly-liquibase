@@ -30,7 +30,7 @@ public final class ChangeLogConfiguration {
     private String path;
     private String deployment;
     private String definition;
-    private String datasourceRef;
+    private String dataSource;
     private String contextNames;
     private String labels;
     private ClassLoader classLoader;
@@ -68,12 +68,12 @@ public final class ChangeLogConfiguration {
         this.definition = definition;
     }
 
-    public String getDatasourceRef() {
-        return datasourceRef;
+    public String getDataSource() {
+        return dataSource;
     }
 
-    public void setDatasourceRef(String datasourceRef) {
-        this.datasourceRef = datasourceRef;
+    public void setDataSource(String dataSource) {
+        this.dataSource = dataSource;
     }
 
     public void setContextNames(String contextNames) {
@@ -157,13 +157,13 @@ public final class ChangeLogConfiguration {
             return false;
         ChangeLogConfiguration that = (ChangeLogConfiguration) o;
         return Objects.equals(name, that.name) && Objects.equals(path, that.path) && Objects.equals(deployment, that.deployment) && Objects
-                .equals(definition, that.definition) && Objects.equals(datasourceRef, that.datasourceRef) && Objects.equals(contextNames, that.contextNames) && Objects
+                .equals(definition, that.definition) && Objects.equals(dataSource, that.dataSource) && Objects.equals(contextNames, that.contextNames) && Objects
                 .equals(labels, that.labels) && Objects.equals(classLoader, that.classLoader) && origin == that.origin;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, path, deployment, definition, datasourceRef, contextNames, labels, classLoader, origin);
+        return Objects.hash(name, path, deployment, definition, dataSource, contextNames, labels, classLoader, origin);
     }
 
     public static class Builder {
@@ -171,7 +171,7 @@ public final class ChangeLogConfiguration {
         private String path;
         private String deployment;
         private String definition;
-        private String datasourceRef;
+        private String dataSource;
         private String contextNames;
         private String labels;
         private ClassLoader classLoader;
@@ -197,8 +197,8 @@ public final class ChangeLogConfiguration {
             return this;
         }
 
-        public Builder datasourceRef(String datasourceRef) {
-            this.datasourceRef = datasourceRef;
+        public Builder dataSource(String dataSource) {
+            this.dataSource = dataSource;
             return this;
         }
 
@@ -236,8 +236,8 @@ public final class ChangeLogConfiguration {
                 throw new IllegalStateException("ChangeLogConfiguration definition must be specified");
             }
 
-            if (this.datasourceRef == null) {
-                throw new IllegalStateException("ChangeLogConfiguration datasourceRef must be specified");
+            if (this.dataSource == null) {
+                throw new IllegalStateException("ChangeLogConfiguration dataSource must be specified");
             }
 
             if (this.classLoader == null) {
@@ -253,7 +253,7 @@ public final class ChangeLogConfiguration {
             configuration.setPath(this.path);
             configuration.setDeployment(this.deployment);
             configuration.setDefinition(this.definition);
-            configuration.setDatasourceRef(this.datasourceRef);
+            configuration.setDataSource(this.dataSource);
             configuration.setContextNames(this.contextNames);
             configuration.setLabels(this.labels);
             configuration.setClassLoader(this.classLoader);

@@ -27,7 +27,7 @@ interface Namespace10 {
     enum Attribute {
         UNKNOWN(null),
         NAME("name"),
-        DATASOURCE_REF("datasource-ref"),
+        DATASOURCE("datasource"),
         CONTEXT_NAMES("context-names"),
         LABELS("labels")
         ;

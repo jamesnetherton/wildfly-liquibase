@@ -25,7 +25,7 @@
         xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
          http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.1.xsd">
 
-    <property name="datasource-ref" value="java:jboss/datasources/ExampleDS"/>
+    <property name="datasource" value="java:jboss/datasources/ExampleDS"/>
 
     <preConditions>
         <runningAs username="SA"/>

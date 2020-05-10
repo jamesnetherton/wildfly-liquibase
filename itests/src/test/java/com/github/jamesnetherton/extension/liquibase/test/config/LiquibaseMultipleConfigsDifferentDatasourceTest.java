@@ -36,7 +36,7 @@ public class LiquibaseMultipleConfigsDifferentDatasourceTest extends LiquibaseTe
     @ChangeLogDefinition(name = "config1")
     private String tableNameConfig1;
 
-    @ChangeLogDefinition(name = "config2", datasourceRef = "java:jboss/datasources/LiquibaseDS")
+    @ChangeLogDefinition(name = "config2", dataSource = "java:jboss/datasources/LiquibaseDS")
     private String tableNameConfig2;
 
     @Deployment
@@ -46,7 +46,7 @@ public class LiquibaseMultipleConfigsDifferentDatasourceTest extends LiquibaseTe
     }
 
     @Test
-    public void testMultipleConfigurationsWithDifferentDatasourceRef() throws Exception {
+    public void testMultipleConfigurationsWithDifferentDatasource() throws Exception {
         assertTableModified(tableNameConfig1);
         assertTableModified(tableNameConfig2, DEFAULT_COLUMNS, "java:jboss/datasources/LiquibaseDS");
     }

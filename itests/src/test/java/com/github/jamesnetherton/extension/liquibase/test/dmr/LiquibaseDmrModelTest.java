@@ -87,14 +87,14 @@ public class LiquibaseDmrModelTest extends LiquibaseTestSupport {
     }
 
     @Test
-    public void testDmrModelCreateWithDatasourceRefPlaceholder() throws Exception {
+    public void testDmrModelCreateWithDatasourcePlaceholder() throws Exception {
         try {
             System.setProperty("datasource.name", "java:jboss/datasources/ExampleDS");
-            boolean success = executeCliScript(new File("target/test-classes/cli/changelog-add-with-datasource-ref-placeholder.cli"));
-            Assert.assertTrue("Expected changelog-add-with-datasource-ref-placeholder.cli success but it failed", success);
+            boolean success = executeCliScript(new File("target/test-classes/cli/changelog-add-with-datasource-placeholder.cli"));
+            Assert.assertTrue("Expected changelog-add-with-datasource-placeholder.cli success but it failed", success);
             assertTableModified("dmr_add_name_with_datasource_ref_placeholder");
         } finally {
-            removeLiquibaseDmrModel("dmr-model-with-datasource-ref-placeholder.xml");
+            removeLiquibaseDmrModel("dmr-model-with-datasource-placeholder.xml");
             System.clearProperty("datasource.name");
         }
     }
@@ -126,9 +126,9 @@ public class LiquibaseDmrModelTest extends LiquibaseTestSupport {
     }
 
     @Test
-    public void testDmrModelCreateWithDuplicateDatasourceRef() throws Exception {
-        boolean success = executeCliScript(new File("target/test-classes/cli/changelog-add-with-duplicate-datasource-ref.cli"));
-        Assert.assertFalse("Expected changelog-add-with-duplicate-datasource-ref.cli to fail but it was successful", success);
+    public void testDmrModelCreateWithDuplicateDatasource() throws Exception {
+        boolean success = executeCliScript(new File("target/test-classes/cli/changelog-add-with-duplicate-datasource.cli"));
+        Assert.assertFalse("Expected changelog-add-with-duplicate-datasource.cli to fail but it was successful", success);
     }
 
     @Test
@@ -165,12 +165,12 @@ public class LiquibaseDmrModelTest extends LiquibaseTestSupport {
     }
 
     @Test
-    public void testDmrModelUpdateDatasourceRef() throws Exception {
+    public void testDmrModelUpdateDatasource() throws Exception {
         try {
-            boolean success = executeCliScript(new File("target/test-classes/cli/changelog-update-with-datasource-ref.cli"));
-            Assert.assertFalse("Expected changelog-update-with-datasource-ref.cli to fail but it was successful", success);
+            boolean success = executeCliScript(new File("target/test-classes/cli/changelog-update-with-datasource.cli"));
+            Assert.assertFalse("Expected changelog-update-with-datasource.cli to fail but it was successful", success);
         } finally {
-            removeLiquibaseDmrModel("dmr-model-update-with-datasource-ref-test.xml");
+            removeLiquibaseDmrModel("dmr-model-update-with-datasource-test.xml");
         }
     }
 }

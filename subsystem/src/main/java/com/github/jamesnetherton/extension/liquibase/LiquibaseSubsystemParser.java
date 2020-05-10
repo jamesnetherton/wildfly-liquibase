@@ -73,7 +73,7 @@ final class LiquibaseSubsystemParser implements Namespace10, XMLStreamConstants,
     private void parseChangeLog(XMLExtendedStreamReader reader, ModelNode address, List<ModelNode> operations) throws XMLStreamException {
 
         String changeLogName = null;
-        String datasourceRef = null;
+        String dataSource = null;
         String contextNames = null;
         String labels = null;
 
@@ -86,8 +86,8 @@ final class LiquibaseSubsystemParser implements Namespace10, XMLStreamConstants,
                     changeLogName = attrValue;
                     break;
                 }
-                case DATASOURCE_REF:
-                    datasourceRef = attrValue;
+                case DATASOURCE:
+                    dataSource = attrValue;
                     break;
                 case CONTEXT_NAMES:
                     contextNames = attrValue;
@@ -103,8 +103,8 @@ final class LiquibaseSubsystemParser implements Namespace10, XMLStreamConstants,
             throw missingRequired(reader, Collections.singleton(Attribute.NAME));
         }
 
-        if (datasourceRef == null) {
-            throw missingRequired(reader, Collections.singleton(Attribute.DATASOURCE_REF));
+        if (dataSource == null) {
+            throw missingRequired(reader, Collections.singleton(Attribute.DATASOURCE));
         }
 
         StringBuffer content = new StringBuffer();
@@ -124,7 +124,7 @@ final class LiquibaseSubsystemParser implements Namespace10, XMLStreamConstants,
         propNode.get(OP_ADDR)
             .set(address)
             .add(ModelConstants.DATABASE_CHANGELOG, changeLogName);
-        propNode.get(ModelConstants.DATASOURCE_REF).set(datasourceRef);
+        propNode.get(ModelConstants.DATASOURCE).set(dataSource);
         propNode.get(ModelConstants.VALUE).set(changeLogDefinition);
 
         if (contextNames != null) {
