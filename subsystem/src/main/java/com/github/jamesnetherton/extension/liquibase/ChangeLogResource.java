@@ -41,7 +41,7 @@ public final class ChangeLogResource extends SimpleResourceDefinition {
         .setAllowExpression(true)
         .build();
 
-    public static final SimpleAttributeDefinition CONTEXT_NAMES = new SimpleAttributeDefinitionBuilder(ModelConstants.CONTEXT_NAMES, ModelType.STRING)
+    public static final SimpleAttributeDefinition CONTEXTS = new SimpleAttributeDefinitionBuilder(ModelConstants.CONTEXTS, ModelType.STRING)
         .addFlag(AttributeAccess.Flag.RESTART_RESOURCE_SERVICES)
         .setAllowExpression(true)
         .setRequired(false)
@@ -64,7 +64,7 @@ public final class ChangeLogResource extends SimpleResourceDefinition {
     public void registerAttributes(ManagementResourceRegistration resourceRegistration) {
         resourceRegistration.registerReadWriteAttribute(VALUE, null, ChangeLogWrite.INSTANCE);
         resourceRegistration.registerReadWriteAttribute(DATASOURCE, null, ChangeLogWrite.INSTANCE);
-        resourceRegistration.registerReadWriteAttribute(CONTEXT_NAMES, null, ChangeLogWrite.INSTANCE);
+        resourceRegistration.registerReadWriteAttribute(CONTEXTS, null, ChangeLogWrite.INSTANCE);
         resourceRegistration.registerReadWriteAttribute(LABELS, null, ChangeLogWrite.INSTANCE);
     }
 }

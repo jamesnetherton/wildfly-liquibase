@@ -20,7 +20,7 @@
 package com.github.jamesnetherton.extension.liquibase;
 
 public interface ModelConstants {
-    String CONTEXT_NAMES = "context-names";
+    String CONTEXTS = "contexts";
     String DATABASE_CHANGELOG = "databaseChangeLog";
     String DATASOURCE = "datasource";
     String LABELS = "labels";

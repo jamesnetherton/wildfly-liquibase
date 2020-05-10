@@ -76,7 +76,7 @@ public final class ChangeLogExecutionService extends AbstractService<ChangeLogEx
             DataSource datasource = (DataSource) initialContext.lookup(configuration.getDataSource());
             connection = new JdbcConnection(datasource.getConnection());
 
-            Contexts contexts = new Contexts(configuration.getContextNames());
+            Contexts contexts = new Contexts(configuration.getContexts());
             LabelExpression labelExpression = new LabelExpression(configuration.getLabels());
 
             liquibase = new Liquibase(configuration.getFileName(), resourceAccessor, connection);

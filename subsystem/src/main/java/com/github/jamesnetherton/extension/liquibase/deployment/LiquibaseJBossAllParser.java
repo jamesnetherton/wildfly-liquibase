@@ -133,7 +133,7 @@ public class LiquibaseJBossAllParser implements JBossAllXMLParser<BuilderCollect
                     final Element element = Element.of(reader.getName());
                     switch (element) {
                         case CONTEXTS:
-                            builder.contextNames(parseElement(reader, builder));
+                            builder.contexts(parseElement(reader, builder));
                             break;
                         case LABELS:
                             builder.labels(parseElement(reader, builder));

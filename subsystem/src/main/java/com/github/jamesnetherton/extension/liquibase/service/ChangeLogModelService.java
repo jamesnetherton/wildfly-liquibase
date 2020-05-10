@@ -51,14 +51,14 @@ public class ChangeLogModelService extends AbstractService<ChangeLogModelService
         String changeLogName = operation.get(ModelDescriptionConstants.OP_ADDR).asObject().get(ModelConstants.DATABASE_CHANGELOG).asString();
         String changeLogDefinition = ChangeLogResource.VALUE.resolveModelAttribute(context, model).asString();
         String dataSource = ChangeLogResource.DATASOURCE.resolveModelAttribute(context, model).asString();
-        String contextNames = ChangeLogResource.CONTEXT_NAMES.resolveModelAttribute(context, model).asString();
+        String contexts = ChangeLogResource.CONTEXTS.resolveModelAttribute(context, model).asString();
         String labels = ChangeLogResource.LABELS.resolveModelAttribute(context, model).asString();
 
         ChangeLogConfiguration configuration = ChangeLogConfiguration.builder()
             .name(changeLogName)
             .definition(changeLogDefinition)
             .dataSource(dataSource)
-            .contextNames(contextNames)
+            .contexts(contexts)
             .labels(labels)
             .classLoader(ChangeLogModelService.class.getClassLoader())
             .subsystemOrigin()
@@ -86,8 +86,8 @@ public class ChangeLogModelService extends AbstractService<ChangeLogModelService
         String oldDataSource = configuration.getDataSource();
 
         switch (operation.get(ModelDescriptionConstants.NAME).asString()) {
-            case ModelConstants.CONTEXT_NAMES:
-                configuration.setContextNames(value);
+            case ModelConstants.CONTEXTS:
+                configuration.setContexts(value);
                 break;
             case ModelConstants.DATASOURCE:
                 configuration.setDataSource(value);

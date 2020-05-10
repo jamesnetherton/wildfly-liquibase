@@ -47,15 +47,15 @@ final class LiquibaseSubsystemWriter implements XMLStreamConstants, XMLElementWr
             for (String key : new TreeSet<>(properties.keys())) {
                 String val = properties.get(key).get(ModelConstants.VALUE).asString();
                 String dataSource = properties.get(key).get(ModelConstants.DATASOURCE).asString();
-                String contextNames = properties.get(key).get(ModelConstants.CONTEXT_NAMES).asStringOrNull();
+                String contexts = properties.get(key).get(ModelConstants.CONTEXTS).asStringOrNull();
                 String labels = properties.get(key).get(ModelConstants.LABELS).asStringOrNull();
 
                 writer.writeStartElement(Namespace10.Element.DATABASE_CHANGELOG.getLocalName());
                 writer.writeAttribute(Namespace10.Attribute.NAME.getLocalName(), key);
                 writer.writeAttribute(Namespace10.Attribute.DATASOURCE.getLocalName(), dataSource);
 
-                if (contextNames != null) {
-                    writer.writeAttribute(Namespace10.Attribute.CONTEXT_NAMES.getLocalName(), contextNames);
+                if (contexts != null) {
+                    writer.writeAttribute(Namespace10.Attribute.CONTEXTS.getLocalName(), contexts);
                 }
 
                 if (labels != null) {

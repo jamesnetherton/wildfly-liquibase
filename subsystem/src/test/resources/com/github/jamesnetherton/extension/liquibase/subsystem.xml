@@ -18,6 +18,6 @@
   #L%
   -->
 <subsystem xmlns="urn:com.github.jamesnetherton.liquibase:1.0">
-    <databaseChangeLog name="test-migration" datasource="java:jboss/datasources/ExampleDS" context-names="foo,bar,cheese" labels="foo,bar,cheese">
+    <databaseChangeLog name="test-migration" datasource="java:jboss/datasources/ExampleDS" contexts="foo,bar,cheese" labels="foo,bar,cheese">
     </databaseChangeLog>
 </subsystem>

@@ -31,7 +31,7 @@ public final class ChangeLogConfiguration {
     private String deployment;
     private String definition;
     private String dataSource;
-    private String contextNames;
+    private String contexts;
     private String labels;
     private ClassLoader classLoader;
     private ConfigurationOrigin origin;
@@ -76,12 +76,12 @@ public final class ChangeLogConfiguration {
         this.dataSource = dataSource;
     }
 
-    public void setContextNames(String contextNames) {
-        this.contextNames = contextNames;
+    public void setContexts(String contexts) {
+        this.contexts = contexts;
     }
 
-    public String getContextNames() {
-        return contextNames;
+    public String getContexts() {
+        return contexts;
     }
 
     public void setLabels(String labels) {
@@ -157,13 +157,13 @@ public final class ChangeLogConfiguration {
             return false;
         ChangeLogConfiguration that = (ChangeLogConfiguration) o;
         return Objects.equals(name, that.name) && Objects.equals(path, that.path) && Objects.equals(deployment, that.deployment) && Objects
-                .equals(definition, that.definition) && Objects.equals(dataSource, that.dataSource) && Objects.equals(contextNames, that.contextNames) && Objects
+                .equals(definition, that.definition) && Objects.equals(dataSource, that.dataSource) && Objects.equals(contexts, that.contexts) && Objects
                 .equals(labels, that.labels) && Objects.equals(classLoader, that.classLoader) && origin == that.origin;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, path, deployment, definition, dataSource, contextNames, labels, classLoader, origin);
+        return Objects.hash(name, path, deployment, definition, dataSource, contexts, labels, classLoader, origin);
     }
 
     public static class Builder {
@@ -172,7 +172,7 @@ public final class ChangeLogConfiguration {
         private String deployment;
         private String definition;
         private String dataSource;
-        private String contextNames;
+        private String contexts;
         private String labels;
         private ClassLoader classLoader;
         private ConfigurationOrigin origin;
@@ -202,8 +202,8 @@ public final class ChangeLogConfiguration {
             return this;
         }
 
-        public Builder contextNames(String contextNames) {
-            this.contextNames = contextNames;
+        public Builder contexts(String contexts) {
+            this.contexts = contexts;
             return this;
         }
 
@@ -254,7 +254,7 @@ public final class ChangeLogConfiguration {
             configuration.setDeployment(this.deployment);
             configuration.setDefinition(this.definition);
             configuration.setDataSource(this.dataSource);
-            configuration.setContextNames(this.contextNames);
+            configuration.setContexts(this.contexts);
             configuration.setLabels(this.labels);
             configuration.setClassLoader(this.classLoader);
             configuration.setOrigin(this.origin);

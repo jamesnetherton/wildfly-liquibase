@@ -28,7 +28,7 @@ interface Namespace10 {
         UNKNOWN(null),
         NAME("name"),
         DATASOURCE("datasource"),
-        CONTEXT_NAMES("context-names"),
+        CONTEXTS("contexts"),
         LABELS("labels")
         ;
         private final String name;

@@ -116,7 +116,7 @@ The change log definition body must be wraped within a `CDATA` block in order fo
 
 ```xml
 <subsystem xmlns="urn:com.github.jamesnetherton.liquibase:1.0"/>
-    <databaseChangeLog name="changelog.xml" datasource="java:jboss/datasources/ExampleDS" context-names="test">
+    <databaseChangeLog name="changelog.xml" datasource="java:jboss/datasources/ExampleDS" contexts="test">
         <![CDATA[
             <preConditions>
                 <runningAs username="SA"/>
@@ -143,7 +143,7 @@ The change log definition body must be wraped within a `CDATA` block in order fo
 
 |Attribute Name| Required | Description|
 ---------------|----------|-------------
-|context-names | No | A comma separated list of Liquibase contexts to run in
+|contexts | No | A comma separated list of Liquibase contexts to run in
 |datasource | Yes | A reference to a DataSource JNDI binding configured in the WildFly datasources susbsystem
 |labels | No | Comma separated list of label expressions for Liquibase to chose the labels you want to execute
 |name | Yes | Unique identifier for the change log which is ideally a file name. You should include a file extension to help the Liquibase subsystem determine what type of content it is handling

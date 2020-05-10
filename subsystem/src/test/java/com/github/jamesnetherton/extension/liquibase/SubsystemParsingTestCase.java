@@ -61,7 +61,7 @@ public class SubsystemParsingTestCase extends AbstractSubsystemTest {
         ModelNode addType = operations.get(1);
         Assert.assertEquals(ADD, addType.get(OP).asString());
         Assert.assertEquals("java:jboss/datasources/ExampleDS", addType.get(ModelConstants.DATASOURCE).asString());
-        Assert.assertEquals("foo,bar,cheese", addType.get(ModelConstants.CONTEXT_NAMES).asString());
+        Assert.assertEquals("foo,bar,cheese", addType.get(ModelConstants.CONTEXTS).asString());
         Assert.assertEquals("foo,bar,cheese", addType.get(ModelConstants.LABELS).asString());
         addr = PathAddress.pathAddress(addType.get(OP_ADDR));
         Assert.assertEquals(2, addr.size());

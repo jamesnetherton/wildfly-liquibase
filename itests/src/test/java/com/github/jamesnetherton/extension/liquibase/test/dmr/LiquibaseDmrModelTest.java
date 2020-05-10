@@ -143,7 +143,7 @@ public class LiquibaseDmrModelTest extends LiquibaseTestSupport {
     }
 
     @Test
-    public void testDmrModelUpdateContextNames() throws Exception {
+    public void testDmrModelUpdateContexts() throws Exception {
         try {
             boolean success = executeCliScript(new File("target/test-classes/cli/changelog-update-with-context.cli"));
             Assert.assertTrue("Expected changelog-update-with-context.cli success but it failed", success);
