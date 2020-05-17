@@ -1,5 +1,28 @@
 ### Changelog
 
+#### WildFly Liquibase 0.9.0
+
+**Enhancements**
+
+* [#54][54] Add support for LiquibaseServletListener context params
+* [#66][66] Upgrade to WildFly 19.1.0 Final
+* [#70][70] Upgrade Liquibase to 3.9.0
+
+For details see [0.9.0 Enhancements](https://github.com/jamesnetherton/wildfly-liquibase/issues?q=milestone%3A"0.9.0"+label%3Aenhancement)
+
+**Tasks**
+
+* [#67][67] Rename datasource-ref to datasource
+* [#68][68] Rename context-names to contexts
+
+For details see [0.9.0 Tasks](https://github.com/jamesnetherton/wildfly-liquibase/issues?q=milestone%3A"0.9.0"+label%3Atask)
+
+[54]: https://github.com/jamesnetherton/wildfly-liquibase/issues/54
+[66]: https://github.com/jamesnetherton/wildfly-liquibase/issues/66
+[70]: https://github.com/jamesnetherton/wildfly-liquibase/issues/70
+[67]: https://github.com/jamesnetherton/wildfly-liquibase/issues/67
+[68]: https://github.com/jamesnetherton/wildfly-liquibase/issues/68
+
 #### WildFly Liquibase 0.8.0
 
 **Enhancements**

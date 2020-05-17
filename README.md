@@ -12,8 +12,8 @@ Download one of the [release](https://github.com/jamesnetherton/wildfly-liquibas
 
 ```
 cd $JBOSS_HOME
-wget https://github.com/jamesnetherton/wildfly-liquibase/releases/download/0.8.0/wildfly-liquibase-distro-0.8.0.zip
-unzip wildfly-liquibase-distro-0.8.0.zip
+wget https://github.com/jamesnetherton/wildfly-liquibase/releases/download/0.9.0/wildfly-liquibase-distro-0.8.0.zip
+unzip wildfly-liquibase-distro-0.9.0.zip
 ```
 
 Check the release notes to ensure that the distribution is compatible with your WildFly version.
