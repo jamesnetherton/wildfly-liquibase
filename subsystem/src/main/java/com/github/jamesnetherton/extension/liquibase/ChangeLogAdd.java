@@ -32,10 +32,13 @@ final class ChangeLogAdd extends AbstractAddStepHandler {
 
     @Override
     protected void populateModel(ModelNode operation, ModelNode model) throws OperationFailedException {
-        ChangeLogResource.VALUE.validateAndSet(operation, model);
-        ChangeLogResource.DATASOURCE.validateAndSet(operation, model);
         ChangeLogResource.CONTEXTS.validateAndSet(operation, model);
+        ChangeLogResource.DATASOURCE.validateAndSet(operation, model);
+        ChangeLogResource.FAIL_ON_ERROR.validateAndSet(operation, model);
+        ChangeLogResource.HOST_EXCLUDES.validateAndSet(operation, model);
+        ChangeLogResource.HOST_INCLUDES.validateAndSet(operation, model);
         ChangeLogResource.LABELS.validateAndSet(operation, model);
+        ChangeLogResource.VALUE.validateAndSet(operation, model);
     }
 
     @Override

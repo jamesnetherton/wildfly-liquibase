@@ -51,6 +51,9 @@ public class LiquibaseJBossAllParser implements JBossAllXMLParser<BuilderCollect
     enum Element {
         LIQUIBASE(ROOT_ELEMENT),
         CONTEXTS(new QName(NAMESPACE_1_0, "contexts")),
+        FAIL_ON_ERROR(new QName(NAMESPACE_1_0, "fail-on-error")),
+        HOST_EXCLUDES(new QName(NAMESPACE_1_0, "host-excludes")),
+        HOST_INCLUDES(new QName(NAMESPACE_1_0, "host-includes")),
         LABELS(new QName(NAMESPACE_1_0, "labels")),
         UNKNOWN(null);
 
@@ -118,13 +121,11 @@ public class LiquibaseJBossAllParser implements JBossAllXMLParser<BuilderCollect
     private void parseLiquibaseElement(XMLExtendedStreamReader reader, BuilderCollection result) throws XMLStreamException {
         final Builder builder = new Builder();
         final Element rootElement = Element.of(reader.getName());
-        switch (rootElement) {
-            case LIQUIBASE:
-                final String value = getAttributeValue(reader, Attribute.CHANGELOG);
-                builder.name(value);
-                break;
-            default:
-                throw unexpectedContent(reader);
+        if (rootElement == Element.LIQUIBASE) {
+            final String value = getAttributeValue(reader, Attribute.CHANGELOG);
+            builder.name(value);
+        } else {
+            throw unexpectedContent(reader);
         }
 
         while (reader.hasNext()) {
@@ -134,6 +135,15 @@ public class LiquibaseJBossAllParser implements JBossAllXMLParser<BuilderCollect
                     switch (element) {
                         case CONTEXTS:
                             builder.contexts(parseElement(reader, builder));
+                            break;
+                        case FAIL_ON_ERROR:
+                            Boolean failOnError = Boolean.valueOf(parseElement(reader, builder));
+                            builder.failOnError(failOnError);
+                        case HOST_EXCLUDES:
+                            builder.hostExcludes(parseElement(reader, builder));
+                            break;
+                        case HOST_INCLUDES:
+                            builder.hostIncludes(parseElement(reader, builder));
                             break;
                         case LABELS:
                             builder.labels(parseElement(reader, builder));

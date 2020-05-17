@@ -20,6 +20,14 @@ package com.github.jamesnetherton.extension.liquibase.service;
  * #L%
  */
 
+import liquibase.util.NetUtil;
+
+import java.net.SocketException;
+import java.net.UnknownHostException;
+
+import com.github.jamesnetherton.extension.liquibase.ChangeLogConfiguration;
+import com.github.jamesnetherton.extension.liquibase.LiquibaseLogger;
+
 import org.jboss.as.controller.OperationContext;
 import org.jboss.msc.service.AbstractService;
 import org.jboss.msc.service.ServiceBuilder;
@@ -43,5 +51,39 @@ public final class ServiceHelper {
     public static ChangeLogModelService getChangeLogModelUpdateService(OperationContext context) {
         ServiceName serviceName = ChangeLogModelService.getServiceName();
         return getService(context, serviceName, ChangeLogModelService.class);
+    }
+
+    public static boolean isChangeLogExecutable(ChangeLogConfiguration configuration) {
+        final String hostExcludes = configuration.getHostExcludes();
+        final String hostIncludes = configuration.getHostIncludes();
+
+        if ((hostExcludes == null || hostExcludes.isEmpty()) && (hostIncludes == null || hostIncludes.isEmpty())) {
+            return true;
+        }
+
+        try {
+            String hostName = NetUtil.getLocalHostName();
+
+            if (hostIncludes != null && !hostIncludes.isEmpty()) {
+                for (String host : hostIncludes.split(",")) {
+                    host = host.trim();
+                    if (hostName.equalsIgnoreCase(host)) {
+                        return true;
+                    }
+                }
+            } else if (hostExcludes != null && !hostExcludes.isEmpty()) {
+                for (String host : hostExcludes.split(",")) {
+                    host = host.trim();
+                    if (hostName.equalsIgnoreCase(host)) {
+                        return false;
+                    }
+                }
+                return true;
+            }
+        } catch (SocketException | UnknownHostException e) {
+            LiquibaseLogger.ROOT_LOGGER.warn("Unable to process host-excludes or host-includes. Failed looking up hostname", e);
+        }
+
+        return false;
     }
 }

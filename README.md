@@ -90,7 +90,7 @@ You can execute XML change logs without the requirement of a deployment archive 
 
 To configure the various aspects of Liquibase change log execution, you can provide an **_optional_** `META-INF/jboss-all.xml` or `WEB-INF/jboss-all.xml`.
 
-For example to define the contexts that are enabled for specific change log files:
+For example to define the contexts and other attributes for specific change log files:
 
 ```xml
 <?xml version="1.0" encoding="UTF-8"?>
@@ -98,10 +98,13 @@ For example to define the contexts that are enabled for specific change log file
     <liquibase xmlns="urn:com.github.jamesnetherton.liquibase:1.0" changelog="changelog.xml">
         <contexts>context1,context2</contexts>
         <labels>prod,!dev</labels>
+        <fail-on-error>false</fail-on-error>
+        <host-includes>some.host.com,another.host.net</host-includes>
     </liquibase>
     <liquibase xmlns="urn:com.github.jamesnetherton.liquibase:1.0" changelog="other-changelog.xml">
         <contexts>contextA,contextB</contexts>
         <labels>prod,!qa</labels>
+        <host-excludes>some.host.com,another.host.net</host-excludes>
     </liquibase>
 </jboss>
 ```
@@ -145,6 +148,9 @@ The change log definition body must be wraped within a `CDATA` block in order fo
 ---------------|----------|-------------
 |contexts | No | A comma separated list of Liquibase contexts to run in
 |datasource | Yes | A reference to a DataSource JNDI binding configured in the WildFly datasources susbsystem
+|fail-on-error | No | Either `true` or `false` to prevent the deployment or server startup proceeding in the event that changelog execution fails
+|host-excludes | No | Comma separated list of host names to exclude from executing the changelog
+|host-includes | No | Comma separated list of host names to include for executing the changelog
 |labels | No | Comma separated list of label expressions for Liquibase to chose the labels you want to execute
 |name | Yes | Unique identifier for the change log which is ideally a file name. You should include a file extension to help the Liquibase subsystem determine what type of content it is handling
 

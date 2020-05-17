@@ -45,10 +45,13 @@ final class LiquibaseSubsystemWriter implements XMLStreamConstants, XMLElementWr
             ModelNode properties = node.get(ModelConstants.DATABASE_CHANGELOG);
 
             for (String key : new TreeSet<>(properties.keys())) {
-                String val = properties.get(key).get(ModelConstants.VALUE).asString();
-                String dataSource = properties.get(key).get(ModelConstants.DATASOURCE).asString();
                 String contexts = properties.get(key).get(ModelConstants.CONTEXTS).asStringOrNull();
+                String dataSource = properties.get(key).get(ModelConstants.DATASOURCE).asString();
+                String failOnError = properties.get(key).get(ModelConstants.FAIL_ON_ERROR).asStringOrNull();
+                String hostExcludes = properties.get(key).get(ModelConstants.HOST_EXCLUDES).asStringOrNull();
+                String hostIncludes = properties.get(key).get(ModelConstants.HOST_INCLUDES).asStringOrNull();
                 String labels = properties.get(key).get(ModelConstants.LABELS).asStringOrNull();
+                String val = properties.get(key).get(ModelConstants.VALUE).asString();
 
                 writer.writeStartElement(Namespace10.Element.DATABASE_CHANGELOG.getLocalName());
                 writer.writeAttribute(Namespace10.Attribute.NAME.getLocalName(), key);
@@ -58,8 +61,20 @@ final class LiquibaseSubsystemWriter implements XMLStreamConstants, XMLElementWr
                     writer.writeAttribute(Namespace10.Attribute.CONTEXTS.getLocalName(), contexts);
                 }
 
+                if (failOnError != null) {
+                    writer.writeAttribute(Namespace10.Attribute.FAIL_ON_ERROR.getLocalName(), failOnError);
+                }
+
                 if (labels != null) {
                     writer.writeAttribute(Namespace10.Attribute.LABELS.getLocalName(), labels);
+                }
+
+                if (hostExcludes != null) {
+                    writer.writeAttribute(Namespace10.Attribute.HOST_EXCLUDES.getLocalName(), hostExcludes);
+                }
+
+                if (hostIncludes != null) {
+                    writer.writeAttribute(Namespace10.Attribute.HOST_INCLUDES.getLocalName(), hostIncludes);
                 }
 
                 writer.writeCharacters(val);

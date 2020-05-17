@@ -73,8 +73,11 @@ final class LiquibaseSubsystemParser implements Namespace10, XMLStreamConstants,
     private void parseChangeLog(XMLExtendedStreamReader reader, ModelNode address, List<ModelNode> operations) throws XMLStreamException {
 
         String changeLogName = null;
-        String dataSource = null;
         String contexts = null;
+        String dataSource = null;
+        Boolean failOnError = null;
+        String hostExcludes = null;
+        String hostIncludes = null;
         String labels = null;
 
         for (int i = 0; i < reader.getAttributeCount(); i++) {
@@ -82,18 +85,26 @@ final class LiquibaseSubsystemParser implements Namespace10, XMLStreamConstants,
             final String attrValue = reader.getAttributeValue(i);
             final Attribute attribute = Attribute.forName(reader.getAttributeLocalName(i));
             switch (attribute) {
-                case NAME: {
-                    changeLogName = attrValue;
-                    break;
-                }
-                case DATASOURCE:
-                    dataSource = attrValue;
-                    break;
                 case CONTEXTS:
                     contexts = attrValue;
                     break;
+                case DATASOURCE:
+                    dataSource = attrValue;
+                    break;
+                case FAIL_ON_ERROR:
+                    failOnError = Boolean.valueOf(attrValue);
+                    break;
+                case HOST_EXCLUDES:
+                    hostExcludes = attrValue;
+                    break;
+                case HOST_INCLUDES:
+                    hostIncludes = attrValue;
+                    break;
                 case LABELS:
                     labels = attrValue;
+                    break;
+                case NAME:
+                    changeLogName = attrValue;
                     break;
                 default:
                     throw unexpectedAttribute(reader, i);
@@ -129,6 +140,18 @@ final class LiquibaseSubsystemParser implements Namespace10, XMLStreamConstants,
 
         if (contexts != null) {
             propNode.get(ModelConstants.CONTEXTS).set(contexts);
+        }
+
+        if (failOnError != null) {
+            propNode.get(ModelConstants.FAIL_ON_ERROR).set(failOnError);
+        }
+
+        if (hostExcludes != null) {
+            propNode.get(ModelConstants.HOST_EXCLUDES).set(hostExcludes);
+        }
+
+        if (hostIncludes != null) {
+            propNode.get(ModelConstants.HOST_INCLUDES).set(hostIncludes);
         }
 
         if (labels != null) {

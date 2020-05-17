@@ -1,15 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
   #%L
-  wildfly-liquibase-subsystem
+  wildfly-liquibase-itests
   %%
   Copyright (C) 2017 James Netherton
   %%
   Licensed under the Apache License, Version 2.0 (the "License");
   you may not use this file except in compliance with the License.
   You may obtain a copy of the License at
-  
+
        http://www.apache.org/licenses/LICENSE-2.0
-  
+
   Unless required by applicable law or agreed to in writing, software
   distributed under the License is distributed on an "AS IS" BASIS,
   WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
@@ -17,13 +18,8 @@
   limitations under the License.
   #L%
   -->
-<subsystem xmlns="urn:com.github.jamesnetherton.liquibase:1.0">
-    <databaseChangeLog name="test-migration"
-                       datasource="java:jboss/datasources/ExampleDS"
-                       contexts="foo,bar,cheese"
-                       labels="foo,bar,cheese"
-                       fail-on-error="false"
-                       host-excludes="foo.com,bar.net,cheese.org"
-                       host-includes="cheese.org,bar.net,foo.com">
-    </databaseChangeLog>
-</subsystem>
+<jboss xmlns="urn:jboss:1.0">
+    <liquibase xmlns="urn:com.github.jamesnetherton.liquibase:1.0" changelog="changelog.xml">
+        <host-excludes>localhost</host-excludes>
+    </liquibase>
+</jboss>

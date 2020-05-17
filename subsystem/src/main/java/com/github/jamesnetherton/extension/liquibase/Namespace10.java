@@ -25,11 +25,14 @@ import java.util.Map;
 interface Namespace10 {
 
     enum Attribute {
-        UNKNOWN(null),
-        NAME("name"),
-        DATASOURCE("datasource"),
         CONTEXTS("contexts"),
-        LABELS("labels")
+        DATASOURCE("datasource"),
+        FAIL_ON_ERROR("fail-on-error"),
+        HOST_EXCLUDES("host-excludes"),
+        HOST_INCLUDES("host-includes"),
+        LABELS("labels"),
+        NAME("name"),
+        UNKNOWN(null),
         ;
         private final String name;
 

@@ -23,6 +23,9 @@ public interface ModelConstants {
     String CONTEXTS = "contexts";
     String DATABASE_CHANGELOG = "databaseChangeLog";
     String DATASOURCE = "datasource";
+    String FAIL_ON_ERROR = "fail-on-error";
+    String HOST_EXCLUDES = "host-excludes";
+    String HOST_INCLUDES = "host-includes";
     String LABELS = "labels";
     String VALUE = "value";
 }

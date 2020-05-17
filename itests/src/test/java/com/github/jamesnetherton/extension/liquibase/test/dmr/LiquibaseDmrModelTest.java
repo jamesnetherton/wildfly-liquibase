@@ -19,8 +19,11 @@
  */
 package com.github.jamesnetherton.extension.liquibase.test.dmr;
 
+import liquibase.util.NetUtil;
+
 import java.io.File;
 import java.util.Arrays;
+import java.util.Collections;
 
 import com.github.jamesnetherton.liquibase.arquillian.LiquibaseTestSupport;
 
@@ -76,6 +79,41 @@ public class LiquibaseDmrModelTest extends LiquibaseTestSupport {
     }
 
     @Test
+    public void testDmrModelCreateWithFailOnError() throws Exception {
+        try {
+            boolean success = executeCliScript(new File("target/test-classes/cli/changelog-add-with-fail-on-error.cli"));
+            Assert.assertTrue("Expected changelog-add-with-fail-on-error.cli success but it failed", success);
+            assertTableModified("dmr_add_with_fail_on_error");
+        } finally {
+            removeLiquibaseDmrModel("dmr-model-with-fail-on-error-test.xml");
+        }
+    }
+
+    @Test
+    public void testDmrModelCreateWithHostExcludes() throws Exception {
+        try {
+            System.setProperty("host.excludes", NetUtil.getLocalHostName());
+            boolean success = executeCliScript(new File("target/test-classes/cli/changelog-add-with-host-excludes.cli"));
+            Assert.assertTrue("Expected changelog-add-with-host-excludes.cli success but it failed", success);
+            assertTableModified("dmr_add_with_host_excludes", Collections.emptyList());
+        } finally {
+            removeLiquibaseDmrModel("dmr-model-with-host-excludes-test.xml");
+            System.clearProperty("host.excludes");
+        }
+    }
+
+    @Test
+    public void testDmrModelCreateWithHostIncludes() throws Exception {
+        try {
+            boolean success = executeCliScript(new File("target/test-classes/cli/changelog-add-with-host-includes.cli"));
+            Assert.assertTrue("Expected changelog-add-with-host-includes.cli success but it failed", success);
+            assertTableModified("dmr_add_with_host_includes", Collections.emptyList());
+        } finally {
+            removeLiquibaseDmrModel("dmr-model-with-host-includes-test.xml");
+        }
+    }
+
+    @Test
     public void testDmrModelCreateWithNoFileNameExtension() throws Exception {
         try {
             boolean success = executeCliScript(new File("target/test-classes/cli/changelog-add-with-no-filename-extension.cli"));
@@ -126,6 +164,19 @@ public class LiquibaseDmrModelTest extends LiquibaseTestSupport {
     }
 
     @Test
+    public void testDmrModelCreateWithFailOnErrorPlaceholder() throws Exception {
+        try {
+            System.setProperty("do.fail.on.error", "false");
+            boolean success = executeCliScript(new File("target/test-classes/cli/changelog-add-with-fail-on-error-placeholder.cli"));
+            Assert.assertTrue("Expected changelog-add-with-fail-on-error-placeholder.cli success but it failed", success);
+            assertTableModified("dmr_add_with_fail_on_error_placeholder");
+        } finally {
+            removeLiquibaseDmrModel("dmr-model-with-fail-on-error-placeholder.xml");
+            System.clearProperty("do.fail.on.error");
+        }
+    }
+
+    @Test
     public void testDmrModelCreateWithDuplicateDatasource() throws Exception {
         boolean success = executeCliScript(new File("target/test-classes/cli/changelog-add-with-duplicate-datasource.cli"));
         Assert.assertFalse("Expected changelog-add-with-duplicate-datasource.cli to fail but it was successful", success);
@@ -161,6 +212,43 @@ public class LiquibaseDmrModelTest extends LiquibaseTestSupport {
             assertTableModified("dmr_update_with_label", Arrays.asList("firstname", "id", "lastname", "state"));
         } finally {
             removeLiquibaseDmrModel("dmr-model-update-with-label-test.xml");
+        }
+    }
+
+    @Test
+    public void testDmrModelUpdateFailOnError() throws Exception {
+        try {
+            boolean success = executeCliScript(new File("target/test-classes/cli/changelog-update-with-fail-on-error.cli"));
+            Assert.assertTrue("Expected changelog-update-with-fail-on-error.cli success but it failed", success);
+            assertTableModified("dmr_update_with_fail_on_error");
+        } finally {
+            removeLiquibaseDmrModel("dmr-model-update-with-fail-on-error-test.xml");
+        }
+    }
+
+    @Test
+    public void testDmrModelUpdateHostExcludes() throws Exception {
+        try {
+            System.setProperty("host.name", NetUtil.getLocalHostName());
+            boolean success = executeCliScript(new File("target/test-classes/cli/changelog-update-with-host-excludes.cli"));
+            Assert.assertTrue("Expected changelog-update-with-host-excludes.cli success but it failed", success);
+            assertTableModified("dmr_update_with_host_excludes");
+        } finally {
+            removeLiquibaseDmrModel("dmr-model-update-with-host-excludes-test.xml");
+            System.clearProperty("host.name");
+        }
+    }
+
+    @Test
+    public void testDmrModelUpdateHostIncludes() throws Exception {
+        try {
+            boolean success = executeCliScript(new File("target/test-classes/cli/changelog-update-with-host-includes.cli"));
+            Assert.assertTrue("Expected changelog-update-with-host-includes.cli success but it failed", success);
+            success = executeCliCommand(String.format("/subsystem=liquibase/databaseChangeLog=dmr-model-update-with-host-includes-test.xml/:write-attribute(name=host-includes,value=%s)", NetUtil.getLocalHostName()));
+            Assert.assertTrue("Expected update of host includes success bit it failed", success);
+            assertTableModified("dmr_update_with_host_includes");
+        } finally {
+            removeLiquibaseDmrModel("dmr-model-update-with-host-includes-test.xml");
         }
     }
 

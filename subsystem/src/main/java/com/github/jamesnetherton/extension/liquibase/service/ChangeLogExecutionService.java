@@ -66,6 +66,11 @@ public final class ChangeLogExecutionService extends AbstractService<ChangeLogEx
     }
 
     public void executeChangeLog(ChangeLogConfiguration configuration) {
+        if (!ServiceHelper.isChangeLogExecutable(configuration)) {
+            LiquibaseLogger.ROOT_LOGGER.info("Not executing changelog {} as host-excludes or host-includes rules did not apply to this server host", configuration.getFileName());
+            return;
+        }
+
         JdbcConnection connection = null;
         Liquibase liquibase = null;
 
@@ -82,7 +87,12 @@ public final class ChangeLogExecutionService extends AbstractService<ChangeLogEx
             liquibase = new Liquibase(configuration.getFileName(), resourceAccessor, connection);
             liquibase.update(contexts, labelExpression);
         } catch (NamingException | LiquibaseException | SQLException e) {
-            throw new IllegalStateException(e);
+            if (configuration.isFailOnError()) {
+                throw new IllegalStateException(e);
+            } else {
+                LiquibaseLogger.ROOT_LOGGER.warn("Liquibase changelog execution failed:", e);
+                LiquibaseLogger.ROOT_LOGGER.warn("Continuing deployment after changelog execution failure of {} as fail-on-error is false", configuration.getDeployment());
+            }
         } finally {
             if (liquibase != null && liquibase.getDatabase() != null) {
                 try {

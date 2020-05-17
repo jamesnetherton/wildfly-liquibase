@@ -26,13 +26,16 @@ import java.util.Objects;
 
 public final class ChangeLogConfiguration {
 
+    private String contexts;
+    private String dataSource;
+    private String definition;
+    private String deployment;
+    private boolean failOnError = true;
+    private String hostExcludes;
+    private String hostIncludes;
+    private String labels;
     private String name;
     private String path;
-    private String deployment;
-    private String definition;
-    private String dataSource;
-    private String contexts;
-    private String labels;
     private ClassLoader classLoader;
     private ConfigurationOrigin origin;
 
@@ -82,6 +85,30 @@ public final class ChangeLogConfiguration {
 
     public String getContexts() {
         return contexts;
+    }
+
+    public void setFailOnError(boolean failOnError) {
+        this.failOnError = failOnError;
+    }
+
+    public boolean isFailOnError() {
+        return failOnError;
+    }
+
+    public String getHostExcludes() {
+        return hostExcludes;
+    }
+
+    public void setHostExcludes(String hostExcludes) {
+        this.hostExcludes = hostExcludes;
+    }
+
+    public String getHostIncludes() {
+        return hostIncludes;
+    }
+
+    public void setHostIncludes(String hostIncludes) {
+        this.hostIncludes = hostIncludes;
     }
 
     public void setLabels(String labels) {
@@ -156,44 +183,33 @@ public final class ChangeLogConfiguration {
         if (o == null || getClass() != o.getClass())
             return false;
         ChangeLogConfiguration that = (ChangeLogConfiguration) o;
-        return Objects.equals(name, that.name) && Objects.equals(path, that.path) && Objects.equals(deployment, that.deployment) && Objects
-                .equals(definition, that.definition) && Objects.equals(dataSource, that.dataSource) && Objects.equals(contexts, that.contexts) && Objects
-                .equals(labels, that.labels) && Objects.equals(classLoader, that.classLoader) && origin == that.origin;
+        return failOnError == that.failOnError && Objects.equals(name, that.name) && Objects.equals(path, that.path) && Objects.equals(contexts, that.contexts)
+                && Objects.equals(dataSource, that.dataSource) && Objects.equals(definition, that.definition) && Objects.equals(deployment, that.deployment) && Objects
+                .equals(hostExcludes, that.hostExcludes) && Objects.equals(hostIncludes, that.hostIncludes) && Objects.equals(labels, that.labels) && Objects
+                .equals(classLoader, that.classLoader) && origin == that.origin;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, path, deployment, definition, dataSource, contexts, labels, classLoader, origin);
+        return Objects.hash(name, path, contexts, dataSource, definition, deployment, failOnError, hostExcludes, hostIncludes, labels, classLoader, origin);
     }
 
     public static class Builder {
+        private String contexts;
+        private String dataSource;
+        private String definition;
+        private String deployment;
+        private boolean failOnError = true;
+        private String hostExcludes;
+        private String hostIncludes;
+        private String labels;
         private String name;
         private String path;
-        private String deployment;
-        private String definition;
-        private String dataSource;
-        private String contexts;
-        private String labels;
         private ClassLoader classLoader;
         private ConfigurationOrigin origin;
 
-        public Builder name(String name) {
-            this.name = name;
-            return this;
-        }
-
-        public Builder path(String path) {
-            this.path = path;
-            return this;
-        }
-
-        public Builder deployment(String deployment) {
-            this.deployment = deployment;
-            return this;
-        }
-
-        public Builder definition(String definition) {
-            this.definition = definition;
+        public Builder contexts(String contexts) {
+            this.contexts = contexts;
             return this;
         }
 
@@ -202,13 +218,43 @@ public final class ChangeLogConfiguration {
             return this;
         }
 
-        public Builder contexts(String contexts) {
-            this.contexts = contexts;
+        public Builder definition(String definition) {
+            this.definition = definition;
+            return this;
+        }
+
+        public Builder deployment(String deployment) {
+            this.deployment = deployment;
+            return this;
+        }
+
+        public Builder hostExcludes(String hostExcludes) {
+            this.hostExcludes = hostExcludes;
+            return this;
+        }
+
+        public Builder hostIncludes(String hostIncludes) {
+            this.hostIncludes = hostIncludes;
+            return this;
+        }
+
+        public Builder failOnError(boolean failOnError) {
+            this.failOnError = failOnError;
             return this;
         }
 
         public Builder labels(String labels) {
             this.labels = labels;
+            return this;
+        }
+
+        public Builder name(String name) {
+            this.name = name;
+            return this;
+        }
+
+        public Builder path(String path) {
+            this.path = path;
             return this;
         }
 
@@ -249,15 +295,18 @@ public final class ChangeLogConfiguration {
             }
 
             ChangeLogConfiguration configuration = new ChangeLogConfiguration();
-            configuration.setName(this.name);
-            configuration.setPath(this.path);
-            configuration.setDeployment(this.deployment);
-            configuration.setDefinition(this.definition);
-            configuration.setDataSource(this.dataSource);
             configuration.setContexts(this.contexts);
-            configuration.setLabels(this.labels);
             configuration.setClassLoader(this.classLoader);
+            configuration.setDataSource(this.dataSource);
+            configuration.setDefinition(this.definition);
+            configuration.setDeployment(this.deployment);
+            configuration.setFailOnError(this.failOnError);
+            configuration.setHostExcludes(this.hostExcludes);
+            configuration.setHostIncludes(this.hostIncludes);
+            configuration.setLabels(this.labels);
+            configuration.setName(this.name);
             configuration.setOrigin(this.origin);
+            configuration.setPath(this.path);
             return configuration;
         }
 

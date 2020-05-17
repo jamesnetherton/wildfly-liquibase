@@ -50,17 +50,23 @@ public class ChangeLogModelService extends AbstractService<ChangeLogModelService
     public void createChangeLogModel(OperationContext context, ModelNode operation, ModelNode model) throws OperationFailedException {
         String changeLogName = operation.get(ModelDescriptionConstants.OP_ADDR).asObject().get(ModelConstants.DATABASE_CHANGELOG).asString();
         String changeLogDefinition = ChangeLogResource.VALUE.resolveModelAttribute(context, model).asString();
+        String contexts = ChangeLogResource.CONTEXTS.resolveModelAttribute(context, model).asString("");
         String dataSource = ChangeLogResource.DATASOURCE.resolveModelAttribute(context, model).asString();
-        String contexts = ChangeLogResource.CONTEXTS.resolveModelAttribute(context, model).asString();
-        String labels = ChangeLogResource.LABELS.resolveModelAttribute(context, model).asString();
+        Boolean failOnError = ChangeLogResource.FAIL_ON_ERROR.resolveModelAttribute(context, model).asBoolean(true);
+        String hostExcludes = ChangeLogResource.HOST_EXCLUDES.resolveModelAttribute(context, model).asString("");
+        String hostIncludes = ChangeLogResource.HOST_INCLUDES.resolveModelAttribute(context, model).asString("");
+        String labels = ChangeLogResource.LABELS.resolveModelAttribute(context, model).asString("");
 
         ChangeLogConfiguration configuration = ChangeLogConfiguration.builder()
-            .name(changeLogName)
-            .definition(changeLogDefinition)
-            .dataSource(dataSource)
             .contexts(contexts)
-            .labels(labels)
             .classLoader(ChangeLogModelService.class.getClassLoader())
+            .dataSource(dataSource)
+            .definition(changeLogDefinition)
+            .failOnError(failOnError)
+            .hostExcludes(hostExcludes)
+            .hostIncludes(hostIncludes)
+            .labels(labels)
+            .name(changeLogName)
             .subsystemOrigin()
             .build();
 
@@ -91,6 +97,15 @@ public class ChangeLogModelService extends AbstractService<ChangeLogModelService
                 break;
             case ModelConstants.DATASOURCE:
                 configuration.setDataSource(value);
+                break;
+            case ModelConstants.FAIL_ON_ERROR:
+                configuration.setFailOnError(Boolean.valueOf(value));
+                break;
+            case ModelConstants.HOST_EXCLUDES:
+                configuration.setHostExcludes(value);
+                break;
+            case ModelConstants.HOST_INCLUDES:
+                configuration.setHostIncludes(value);
                 break;
             case ModelConstants.LABELS:
                 configuration.setLabels(value);

@@ -31,9 +31,10 @@ public final class ChangeLogResource extends SimpleResourceDefinition {
 
     public static final PathElement CHANGE_LOG_PATH = PathElement.pathElement(ModelConstants.DATABASE_CHANGELOG);
 
-    public static final SimpleAttributeDefinition VALUE = new SimpleAttributeDefinitionBuilder(ModelConstants.VALUE, ModelType.STRING)
-        .addFlag(AttributeAccess.Flag.RESTART_NONE)
-        .setAllowExpression(false)
+    public static final SimpleAttributeDefinition CONTEXTS = new SimpleAttributeDefinitionBuilder(ModelConstants.CONTEXTS, ModelType.STRING)
+        .addFlag(AttributeAccess.Flag.RESTART_RESOURCE_SERVICES)
+        .setAllowExpression(true)
+        .setRequired(false)
         .build();
 
     public static final SimpleAttributeDefinition DATASOURCE = new SimpleAttributeDefinitionBuilder(ModelConstants.DATASOURCE, ModelType.STRING)
@@ -41,7 +42,19 @@ public final class ChangeLogResource extends SimpleResourceDefinition {
         .setAllowExpression(true)
         .build();
 
-    public static final SimpleAttributeDefinition CONTEXTS = new SimpleAttributeDefinitionBuilder(ModelConstants.CONTEXTS, ModelType.STRING)
+    public static final SimpleAttributeDefinition FAIL_ON_ERROR = new SimpleAttributeDefinitionBuilder(ModelConstants.FAIL_ON_ERROR, ModelType.BOOLEAN)
+        .addFlag(AttributeAccess.Flag.RESTART_RESOURCE_SERVICES)
+        .setAllowExpression(true)
+        .setRequired(false)
+        .build();
+
+    public static final SimpleAttributeDefinition HOST_EXCLUDES = new SimpleAttributeDefinitionBuilder(ModelConstants.HOST_EXCLUDES, ModelType.STRING)
+        .addFlag(AttributeAccess.Flag.RESTART_RESOURCE_SERVICES)
+        .setAllowExpression(true)
+        .setRequired(false)
+        .build();
+
+    public static final SimpleAttributeDefinition HOST_INCLUDES = new SimpleAttributeDefinitionBuilder(ModelConstants.HOST_INCLUDES, ModelType.STRING)
         .addFlag(AttributeAccess.Flag.RESTART_RESOURCE_SERVICES)
         .setAllowExpression(true)
         .setRequired(false)
@@ -53,18 +66,27 @@ public final class ChangeLogResource extends SimpleResourceDefinition {
         .setRequired(false)
         .build();
 
+    public static final SimpleAttributeDefinition VALUE = new SimpleAttributeDefinitionBuilder(ModelConstants.VALUE, ModelType.STRING)
+        .addFlag(AttributeAccess.Flag.RESTART_NONE)
+        .setAllowExpression(false)
+        .build();
+
     ChangeLogResource() {
         super(CHANGE_LOG_PATH,
-              LiquibaseResourceDescriptionResolvers.getResolver(ModelConstants.DATABASE_CHANGELOG),
-              new ChangeLogAdd(),
-              new ChangeLogRemove());
+          LiquibaseResourceDescriptionResolvers.getResolver(ModelConstants.DATABASE_CHANGELOG),
+          new ChangeLogAdd(),
+          new ChangeLogRemove()
+        );
     }
 
     @Override
     public void registerAttributes(ManagementResourceRegistration resourceRegistration) {
-        resourceRegistration.registerReadWriteAttribute(VALUE, null, ChangeLogWrite.INSTANCE);
-        resourceRegistration.registerReadWriteAttribute(DATASOURCE, null, ChangeLogWrite.INSTANCE);
         resourceRegistration.registerReadWriteAttribute(CONTEXTS, null, ChangeLogWrite.INSTANCE);
+        resourceRegistration.registerReadWriteAttribute(DATASOURCE, null, ChangeLogWrite.INSTANCE);
+        resourceRegistration.registerReadWriteAttribute(FAIL_ON_ERROR, null, ChangeLogWrite.INSTANCE);
+        resourceRegistration.registerReadWriteAttribute(HOST_EXCLUDES, null, ChangeLogWrite.INSTANCE);
+        resourceRegistration.registerReadWriteAttribute(HOST_INCLUDES, null, ChangeLogWrite.INSTANCE);
         resourceRegistration.registerReadWriteAttribute(LABELS, null, ChangeLogWrite.INSTANCE);
+        resourceRegistration.registerReadWriteAttribute(VALUE, null, ChangeLogWrite.INSTANCE);
     }
 }
