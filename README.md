@@ -8,19 +8,17 @@
 
 ## Installation
 
+### Distribution overlay
+
 Download one of the [release](https://github.com/jamesnetherton/wildfly-liquibase/releases) distribution zip files and unpack it inside of your WildFly installation directory.
 
 ```
 cd $JBOSS_HOME
-wget https://github.com/jamesnetherton/wildfly-liquibase/releases/download/0.9.0/wildfly-liquibase-distro-0.8.0.zip
-unzip wildfly-liquibase-distro-0.9.0.zip
+wget https://github.com/jamesnetherton/wildfly-liquibase/releases/download/1.0.0/wildfly-liquibase-distro-0.8.0.zip
+unzip wildfly-liquibase-distro-1.0.0.zip
 ```
 
 Check the release notes to ensure that the distribution is compatible with your WildFly version.
-
-## Configuration
-
-### Subsystem configuration
 
 For convenience, the distribution provides a `standalone-liquibase.xml` configuration file which you can reference when starting WildFly:
 
@@ -41,6 +39,24 @@ Otherwise you can manually configure the Liquibase subsystem in one of the exist
 ```
 <subsystem xmlns="urn:com.github.jamesnetherton.liquibase:1.0"/>
 ```
+
+### Galleon provisioning
+
+Alternatively, you may use WildFly [Galleon](https://github.com/wildfly/galleon/) to provision a server.
+
+First install the base server:
+
+```
+galleon.sh install wildfly:current --dir=wildfly
+```
+
+Next install the Liquibase subsystem layer:
+
+```
+galleon.sh install com.github.jamesnetherton:wildfly-liquibase-galleon-pack:1.0.0 --dir=wildfly --layers=liquibase
+```
+
+## Configuration
 
 ### Change logs
 

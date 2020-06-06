@@ -20,6 +20,7 @@
 package com.github.jamesnetherton.extension.liquibase.config;
 
 import java.io.File;
+import java.io.FilenameFilter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -53,7 +54,12 @@ public class WildFlyLiquibaseConfig {
 
         destPath.toFile().mkdirs();
         File source = new File(configSource);
-        File[] files = source.listFiles();
+        File[] files = source.listFiles(new FilenameFilter() {
+            @Override
+            public boolean accept(File file, String name) {
+                return name.endsWith(".xml");
+            }
+        });
         if (files != null) {
             for (File file : files) {
                 try {

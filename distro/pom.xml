@@ -13,102 +13,64 @@
 
     <properties>
         <config.directory>${project.build.directory}/configuration</config.directory>
-        <modules.directory>${project.build.directory}/modules</modules.directory>
+        <server.directory>${basedir}/target/wildfly-${version.org.wildfly}</server.directory>
+        <modules.directory>${basedir}/target/wildfly-${version.org.wildfly}/modules/system/layers/base</modules.directory>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>com.github.jamesnetherton</groupId>
-            <artifactId>wildfly-liquibase-subsystem</artifactId>
+            <artifactId>wildfly-liquibase-feature-pack</artifactId>
             <version>${project.version}</version>
+            <type>zip</type>
+        </dependency>
+        <dependency>
+            <groupId>org.wildfly</groupId>
+            <artifactId>wildfly-galleon-pack</artifactId>
+            <version>${version.org.wildfly}</version>
+            <type>zip</type>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
         <dependency>
             <groupId>org.jdom</groupId>
             <artifactId>jdom</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.liquibase</groupId>
-            <artifactId>liquibase-cdi</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.liquibase</groupId>
-            <artifactId>liquibase-core</artifactId>
         </dependency>
     </dependencies>
 
     <build>
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-resources-plugin</artifactId>
+                <groupId>org.jboss.galleon</groupId>
+                <artifactId>galleon-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>copy-module-definitions</id>
-                        <phase>package</phase>
+                        <id>server-provisioning</id>
                         <goals>
-                            <goal>copy-resources</goal>
+                            <goal>provision</goal>
                         </goals>
+                        <phase>compile</phase>
                         <configuration>
-                            <resources>
-                                <resource>
-                                    <directory>src/modules</directory>
-                                    <filtering>true</filtering>
-                                </resource>
-                            </resources>
-                            <outputDirectory>${modules.directory}</outputDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>unpack-wildfly-configuration</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>unpack</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
+                            <install-dir>${server.directory}</install-dir>
+                            <plugin-options>
+                                <jboss-fork-embedded>true</jboss-fork-embedded>
+                            </plugin-options>
+                            <feature-packs>
+                                <feature-pack>
                                     <groupId>org.wildfly</groupId>
-                                    <artifactId>wildfly-dist</artifactId>
-                                    <type>tar.gz</type>
-                                    <includes>**/standalone/configuration/*.xml</includes>
-                                </artifactItem>
-                            </artifactItems>
-                            <outputDirectory>${project.build.directory}</outputDirectory>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>copy-subsystem-dependencies</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>copy</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
+                                    <artifactId>wildfly-galleon-pack</artifactId>
+                                    <version>${version.org.wildfly}</version>
+                                </feature-pack>
+                                <feature-pack>
                                     <groupId>com.github.jamesnetherton</groupId>
-                                    <artifactId>wildfly-liquibase-subsystem</artifactId>
+                                    <artifactId>wildfly-liquibase-feature-pack</artifactId>
                                     <version>${project.version}</version>
-                                    <outputDirectory>${modules.directory}/com/github/jamesnetherton/extension/liquibase/main</outputDirectory>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.liquibase</groupId>
-                                    <artifactId>liquibase-cdi</artifactId>
-                                    <version>${version.org.liquibase}</version>
-                                    <outputDirectory>${modules.directory}/org/liquibase/cdi/main</outputDirectory>
-                                </artifactItem>
-                                <artifactItem>
-                                    <groupId>org.liquibase</groupId>
-                                    <artifactId>liquibase-core</artifactId>
-                                    <version>${version.org.liquibase}</version>
-                                    <outputDirectory>${modules.directory}/org/liquibase/core/main</outputDirectory>
-                                </artifactItem>
-                            </artifactItems>
+                                </feature-pack>
+                            </feature-packs>
                         </configuration>
                     </execution>
                 </executions>
@@ -126,7 +88,7 @@
                         <configuration>
                             <mainClass>com.github.jamesnetherton.extension.liquibase.config.WildFlyLiquibaseConfig</mainClass>
                             <arguments>
-                                <argument>${project.build.directory}/wildfly-${version.org.wildfly}/standalone/configuration</argument>
+                                <argument>${server.directory}/standalone/configuration</argument>
                                 <argument>${config.directory}</argument>
                             </arguments>
                         </configuration>
@@ -151,6 +113,14 @@
                         </goals>
                     </execution>
                 </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <configuration>
+                    <source>7</source>
+                    <target>7</target>
+                </configuration>
             </plugin>
         </plugins>
     </build>

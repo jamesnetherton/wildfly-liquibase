@@ -25,6 +25,8 @@
         <version.org.snakeyaml>1.26</version.org.snakeyaml>
         <version.org.wildfly>19.1.0.Final</version.org.wildfly>
         <version.org.wildfly.arquillian>2.2.0.Final</version.org.wildfly.arquillian>
+        <version.org.wildfly.core>11.1.1.Final</version.org.wildfly.core>
+        <version.org.wildfly.common>1.5.2.Final</version.org.wildfly.common>
 
         <!-- Plugin versions -->
         <version.antrun.plugin>3.0.0</version.antrun.plugin>
@@ -37,9 +39,11 @@
         <version.license.plugin>2.0.0</version.license.plugin>
         <version.javadoc.plugin>3.2.0</version.javadoc.plugin>
         <version.release.plugin>3.0.0-M1</version.release.plugin>
+        <version.galleon.plugin>4.2.5.Final</version.galleon.plugin>
         <version.resources.plugin>3.1.0</version.resources.plugin>
         <version.source.plugin>3.2.0</version.source.plugin>
         <version.surefire.plugin>3.0.0-M4</version.surefire.plugin>
+        <version.wildfly.galleon.plugin>4.2.7.Final</version.wildfly.galleon.plugin>
     </properties>
 
     <scm>
@@ -83,8 +87,42 @@
         </snapshotRepository>
     </distributionManagement>
 
+    <repositories>
+        <repository>
+            <id>central</id>
+            <url>https://repo1.maven.org/maven2</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+        <repository>
+            <id>jboss-public-repository</id>
+            <url>https://repository.jboss.org/nexus/content/groups/public</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+        <repository>
+            <id>redhat-ga-repository</id>
+            <url>https://maven.repository.redhat.com/ga</url>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <releases>
+                <enabled>true</enabled>
+            </releases>
+        </repository>
+    </repositories>
+
     <modules>
         <module>subsystem</module>
+        <module>feature-pack</module>
         <module>distro</module>
         <module>testextension</module>
         <module>itests</module>
@@ -242,7 +280,28 @@
                         </excludes>
                     </configuration>
                 </plugin>
-
+                <plugin>
+                    <groupId>org.jboss.galleon</groupId>
+                    <artifactId>galleon-maven-plugin</artifactId>
+                    <version>${version.galleon.plugin}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.wildfly.galleon-plugins</groupId>
+                    <artifactId>wildfly-galleon-maven-plugin</artifactId>
+                    <version>${version.wildfly.galleon.plugin}</version>
+                    <dependencies>
+                        <dependency>
+                            <groupId>org.wildfly.core</groupId>
+                            <artifactId>wildfly-embedded</artifactId>
+                            <version>${version.org.wildfly.core}</version>
+                        </dependency>
+                        <dependency>
+                            <groupId>org.wildfly.common</groupId>
+                            <artifactId>wildfly-common</artifactId>
+                            <version>${version.org.wildfly.common}</version>
+                        </dependency>
+                    </dependencies>
+                </plugin>
             </plugins>
         </pluginManagement>
     </build>

@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <module xmlns="urn:jboss:module:1.5" name="com.github.jamesnetherton.extension.liquibase">
     <resources>
-        <resource-root path="wildfly-liquibase-subsystem-${project.version}.jar"/>
+        <artifact name="${com.github.jamesnetherton:wildfly-liquibase-subsystem}"/>
     </resources>
     <dependencies>
         <module name="javax.api"/>

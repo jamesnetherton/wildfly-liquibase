@@ -27,7 +27,7 @@
             <property name="allowConnectingToRunningServer">true</property>
             <property name="javaVmArguments">-agentlib:jdwp=transport=dt_socket,address=8787,server=y,suspend=n ${javaVmExtraArguments}</property>
             <property name="jbossHome">${jboss.home}</property>
-            <property name="serverConfig">standalone-liquibase.xml</property>
+            <property name="serverConfig">${server.configuration}</property>
         </configuration>
     </container>
 

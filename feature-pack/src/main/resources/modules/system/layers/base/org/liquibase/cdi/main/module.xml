@@ -1,7 +1,7 @@
 <?xml version="1.0" ?>
 <module xmlns="urn:jboss:module:1.5" name="org.liquibase.cdi">
     <resources>
-        <resource-root path="liquibase-cdi-${version.org.liquibase}.jar"/>
+        <artifact name="${org.liquibase:liquibase-cdi}"/>
     </resources>
     <dependencies>
         <module name="javax.annotation.api"/>

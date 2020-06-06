@@ -14,14 +14,25 @@
     <properties>
         <jboss.home>${project.build.directory}/wildfly-${version.org.wildfly}</jboss.home>
         <javaVmExtraArguments />
+        <server.configuration>standalone.xml</server.configuration>
     </properties>
 
     <dependencies>
         <dependency>
             <groupId>com.github.jamesnetherton</groupId>
-            <artifactId>wildfly-liquibase-distro</artifactId>
+            <artifactId>wildfly-liquibase-feature-pack</artifactId>
             <version>${project.version}</version>
             <type>pom</type>
+        </dependency>
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-cdi</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <scope>provided</scope>
         </dependency>
         <dependency>
             <groupId>com.github.jamesnetherton</groupId>
@@ -64,12 +75,6 @@
             <scope>test</scope>
         </dependency>
         <dependency>
-            <groupId>org.wildfly</groupId>
-            <artifactId>wildfly-dist</artifactId>
-            <type>tar.gz</type>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
             <groupId>org.wildfly.arquillian</groupId>
             <artifactId>wildfly-arquillian-container-managed</artifactId>
             <scope>test</scope>
@@ -87,50 +92,11 @@
                 <filtering>true</filtering>
                 <includes>
                     <include>arquillian.xml</include>
+                    <include>provision.xml</include>
                 </includes>
             </testResource>
         </testResources>
         <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-dependency-plugin</artifactId>
-                <executions>
-                    <execution>
-                        <id>unpack-wildfly</id>
-                        <phase>generate-test-resources</phase>
-                        <goals>
-                            <goal>unpack</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>org.wildfly</groupId>
-                                    <artifactId>wildfly-dist</artifactId>
-                                    <type>tar.gz</type>
-                                </artifactItem>
-                            </artifactItems>
-                            <outputDirectory>${project.build.directory}</outputDirectory>
-                        </configuration>
-                    </execution>
-                    <execution>
-                        <id>unpack-liquibase-distro</id>
-                        <phase>generate-test-resources</phase>
-                        <goals>
-                            <goal>unpack</goal>
-                        </goals>
-                        <configuration>
-                            <artifactItems>
-                                <artifactItem>
-                                    <groupId>com.github.jamesnetherton</groupId>
-                                    <artifactId>wildfly-liquibase-distro</artifactId>
-                                    <type>zip</type>
-                                </artifactItem>
-                            </artifactItems>
-                            <outputDirectory>${jboss.home}</outputDirectory>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
             <plugin>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
@@ -151,6 +117,116 @@
             <properties>
                 <javaVmExtraArguments>--add-modules=java.se</javaVmExtraArguments>
             </properties>
+        </profile>
+        <profile>
+            <id>galleon-provision</id>
+            <activation>
+                <activeByDefault>true</activeByDefault>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.jboss.galleon</groupId>
+                        <artifactId>galleon-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>provision-wildfly-server</id>
+                                <goals>
+                                    <goal>provision-file</goal>
+                                </goals>
+                                <phase>process-test-resources</phase>
+                                <configuration>
+                                    <install-dir>${jboss.home}</install-dir>
+                                    <provisioning-file>${project.build.testOutputDirectory}/provision.xml</provisioning-file>
+                                    <plugin-options>
+                                        <jboss-maven-dist>true</jboss-maven-dist>
+                                        <jboss-fork-embedded>true</jboss-fork-embedded>
+                                    </plugin-options>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+        <profile>
+            <id>distro-provision</id>
+            <activation>
+                <property>
+                    <name>distro</name>
+                </property>
+            </activation>
+            <properties>
+                <server.configuration>standalone-liquibase.xml</server.configuration>
+            </properties>
+            <dependencies>
+                <dependency>
+                    <groupId>org.wildfly</groupId>
+                    <artifactId>wildfly-dist</artifactId>
+                    <type>tar.gz</type>
+                    <scope>test</scope>
+                </dependency>
+                <dependency>
+                    <groupId>com.github.jamesnetherton</groupId>
+                    <artifactId>wildfly-liquibase-distro</artifactId>
+                    <version>${project.version}</version>
+                    <type>pom</type>
+                </dependency>
+            </dependencies>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-dependency-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>unpack-wildfly</id>
+                                <phase>generate-test-resources</phase>
+                                <goals>
+                                    <goal>unpack</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>org.wildfly</groupId>
+                                            <artifactId>wildfly-dist</artifactId>
+                                            <type>tar.gz</type>
+                                        </artifactItem>
+                                    </artifactItems>
+                                    <outputDirectory>${project.build.directory}</outputDirectory>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>unpack-liquibase-distro</id>
+                                <phase>generate-test-resources</phase>
+                                <goals>
+                                    <goal>unpack</goal>
+                                </goals>
+                                <configuration>
+                                    <artifactItems>
+                                        <artifactItem>
+                                            <groupId>com.github.jamesnetherton</groupId>
+                                            <artifactId>wildfly-liquibase-distro</artifactId>
+                                            <type>zip</type>
+                                        </artifactItem>
+                                    </artifactItems>
+                                    <outputDirectory>${jboss.home}</outputDirectory>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                    <plugin>
+                        <artifactId>maven-surefire-plugin</artifactId>
+                        <configuration>
+                            <redirectTestOutputToFile>false</redirectTestOutputToFile>
+                            <includes>
+                                <include>**/cdi/*Test.java</include>
+                                <include>**/deployment/*Test.java</include>
+                            </includes>
+                        </configuration>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
         <profile>
             <id>debug</id>

@@ -17,6 +17,7 @@ before_script:
 
 script:
  - ./mvnw clean install -P examples
+ - ./mvnw clean install -P distro-provision
 
 deploy:
   provider: script

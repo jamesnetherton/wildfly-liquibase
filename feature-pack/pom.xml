@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.github.jamesnetherton</groupId>
+        <artifactId>wildfly-liquibase</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>wildfly-liquibase-feature-pack</artifactId>
+    <packaging>pom</packaging>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.wildfly</groupId>
+            <artifactId>wildfly-galleon-pack</artifactId>
+            <version>${version.org.wildfly}</version>
+            <type>zip</type>
+        </dependency>
+
+        <dependency>
+            <groupId>com.github.jamesnetherton</groupId>
+            <artifactId>wildfly-liquibase-subsystem</artifactId>
+            <version>${project.version}</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-cdi</artifactId>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.wildfly.galleon-plugins</groupId>
+                <artifactId>wildfly-galleon-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>galleon-pack-build</id>
+                        <goals>
+                            <goal>build-feature-pack</goal>
+                        </goals>
+                        <phase>compile</phase>
+                    </execution>
+                </executions>
+                <configuration>
+                    <fork-embedded>true</fork-embedded>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>

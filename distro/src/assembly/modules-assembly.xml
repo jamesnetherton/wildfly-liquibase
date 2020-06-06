@@ -27,8 +27,12 @@
     <baseDirectory>/</baseDirectory>
     <fileSets>
         <fileSet>
-            <directory>${modules.directory}</directory>
-            <outputDirectory>modules/system/layers/base</outputDirectory>
+            <directory>${modules.directory}/com/github/jamesnetherton</directory>
+            <outputDirectory>modules/system/layers/base/com/github/jamesnetherton</outputDirectory>
+        </fileSet>
+        <fileSet>
+            <directory>${modules.directory}/org/liquibase</directory>
+            <outputDirectory>modules/system/layers/base/org/liquibase</outputDirectory>
         </fileSet>
         <fileSet>
             <directory>${config.directory}</directory>
