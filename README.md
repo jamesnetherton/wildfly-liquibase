@@ -14,8 +14,8 @@ Download one of the [release](https://github.com/jamesnetherton/wildfly-liquibas
 
 ```
 cd $JBOSS_HOME
-wget https://github.com/jamesnetherton/wildfly-liquibase/releases/download/1.0.0/wildfly-liquibase-distro-0.8.0.zip
-unzip wildfly-liquibase-distro-1.0.0.zip
+wget https://github.com/jamesnetherton/wildfly-liquibase/releases/download/0.9.0/wildfly-liquibase-distro-0.8.0.zip
+unzip wildfly-liquibase-distro-0.9.0.zip
 ```
 
 Check the release notes to ensure that the distribution is compatible with your WildFly version.
@@ -53,7 +53,7 @@ galleon.sh install wildfly:current --dir=wildfly
 Next install the Liquibase subsystem layer:
 
 ```
-galleon.sh install com.github.jamesnetherton:wildfly-liquibase-galleon-pack:1.0.0 --dir=wildfly --layers=liquibase
+galleon.sh install com.github.jamesnetherton:wildfly-liquibase-galleon-pack:0.9.0 --dir=wildfly --layers=liquibase
 ```
 
 ## Configuration
@@ -104,6 +104,7 @@ CREATE TABLE test (
 
 You can execute XML change logs without the requirement of a deployment archive wrapper. Simply place a file suffixed with `changelog.xml` into the WildFly deployments directory, and the Liquibase subsystem will attempt to execute it.
 
+##### Additional deployment configuration options
 To configure the various aspects of Liquibase change log execution, you can provide an **_optional_** `META-INF/jboss-all.xml` or `WEB-INF/jboss-all.xml`.
 
 For example to define the contexts and other attributes for specific change log files:
