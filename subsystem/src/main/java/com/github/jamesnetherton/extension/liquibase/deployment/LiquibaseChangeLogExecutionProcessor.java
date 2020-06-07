@@ -60,10 +60,10 @@ public class LiquibaseChangeLogExecutionProcessor implements DeploymentUnitProce
             String dataSource = configuration.getDataSource();
 
             if (registryService.containsDatasource(dataSource)) {
-                throw new DeploymentUnitProcessingException(String.format(MESSAGE_DUPLICATE_DATASOURCE, dataSource));
+                throw new DeploymentUnitProcessingException(String.format(MESSAGE_DUPLICATE_DATASOURCE, configuration.getDataSource()));
             }
 
-            ServiceName serviceName = ChangeLogExecutionService.createServiceName(dataSource);
+            ServiceName serviceName = ChangeLogExecutionService.createServiceName(configuration.getName());
             ChangeLogExecutionService service = new ChangeLogExecutionService(configuration);
             ServiceBuilder<ChangeLogExecutionService> builder = phaseContext.getServiceTarget().addService(serviceName, service);
 

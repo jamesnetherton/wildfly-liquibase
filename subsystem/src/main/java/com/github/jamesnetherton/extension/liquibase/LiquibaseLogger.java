@@ -25,5 +25,6 @@ import org.slf4j.LoggerFactory;
 public interface LiquibaseLogger {
     Logger ROOT_LOGGER = LoggerFactory.getLogger(LiquibaseLogger.class.getPackage().getName());
 
-    String MESSAGE_DUPLICATE_DATASOURCE = "Multiple change log definitions for datasource '%s' are not allowed";
+    String MESSAGE_DUPLICATE_DATASOURCE = "Multiple change log definitions for datasource '%s' detected. "
+            + "Concurrent change log executions on the same datasource must be avoided as the execution order is non-deterministic.";
 }

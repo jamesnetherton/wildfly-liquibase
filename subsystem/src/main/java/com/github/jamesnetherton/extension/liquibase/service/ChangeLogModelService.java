@@ -75,7 +75,7 @@ public class ChangeLogModelService extends AbstractService<ChangeLogModelService
         }
 
         ServiceTarget serviceTarget = context.getServiceTarget();
-        ServiceName serviceName = ChangeLogExecutionService.createServiceName(dataSource);
+        ServiceName serviceName = ChangeLogExecutionService.createServiceName(configuration.getName());
 
         installChangeLogExecutionService(serviceTarget, serviceName, configuration);
     }
@@ -124,7 +124,7 @@ public class ChangeLogModelService extends AbstractService<ChangeLogModelService
             throw new OperationFailedException("Modifying the change log datasource property is not supported");
         }
 
-        ServiceName serviceName = ChangeLogExecutionService.createServiceName(dataSource);
+        ServiceName serviceName = ChangeLogExecutionService.createServiceName(changeLogName);
         ServiceTarget serviceTarget = context.getServiceTarget();
 
         context.removeService(serviceName);
@@ -134,8 +134,7 @@ public class ChangeLogModelService extends AbstractService<ChangeLogModelService
 
     public void removeChangeLogModel(OperationContext context, ModelNode model) throws OperationFailedException {
         String runtimeName = context.getCurrentAddressValue();
-        String dataSource = ChangeLogResource.DATASOURCE.resolveModelAttribute(context, model).asString();
-        ServiceName serviceName = ChangeLogExecutionService.createServiceName(dataSource);
+        ServiceName serviceName = ChangeLogExecutionService.createServiceName(runtimeName);
         context.removeService(serviceName);
         registryService.removeConfiguration(runtimeName);
     }

@@ -338,6 +338,11 @@ public final class ChangeLogConfiguration {
 
     enum ConfigurationOrigin {
         DEPLOYMENT,
-        SUBSYSTEM
+        SUBSYSTEM;
+
+        @Override
+        public String toString() {
+            return this.name().toLowerCase();
+        }
     }
 }

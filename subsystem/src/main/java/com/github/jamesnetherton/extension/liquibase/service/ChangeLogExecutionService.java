@@ -30,6 +30,7 @@ import liquibase.resource.FileSystemResourceAccessor;
 import liquibase.resource.ResourceAccessor;
 
 import java.sql.SQLException;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import javax.naming.InitialContext;
 import javax.naming.NamingException;
@@ -49,6 +50,7 @@ import org.jboss.msc.service.StartException;
  */
 public final class ChangeLogExecutionService extends AbstractService<ChangeLogExecutionService> {
 
+    private static final AtomicInteger COUNTER = new AtomicInteger();
     private final ChangeLogConfiguration configuration;
 
     public ChangeLogExecutionService(ChangeLogConfiguration configuration) {
@@ -84,6 +86,7 @@ public final class ChangeLogExecutionService extends AbstractService<ChangeLogEx
             Contexts contexts = new Contexts(configuration.getContexts());
             LabelExpression labelExpression = new LabelExpression(configuration.getLabels());
 
+            LiquibaseLogger.ROOT_LOGGER.info(String.format("Starting execution of %s changelog %s", configuration.getOrigin(), configuration.getFileName()));
             liquibase = new Liquibase(configuration.getFileName(), resourceAccessor, connection);
             liquibase.update(contexts, labelExpression);
         } catch (NamingException | LiquibaseException | SQLException e) {
@@ -112,7 +115,8 @@ public final class ChangeLogExecutionService extends AbstractService<ChangeLogEx
         }
     }
 
-    public static ServiceName createServiceName(String suffix) {
+    public static ServiceName createServiceName(String changeLogName) {
+        String suffix = String.format("%s.%d", changeLogName, COUNTER.incrementAndGet());
         return ServiceName.JBOSS.append("liquibase", "changelog", "execution", suffix);
     }
 }
