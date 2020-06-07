@@ -24,11 +24,7 @@ import java.util.Map;
 
 import com.github.jamesnetherton.extension.liquibase.ChangeLogConfiguration;
 
-import org.jboss.msc.service.AbstractService;
-import org.jboss.msc.service.ServiceName;
-import org.jboss.msc.service.StopContext;
-
-public class ChangeLogConfigurationRegistryService extends AbstractService<ChangeLogConfigurationRegistryService> {
+public class ChangeLogConfigurationRegistryService {
 
     private final Map<String, ChangeLogConfiguration> configurationMap = new HashMap<>();
 
@@ -49,22 +45,6 @@ public class ChangeLogConfigurationRegistryService extends AbstractService<Chang
             return configurationMap.values()
                 .stream()
                 .anyMatch((configuration -> configuration.getDataSource().equals(dataSource)));
-        }
-    }
-
-    public static ServiceName getServiceName() {
-        return ServiceName.JBOSS.append("liquibase", "changelog", "configuration", "registry");
-    }
-
-    @Override
-    public ChangeLogConfigurationRegistryService getValue() throws IllegalStateException {
-        return this;
-    }
-
-    @Override
-    public void stop(StopContext context) {
-        synchronized (configurationMap) {
-            configurationMap.clear();
         }
     }
 }

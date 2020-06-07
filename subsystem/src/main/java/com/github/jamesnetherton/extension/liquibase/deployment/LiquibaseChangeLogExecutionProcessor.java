@@ -33,9 +33,7 @@ import org.jboss.as.server.deployment.DeploymentUnit;
 import org.jboss.as.server.deployment.DeploymentUnitProcessingException;
 import org.jboss.as.server.deployment.DeploymentUnitProcessor;
 import org.jboss.msc.service.ServiceBuilder;
-import org.jboss.msc.service.ServiceController;
 import org.jboss.msc.service.ServiceName;
-import org.jboss.msc.service.ServiceRegistry;
 import static com.github.jamesnetherton.extension.liquibase.LiquibaseLogger.MESSAGE_DUPLICATE_DATASOURCE;
 
 /**
@@ -43,6 +41,12 @@ import static com.github.jamesnetherton.extension.liquibase.LiquibaseLogger.MESS
  * the deployment unit.
  */
 public class LiquibaseChangeLogExecutionProcessor implements DeploymentUnitProcessor{
+
+    private final ChangeLogConfigurationRegistryService registryService;
+
+    public LiquibaseChangeLogExecutionProcessor(ChangeLogConfigurationRegistryService registryService) {
+        this.registryService = registryService;
+    }
 
     @Override
     public void deploy(DeploymentPhaseContext phaseContext) throws DeploymentUnitProcessingException {
@@ -53,8 +57,6 @@ public class LiquibaseChangeLogExecutionProcessor implements DeploymentUnitProce
         if (configurations.isEmpty()) {
             return;
         }
-
-        ChangeLogConfigurationRegistryService registryService = getRegistryService(phaseContext.getServiceRegistry());
 
         for (ChangeLogConfiguration configuration : configurations) {
             String dataSource = configuration.getDataSource();
@@ -81,8 +83,6 @@ public class LiquibaseChangeLogExecutionProcessor implements DeploymentUnitProce
     public void undeploy(DeploymentUnit deploymentUnit) {
         List<ChangeLogConfiguration> configurations = deploymentUnit.getAttachmentList(LiquibaseConstants.LIQUIBASE_CHANGELOGS);
         if (!configurations.isEmpty()) {
-            ChangeLogConfigurationRegistryService registryService = getRegistryService(deploymentUnit.getServiceRegistry());
-
             for (ChangeLogConfiguration configuration : configurations) {
                 registryService.removeConfiguration(getConfigurationKey(deploymentUnit, configuration));
             }
@@ -91,12 +91,5 @@ public class LiquibaseChangeLogExecutionProcessor implements DeploymentUnitProce
 
     private String getConfigurationKey(DeploymentUnit deploymentUnit, ChangeLogConfiguration configuration) {
         return String.format("%s.%s", configuration.getName(), deploymentUnit.getName());
-    }
-
-    @SuppressWarnings("unchecked")
-    private ChangeLogConfigurationRegistryService getRegistryService(ServiceRegistry serviceRegistry) {
-        ServiceController<ChangeLogConfigurationRegistryService> controller = (ServiceController<ChangeLogConfigurationRegistryService>) serviceRegistry.getRequiredService(
-                ChangeLogConfigurationRegistryService.getServiceName());
-        return controller.getValue();
     }
 }

@@ -55,9 +55,7 @@ class LiquibaseSubsystemAdd extends AbstractBoottimeAddStepHandler {
 
         ServiceTarget serviceTarget = context.getServiceTarget();
 
-        ServiceName registryServiceName = ChangeLogConfigurationRegistryService.getServiceName();
         ChangeLogConfigurationRegistryService registryService = new ChangeLogConfigurationRegistryService();
-        ServiceHelper.installService(registryServiceName, serviceTarget, registryService);
 
         ServiceName modelUpdateServiceName = ChangeLogModelService.getServiceName();
         ChangeLogModelService modelUpdateService = new ChangeLogModelService(registryService);
@@ -70,7 +68,7 @@ class LiquibaseSubsystemAdd extends AbstractBoottimeAddStepHandler {
                 processorTarget.addDeploymentProcessor(LiquibaseExtension.SUBSYSTEM_NAME, Phase.STRUCTURE, STRUCTURE_LIQUIBASE_JBOSS_ALL, parser);
                 processorTarget.addDeploymentProcessor(LiquibaseExtension.SUBSYSTEM_NAME, Phase.DEPENDENCIES, DEPENDENCIES_LIQUIBASE, new LiquibaseDependenciesProcessor());
                 processorTarget.addDeploymentProcessor(LiquibaseExtension.SUBSYSTEM_NAME, Phase.INSTALL, INSTALL_LIQUIBASE_CHANGE_LOG, new LiquibaseChangeLogParseProcessor());
-                processorTarget.addDeploymentProcessor(LiquibaseExtension.SUBSYSTEM_NAME, Phase.INSTALL, INSTALL_LIQUIBASE_MIGRATION_EXECUTION, new LiquibaseChangeLogExecutionProcessor());
+                processorTarget.addDeploymentProcessor(LiquibaseExtension.SUBSYSTEM_NAME, Phase.INSTALL, INSTALL_LIQUIBASE_MIGRATION_EXECUTION, new LiquibaseChangeLogExecutionProcessor(registryService));
             }
         }, OperationContext.Stage.RUNTIME);
 
