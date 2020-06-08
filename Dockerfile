@@ -1,4 +1,4 @@
-FROM jboss/wildfly:19.0.0.Final
+FROM jamesnetherton/wildfly:20.0.0.Final
 
 COPY ./distro/target/modules/ /opt/jboss/wildfly/modules/system/layers/base/
 COPY ./distro/target/configuration/* /opt/jboss/wildfly/standalone/configuration/
