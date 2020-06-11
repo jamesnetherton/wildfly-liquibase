@@ -403,7 +403,7 @@
             <build />
         </profile>
         <profile>
-            <id>changelog</id>
+            <id>docs</id>
             <build>
                 <plugins>
                     <plugin>
@@ -418,6 +418,16 @@
                                 </goals>
                                 <configuration>
                                     <source>${project.basedir}/changelog.groovy</source>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>generate-readme</id>
+                                <phase>generate-resources</phase>
+                                <goals>
+                                    <goal>execute</goal>
+                                </goals>
+                                <configuration>
+                                    <source>${project.basedir}/readmegen.groovy</source>
                                 </configuration>
                             </execution>
                         </executions>
