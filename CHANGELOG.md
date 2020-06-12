@@ -1,5 +1,17 @@
 ### Changelog
 
+#### WildFly Liquibase 1.0.0
+
+**Enhancements**
+
+* [#46][46] Create Galleon feature pack distribution
+* [#71][71] Upgrade to WildFly 20.0.0 Final
+
+For details see [1.0.0 Enhancements](https://github.com/jamesnetherton/wildfly-liquibase/issues?q=milestone%3A"1.0.0"+label%3Aenhancement)
+
+[46]: https://github.com/jamesnetherton/wildfly-liquibase/issues/46
+[71]: https://github.com/jamesnetherton/wildfly-liquibase/issues/71
+
 #### WildFly Liquibase 0.9.0
 
 **Enhancements**
