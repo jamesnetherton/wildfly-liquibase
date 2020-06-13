@@ -1,6 +1,7 @@
 FROM jamesnetherton/wildfly:20.0.0.Final
 
-COPY ./distro/target/modules/ /opt/jboss/wildfly/modules/system/layers/base/
-COPY ./distro/target/configuration/* /opt/jboss/wildfly/standalone/configuration/
+ARG WILDFLY_LIQUIBASE_VERSION
+
+ADD ./distro/target/wildfly-liquibase-distro-${WILDFLY_LIQUIBASE_VERSION}.tar.gz /opt/jboss/wildfly/
 
 CMD [ "/opt/jboss/wildfly/bin/standalone.sh", "-c", "standalone-liquibase.xml", "-b 0.0.0.0", "-bmanagement 0.0.0.0" ]

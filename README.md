@@ -1,6 +1,6 @@
 # wildfly-liquibase
 
-[![Build Status](https://travis-ci.org/jamesnetherton/wildfly-liquibase.svg?branch=master)](https://travis-ci.org/jamesnetherton/wildfly-liquibase)
+![WildFly Liquibase CI](https://github.com/jamesnetherton/wildfly-liquibase/workflows/WildFly%20Liquibase%20CI/badge.svg)
 [![License](https://img.shields.io/:license-Apache2-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 [![Maven Central](https://img.shields.io/maven-central/v/com.github.jamesnetherton/wildfly-liquibase.svg?maxAge=600)](http://search.maven.org/#search%7Cga%7C1%7Cg%3Acom.github.jamesnetherton%20a%3Awildfly-liquibase-distro)
 

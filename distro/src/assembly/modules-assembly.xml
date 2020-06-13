@@ -23,6 +23,7 @@
     <id>liquibase-subsystem</id>
     <formats>
         <format>zip</format>
+        <format>tar.gz</format>
     </formats>
     <baseDirectory>/</baseDirectory>
     <fileSets>

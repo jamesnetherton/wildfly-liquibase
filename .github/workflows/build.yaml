@@ -1,0 +1,99 @@
+name: WildFly Liquibase CI
+
+on:
+  push:
+    branches:
+      - '*'
+    paths-ignore:
+      - '**.md'
+      - '**.groovy'
+      - 'LICENSE.txt'
+      - 'Dockerfile'
+    tags:
+      - '*'
+  pull_request:
+    branches:
+      - '*'
+    paths-ignore:
+      - '**.md'
+      - '**.groovy'
+      - 'LICENSE.txt'
+      - 'Dockerfile'
+
+jobs:
+  license-check:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout wildfly-liquibase
+        uses: actions/checkout@v2
+      - name: Restore cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - name: Set up JDK ${{ matrix.java }}
+        uses: joschi/setup-jdk@v2
+        with:
+          java-version: 11
+      - name: Check license headers
+        run: ./mvnw process-sources -ntp -B -P licenseCheck
+
+  build:
+    needs: license-check
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        java: [ '8' , '11', '14' ]
+    steps:
+      - name: Checkout wildfly-liquibase
+        uses: actions/checkout@v2
+      - name: Restore cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - name: Set up JDK ${{ matrix.java }}
+        uses: joschi/setup-jdk@v2
+        with:
+          java-version: ${{ matrix.java }}
+      - name: Build JDK ${{ matrix.java }} - Galleon Provision
+        run: ./mvnw clean install -ntp -B -P examples -P galleon-provision
+      - name: Build JDK ${{ matrix.java }} - Distro Provision
+        if: matrix.java == 11
+        run: ./mvnw clean install -ntp -B -P distro-provision
+
+  docker-image:
+    if: contains(github.ref, 'refs/tags')
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Set tag
+        id: release
+        run: echo ::set-output name=tag::${GITHUB_REF#refs/*/}
+      - name: Checkout wildfly-liquibase
+        uses: actions/checkout@v2
+      - name: Restore cache
+        uses: actions/cache@v2
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+      - name: Set up JDK ${{ matrix.java }}
+        uses: joschi/setup-jdk@v2
+        with:
+          java-version: 11
+      - name: Build distro
+        run: ./mvnw -B -ntp clean install -pl distro -am
+      - name: Build docker image
+        env:
+          BUILD_TAG: ${{ steps.release.outputs.tag }}
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run:
+          /bin/bash ./docker-build.sh
