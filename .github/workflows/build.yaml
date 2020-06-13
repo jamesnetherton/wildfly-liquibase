@@ -33,7 +33,7 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
-      - name: Set up JDK ${{ matrix.java }}
+      - name: Set up JDK
         uses: joschi/setup-jdk@v2
         with:
           java-version: 11
@@ -47,6 +47,7 @@ jobs:
       fail-fast: false
       matrix:
         java: [ '8' , '11', '14' ]
+        provision: [ 'galleon-provision', 'distro-provision' ]
     steps:
       - name: Checkout wildfly-liquibase
         uses: actions/checkout@v2
@@ -61,11 +62,8 @@ jobs:
         uses: joschi/setup-jdk@v2
         with:
           java-version: ${{ matrix.java }}
-      - name: Build JDK ${{ matrix.java }} - Galleon Provision
-        run: ./mvnw clean install -ntp -B -P examples -P galleon-provision
-      - name: Build JDK ${{ matrix.java }} - Distro Provision
-        if: matrix.java == 11
-        run: ./mvnw clean install -ntp -B -P distro-provision
+      - name: Build JDK ${{ matrix.java }} - ${{ matrix.provision }}
+        run: ./mvnw clean install -ntp -B -P examples -P ${{ matrix.provision }}
 
   docker-image:
     if: contains(github.ref, 'refs/tags')
@@ -84,7 +82,7 @@ jobs:
           key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
           restore-keys: |
             ${{ runner.os }}-maven-
-      - name: Set up JDK ${{ matrix.java }}
+      - name: Set up JDK
         uses: joschi/setup-jdk@v2
         with:
           java-version: 11
@@ -95,5 +93,4 @@ jobs:
           BUILD_TAG: ${{ steps.release.outputs.tag }}
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        run:
-          /bin/bash ./docker-build.sh
+        run: /bin/bash ./docker-build.sh
