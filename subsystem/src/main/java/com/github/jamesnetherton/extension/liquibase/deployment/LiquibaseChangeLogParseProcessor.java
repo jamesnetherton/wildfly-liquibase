@@ -75,7 +75,7 @@ public class LiquibaseChangeLogParseProcessor implements DeploymentUnitProcessor
         WarMetaData warMetaData = deploymentUnit.getAttachment(WarMetaData.ATTACHMENT_KEY);
         if (warMetaData != null) {
             WebMetaData webMetaData = warMetaData.getWebMetaData();
-            if (webMetaData != null) {
+            if (webMetaData != null && webMetaData.getContextParams() != null) {
                 changeLogContextParam = webMetaData.getContextParams()
                     .stream()
                     .filter(paramValueMetaData -> paramValueMetaData.getParamName().equals("liquibase.changelog"))
