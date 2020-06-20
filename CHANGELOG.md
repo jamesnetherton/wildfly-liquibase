@@ -1,5 +1,22 @@
 ### Changelog
 
+#### WildFly Liquibase 1.1.0
+
+**Enhancements**
+
+* [#72][72] Upgrade Liquibase to 3.10.0
+
+For details see [1.1.0 Enhancements](https://github.com/jamesnetherton/wildfly-liquibase/issues?q=milestone%3A"1.1.0"+label%3Aenhancement)
+
+**Bugs**
+
+* [#74][74] Deployments without context-params causes NullPointerException
+
+For details see [1.1.0 Bugs](https://github.com/jamesnetherton/wildfly-liquibase/issues?q=milestone%3A"1.1.0"+label%3Abug)
+
+[72]: https://github.com/jamesnetherton/wildfly-liquibase/issues/72
+[74]: https://github.com/jamesnetherton/wildfly-liquibase/issues/74
+
 #### WildFly Liquibase 1.0.0
 
 **Enhancements**
