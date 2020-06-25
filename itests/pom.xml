@@ -116,15 +116,6 @@
     </build>
     <profiles>
         <profile>
-            <id>java-9-plus</id>
-            <activation>
-                <jdk>[9,)</jdk>
-            </activation>
-            <properties>
-                <javaVmExtraArguments>--add-modules=java.se</javaVmExtraArguments>
-            </properties>
-        </profile>
-        <profile>
             <id>galleon-provision</id>
             <activation>
                 <activeByDefault>true</activeByDefault>
