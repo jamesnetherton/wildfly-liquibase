@@ -29,7 +29,7 @@
         <dependency>
             <groupId>org.liquibase</groupId>
             <artifactId>liquibase-cdi</artifactId>
-            <version>3.10.0</version>
+            <version>3.10.1</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
