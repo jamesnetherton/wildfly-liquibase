@@ -100,6 +100,23 @@ public class LiquibaseTestSupport {
         return executeCliCommand("/subsystem=liquibase/databaseChangeLog=" + name + "/:remove");
     }
 
+    protected boolean addDataSource(String dataSourceName, String databaseName) throws Exception {
+        String command = "data-source add --name=" + dataSourceName + " --jndi-name=java:jboss/datasources/" + dataSourceName + " --driver-name=h2 --connection-url=jdbc:h2:mem:" + databaseName + ";DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE --user-name=sa --password=sa";
+        return executeCliCommand(command);
+    }
+
+    protected boolean removeDataSource(String dataSourceName) throws Exception {
+        return executeCliCommand("data-source remove --name=" + dataSourceName);
+    }
+
+    protected boolean deploy(String deployment) throws Exception {
+        return executeCliCommand("deploy " + deployment);
+    }
+
+    protected boolean undeploy(String deployment) throws Exception {
+        return executeCliCommand("undeploy " + deployment);
+    }
+
     protected boolean executeCliScript(File scriptFile) throws Exception {
         return jbossCli("--file=" + scriptFile.getAbsolutePath());
     }
