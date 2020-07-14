@@ -1,5 +1,17 @@
 ### Changelog
 
+#### WildFly Liquibase 1.1.1
+
+**Enhancements**
+
+* [#75][75] Upgrade to Liquibase 3.10.1
+* [#76][76] Upgrade to WildFly 20.0.1.Final
+
+For details see [1.1.1 Enhancements](https://github.com/jamesnetherton/wildfly-liquibase/issues?q=milestone%3A"1.1.1"+label%3Aenhancement)
+
+[75]: https://github.com/jamesnetherton/wildfly-liquibase/issues/75
+[76]: https://github.com/jamesnetherton/wildfly-liquibase/issues/76
+
 #### WildFly Liquibase 1.1.0
 
 **Enhancements**

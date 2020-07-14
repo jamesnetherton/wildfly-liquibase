@@ -59,9 +59,7 @@ def issueCategories = ['enhancement', 'task', 'bug']
 // Fetch and sort all closed milestones
 def milestones = milestoneService.getMilestones(gitHubNamespace, gitHubProject, "closed")
 milestones.sort{a,b ->
-    def atitle = new Double(a.title.substring(0, a.title.lastIndexOf('.')))
-    def btitle = new Double(b.title.substring(0, b.title.lastIndexOf('.')))
-    btitle <=> atitle
+    b.title <=> a.title
 }
 
 // Fetch closed issues for each milestone and sort into categories
