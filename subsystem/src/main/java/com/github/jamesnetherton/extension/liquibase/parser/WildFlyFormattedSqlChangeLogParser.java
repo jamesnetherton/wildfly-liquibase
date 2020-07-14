@@ -24,10 +24,11 @@ import liquibase.changelog.DatabaseChangeLog;
 import liquibase.exception.ChangeLogParseException;
 import liquibase.parser.core.formattedsql.FormattedSqlChangeLogParser;
 import liquibase.resource.ResourceAccessor;
-import liquibase.resource.UtfBomAwareReader;
+import liquibase.util.StreamUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -42,16 +43,18 @@ public class WildFlyFormattedSqlChangeLogParser extends FormattedSqlChangeLogPar
 
     @Override
     public DatabaseChangeLog parse(String physicalChangeLogLocation, ChangeLogParameters changeLogParameters, ResourceAccessor resourceAccessor) throws ChangeLogParseException {
-        try (BufferedReader reader = new BufferedReader(new UtfBomAwareReader(openChangeLogFile(physicalChangeLogLocation, resourceAccessor)))){
-            String line;
-            while ((line = reader.readLine()) != null) {
-                Matcher matcher = DATASOURCE_PATTERN.matcher(line);
-                if (matcher.matches()) {
-                    changeLogParameters.set(ModelConstants.DATASOURCE, matcher.group(1).trim());
-                    break;
+        try (InputStream inputStream = openChangeLogFile(physicalChangeLogLocation, resourceAccessor)) {
+            try (BufferedReader reader = new BufferedReader(StreamUtil.readStreamWithReader(inputStream, null))){
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    Matcher matcher = DATASOURCE_PATTERN.matcher(line);
+                    if (matcher.matches()) {
+                        changeLogParameters.set(ModelConstants.DATASOURCE, matcher.group(1).trim());
+                        break;
+                    }
                 }
+                return super.parse(physicalChangeLogLocation, changeLogParameters, resourceAccessor);
             }
-            return super.parse(physicalChangeLogLocation, changeLogParameters, resourceAccessor);
         } catch (IOException e) {
             throw new ChangeLogParseException(e);
         }

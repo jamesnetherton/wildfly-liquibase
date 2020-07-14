@@ -65,7 +65,7 @@ public class ChangeLogTemplateTest {
             throw new ChangeLogParseException("Failed to find a suitable parser for " + file.getName());
         }
 
-        DatabaseChangeLog changeLog = parser.parse(file.getAbsolutePath(), new ChangeLogParameters(), new FileSystemResourceAccessor());
+        DatabaseChangeLog changeLog = parser.parse(file.getName(), new ChangeLogParameters(), new FileSystemResourceAccessor(file.getParentFile()));
         Assert.assertNotNull(changeLog);
     }
 }

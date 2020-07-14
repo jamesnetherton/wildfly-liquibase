@@ -38,7 +38,7 @@ import javax.sql.DataSource;
 
 import com.github.jamesnetherton.extension.liquibase.ChangeLogConfiguration;
 import com.github.jamesnetherton.extension.liquibase.LiquibaseLogger;
-import com.github.jamesnetherton.extension.liquibase.resource.WildFlyLiquibaseResourceAccessor;
+import com.github.jamesnetherton.extension.liquibase.resource.WildFlyResourceAccessor;
 
 import org.jboss.msc.service.AbstractService;
 import org.jboss.msc.service.ServiceName;
@@ -76,8 +76,9 @@ public final class ChangeLogExecutionService extends AbstractService<ChangeLogEx
         JdbcConnection connection = null;
         Liquibase liquibase = null;
 
+        final ClassLoader oldTCCL = Thread.currentThread().getContextClassLoader();
         try {
-            ResourceAccessor resourceAccessor = new CompositeResourceAccessor(new FileSystemResourceAccessor(), new WildFlyLiquibaseResourceAccessor(configuration));
+            ResourceAccessor resourceAccessor = new CompositeResourceAccessor(new FileSystemResourceAccessor(), new WildFlyResourceAccessor(configuration));
 
             InitialContext initialContext = new InitialContext();
             DataSource datasource = (DataSource) initialContext.lookup(configuration.getDataSource());
@@ -87,6 +88,7 @@ public final class ChangeLogExecutionService extends AbstractService<ChangeLogEx
             LabelExpression labelExpression = new LabelExpression(configuration.getLabels());
 
             LiquibaseLogger.ROOT_LOGGER.info(String.format("Starting execution of %s changelog %s", configuration.getOrigin(), configuration.getFileName()));
+            Thread.currentThread().setContextClassLoader(configuration.getClassLoader());
             liquibase = new Liquibase(configuration.getFileName(), resourceAccessor, connection);
             liquibase.update(contexts, labelExpression);
         } catch (NamingException | LiquibaseException | SQLException e) {
@@ -112,6 +114,7 @@ public final class ChangeLogExecutionService extends AbstractService<ChangeLogEx
                     LiquibaseLogger.ROOT_LOGGER.warn("Failed to close database connection", e);
                 }
             }
+            Thread.currentThread().setContextClassLoader(oldTCCL);
         }
     }
 

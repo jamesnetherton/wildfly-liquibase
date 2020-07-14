@@ -23,7 +23,6 @@ import liquibase.changelog.ChangeLogParameters;
 import liquibase.changelog.DatabaseChangeLog;
 import liquibase.exception.ChangeLogParseException;
 import liquibase.parser.ChangeLogParser;
-import liquibase.resource.CompositeResourceAccessor;
 import liquibase.resource.FileSystemResourceAccessor;
 
 import java.io.File;
@@ -42,6 +41,7 @@ import com.github.jamesnetherton.extension.liquibase.LiquibaseConstants;
 import com.github.jamesnetherton.extension.liquibase.LiquibaseLogger;
 import com.github.jamesnetherton.extension.liquibase.ModelConstants;
 import com.github.jamesnetherton.extension.liquibase.resource.VFSResourceAccessor;
+import com.github.jamesnetherton.extension.liquibase.resource.WildFlyCompositeResourceAccessor;
 
 import org.jboss.as.ee.structure.DeploymentType;
 import org.jboss.as.ee.structure.DeploymentTypeMarker;
@@ -137,32 +137,51 @@ public class LiquibaseChangeLogParseProcessor implements DeploymentUnitProcessor
     }
 
     private String parseDataSource(VirtualFile file, String runtimeName, ClassLoader classLoader) throws DeploymentUnitProcessingException {
-        ChangeLogParser parser = ChangeLogParserFactory.createParser(file.getName());
-        if (parser == null) {
-            parser = ChangeLogParserFactory.createParser(runtimeName);
-        }
-
-        if (parser == null) {
-            throw new DeploymentUnitProcessingException("Unable to find a suitable change log parser for " + file.getName());
-        }
-
+        ClassLoader oldTCCL = Thread.currentThread().getContextClassLoader();
         try {
+            Thread.currentThread().setContextClassLoader(classLoader);
+
+            File[] basePaths = new File[] { new File(file.getPhysicalFile().getParent()) };
+            FileSystemResourceAccessor fileSystemResourceAccessor = new FileSystemResourceAccessor(basePaths);
+
             //TODO: Refactor this. Creating ChangeLogConfiguration just to satisfy VFSResourceAccessor is wasteful
             ChangeLogConfiguration configuration = new ChangeLogConfiguration();
             configuration.setName(file.getName());
             configuration.setPath(file.getPathName());
             configuration.setDeployment(runtimeName);
             configuration.setClassLoader(classLoader);
+            VFSResourceAccessor vfsResourceAccessor = new VFSResourceAccessor(configuration);
 
-            CompositeResourceAccessor resourceAccessor = new CompositeResourceAccessor(new FileSystemResourceAccessor(), new VFSResourceAccessor(configuration));
-            DatabaseChangeLog changeLog = parser.parse(file.getPhysicalFile().getAbsolutePath(), new ChangeLogParameters(), resourceAccessor);
+            WildFlyCompositeResourceAccessor compositeResourceAccessor = new WildFlyCompositeResourceAccessor(fileSystemResourceAccessor, vfsResourceAccessor);
+
+            ChangeLogParser parser = ChangeLogParserFactory.createParser(file.getName());
+            if (parser == null) {
+                parser = ChangeLogParserFactory.createParser(runtimeName);
+            }
+
+            if (parser == null) {
+                throw new DeploymentUnitProcessingException("Unable to find a suitable change log parser for " + file.getName());
+            }
+
+            String changeLogLocation;
+            if (runtimeName.endsWith(".war")) {
+                changeLogLocation = file.getName();
+            } else if (runtimeName.endsWith(".xml")) {
+                changeLogLocation = "content";
+            } else {
+                changeLogLocation = file.getPhysicalFile().getAbsolutePath();
+            }
+
+            DatabaseChangeLog changeLog = parser.parse(changeLogLocation, new ChangeLogParameters(), compositeResourceAccessor);
             Object dataSource = changeLog.getChangeLogParameters().getValue(ModelConstants.DATASOURCE, changeLog);
             if (dataSource == null) {
-                throw new DeploymentUnitProcessingException("Change log is missing a datasource property");
+                throw new DeploymentUnitProcessingException("Change log is missing a datasource-ref property");
             }
             return (String) dataSource;
         } catch (ChangeLogParseException | IOException e) {
             throw new DeploymentUnitProcessingException(e);
+        } finally {
+            Thread.currentThread().setContextClassLoader(oldTCCL);
         }
     }
 

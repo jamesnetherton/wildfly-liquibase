@@ -19,32 +19,36 @@
  */
 package com.github.jamesnetherton.extension.liquibase.resource;
 
+import liquibase.resource.InputStreamList;
+
 import java.io.ByteArrayInputStream;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
-import java.util.HashSet;
-import java.util.Set;
 
 import com.github.jamesnetherton.extension.liquibase.ChangeLogConfiguration;
 import com.github.jamesnetherton.extension.liquibase.ChangeLogFormat;
 
-public final class WildFlyLiquibaseResourceAccessor extends VFSResourceAccessor {
+public final class WildFlyResourceAccessor extends VFSResourceAccessor {
 
     private static final String LIQUIBASE_ELEMENT_START = "<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"
         + "<databaseChangeLog xmlns=\"http://www.liquibase.org/xml/ns/dbchangelog\" \n" + "xmlns:xsi=\"http://www.w3.org/2001/XMLSchema-instance\" \n"
         + "xmlns:ext=\"http://www.liquibase.org/xml/ns/dbchangelog-ext\" \n"
-        + "xsi:schemaLocation=\"http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.8.xsd\n"
+        + "xsi:schemaLocation=\"http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd\n"
         + "http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd\">\n";
     private static final String LIQUIBASE_ELEMENT_END = "</databaseChangeLog>";
 
-    public WildFlyLiquibaseResourceAccessor(ChangeLogConfiguration configuration) {
+    public WildFlyResourceAccessor(ChangeLogConfiguration configuration) {
         super(configuration);
     }
 
     @Override
-    public Set<InputStream> getResourcesAsStream(String path) throws IOException {
-        Set<InputStream> resources = new HashSet<>();
+    public InputStreamList openStreams(String relativeTo, String path) throws IOException {
+        File file = new File(path);
+        InputStreamList resources = new InputStreamList();
         InputStream resource = configuration.getClassLoader().getResourceAsStream(path);
 
         if (resource == null) {
@@ -60,22 +64,22 @@ public final class WildFlyLiquibaseResourceAccessor extends VFSResourceAccessor 
             }
 
             if (path.equals(configuration.getFileName())) {
-                resources.add(new ByteArrayInputStream(definition.getBytes(StandardCharsets.UTF_8)));
+                resources.add(file.toURI(), new ByteArrayInputStream(definition.getBytes(StandardCharsets.UTF_8)));
             } else {
-                resources = super.getResourcesAsStream(path);
+                resources = super.openStreams(relativeTo, path);
                 if (resources == null || resources.isEmpty()) {
                     // Attempt to work out the 'relative to' change log path
                     String parentPath =  configuration.getPath().replace("/content/" + configuration.getDeployment(), "");
                     parentPath = parentPath.replace(configuration.getFileName(), "");
                     resource = configuration.getClassLoader().getResourceAsStream(parentPath + path);
                     if (resource != null) {
-                        resources = new HashSet<>();
-                        resources.add(resource);
+                        resources = new InputStreamList();
+                        resources.add(file.toURI(), resource);
                     }
                 }
             }
         } else {
-            resources.add(resource);
+            resources.add(file.toURI(), resource);
         }
 
         return resources;

@@ -23,8 +23,8 @@ import java.util.List;
 
 import com.github.jamesnetherton.extension.liquibase.ChangeLogConfiguration;
 import com.github.jamesnetherton.extension.liquibase.LiquibaseConstants;
-import com.github.jamesnetherton.extension.liquibase.service.ChangeLogExecutionService;
 import com.github.jamesnetherton.extension.liquibase.service.ChangeLogConfigurationRegistryService;
+import com.github.jamesnetherton.extension.liquibase.service.ChangeLogExecutionService;
 
 import org.jboss.as.connector.subsystems.datasources.AbstractDataSourceService;
 import org.jboss.as.naming.deployment.ContextNames;

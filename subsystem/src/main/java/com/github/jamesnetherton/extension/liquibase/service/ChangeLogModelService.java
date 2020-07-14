@@ -19,6 +19,8 @@
  */
 package com.github.jamesnetherton.extension.liquibase.service;
 
+import liquibase.Liquibase;
+
 import com.github.jamesnetherton.extension.liquibase.ChangeLogConfiguration;
 import com.github.jamesnetherton.extension.liquibase.ChangeLogFormat;
 import com.github.jamesnetherton.extension.liquibase.ChangeLogResource;
@@ -59,7 +61,7 @@ public class ChangeLogModelService extends AbstractService<ChangeLogModelService
 
         ChangeLogConfiguration configuration = ChangeLogConfiguration.builder()
             .contexts(contexts)
-            .classLoader(ChangeLogModelService.class.getClassLoader())
+            .classLoader(Liquibase.class.getClassLoader())
             .dataSource(dataSource)
             .definition(changeLogDefinition)
             .failOnError(failOnError)

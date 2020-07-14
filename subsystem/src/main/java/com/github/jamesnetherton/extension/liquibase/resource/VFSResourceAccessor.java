@@ -20,15 +20,15 @@
 package com.github.jamesnetherton.extension.liquibase.resource;
 
 import liquibase.resource.ClassLoaderResourceAccessor;
+import liquibase.resource.InputStreamList;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import com.github.jamesnetherton.extension.liquibase.ChangeLogConfiguration;
 
@@ -46,27 +46,44 @@ public class VFSResourceAccessor extends ClassLoaderResourceAccessor {
     }
 
     @Override
-    public Set<InputStream> getResourcesAsStream(String path) throws IOException {
+    public InputStreamList openStreams(String relativeTo, String path) throws IOException {
+        InputStreamList resources = new InputStreamList();
+        ClassLoader classLoader = configuration.getClassLoader();
+
         // TODO: Improve this as it could potentially fail in some edge case scenarios
         if (path.contains("/vfs/")) {
-            Set<InputStream> resources = new HashSet<>();
             int index = path.indexOf(VFS_CONTENTS_PATH_MARKER);
             if (index > -1) {
-                ClassLoader classLoader = toClassLoader();
                 String resolvedPath = path.substring(index + VFS_CONTENTS_PATH_MARKER.length());
                 InputStream resource = classLoader.getResourceAsStream(resolvedPath);
                 if (resource != null) {
-                    resources.add(resource);
+                    try {
+                        resources.add(new URI(resolvedPath), resource);
+                    } catch (URISyntaxException e) {
+                        throw new IllegalStateException("Invalid URI path: " + resolvedPath);
+                    }
                 }
             }
             return resources;
         }
-        return super.getResourcesAsStream(path);
+
+        InputStream resource = classLoader.getResourceAsStream(path);
+        if (resource != null) {
+            try {
+                resources.add(new URI(path), resource);
+                return resources;
+            } catch (URISyntaxException e) {
+                throw new IllegalStateException("Invalid URI path: " + path);
+            }
+        }
+
+        return super.openStreams(relativeTo, path);
     }
 
     @Override
-    public Set<String> list(String relativeTo, String path, boolean includeFiles, boolean includeDirectories, boolean recursive) {
-        ClassLoader classLoader = toClassLoader();
+    public SortedSet<String> list(String relativeTo, String path, boolean includeFiles, boolean includeDirectories, boolean recursive) {
+        SortedSet<String> resources = new TreeSet<>();
+        ClassLoader classLoader = configuration.getClassLoader();
 
         if (relativeTo != null) {
             String tempPath =  configuration.getPath().replace("/content/" + configuration.getDeployment(), "");
@@ -87,26 +104,29 @@ public class VFSResourceAccessor extends ClassLoaderResourceAccessor {
             VirtualFile parentFile = VFS.getChild(parentUri);
             VirtualFile parentDir = parentFile.getParent();
             VirtualFile changeLogFiles = parentDir.getChild(path);
-            return changeLogFiles.getChildren()
+            changeLogFiles.getChildren()
                 .stream()
                 .map(VirtualFile::getName)
                 .map(name -> parentPath + path + name)
-                .collect(Collectors.toSet());
+                .forEach(resources::add);
         }
 
         URL url = classLoader.getResource(path);
-        URI uri;
-        try {
-            uri = url.toURI();
-        } catch (URISyntaxException e) {
-            throw new IllegalStateException("Invalid resource URI " + path);
-        }
+        if (url != null) {
+            URI uri;
+            try {
+                uri = url.toURI();
+            } catch (URISyntaxException e) {
+                throw new IllegalStateException("Invalid resource URI " + path);
+            }
 
-        return VFS.getChild(uri)
-            .getChildren()
-            .stream()
-            .map(VirtualFile::getName)
-            .map(name -> path + name)
-            .collect(Collectors.toSet());
+            VFS.getChild(uri)
+                .getChildren()
+                .stream()
+                .map(VirtualFile::getName)
+                .map(name -> path + name)
+                .forEach(resources::add);
+        }
+        return resources;
     }
 }
