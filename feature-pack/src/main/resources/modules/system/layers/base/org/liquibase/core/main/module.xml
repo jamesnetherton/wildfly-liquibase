@@ -11,7 +11,4 @@
         <module name="org.slf4j"/>
         <module name="org.yaml.snakeyaml"/>
     </dependencies>
-    <exports>
-        <exclude path="www.liquibase.org/xml/ns/dbchangelog"/>
-    </exports>
 </module>

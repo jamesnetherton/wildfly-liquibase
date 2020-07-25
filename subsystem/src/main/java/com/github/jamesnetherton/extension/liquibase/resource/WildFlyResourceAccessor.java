@@ -25,8 +25,6 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
-import java.net.URISyntaxException;
 import java.nio.charset.StandardCharsets;
 
 import com.github.jamesnetherton.extension.liquibase.ChangeLogConfiguration;
@@ -40,6 +38,7 @@ public final class WildFlyResourceAccessor extends VFSResourceAccessor {
         + "xsi:schemaLocation=\"http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.0.xsd\n"
         + "http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd\">\n";
     private static final String LIQUIBASE_ELEMENT_END = "</databaseChangeLog>";
+    private static final String LIQUIBASE_XSD_PATH = "www.liquibase.org/xml/ns/dbchangelog";
 
     public WildFlyResourceAccessor(ChangeLogConfiguration configuration) {
         super(configuration);
@@ -47,6 +46,11 @@ public final class WildFlyResourceAccessor extends VFSResourceAccessor {
 
     @Override
     public InputStreamList openStreams(String relativeTo, String path) throws IOException {
+        // Prevent 'Found x copies of resource' errors
+        if (path.startsWith(LIQUIBASE_XSD_PATH)) {
+            return null;
+        }
+
         File file = new File(path);
         InputStreamList resources = new InputStreamList();
         InputStream resource = configuration.getClassLoader().getResourceAsStream(path);

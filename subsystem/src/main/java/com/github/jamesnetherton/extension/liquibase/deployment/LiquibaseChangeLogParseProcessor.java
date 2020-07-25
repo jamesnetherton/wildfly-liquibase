@@ -144,7 +144,6 @@ public class LiquibaseChangeLogParseProcessor implements DeploymentUnitProcessor
             File[] basePaths = new File[] { new File(file.getPhysicalFile().getParent()) };
             FileSystemResourceAccessor fileSystemResourceAccessor = new FileSystemResourceAccessor(basePaths);
 
-            //TODO: Refactor this. Creating ChangeLogConfiguration just to satisfy VFSResourceAccessor is wasteful
             ChangeLogConfiguration configuration = new ChangeLogConfiguration();
             configuration.setName(file.getName());
             configuration.setPath(file.getPathName());
