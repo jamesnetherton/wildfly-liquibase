@@ -16,6 +16,7 @@ if [[ "${POM_WF_VERSION}" != "${DOCKERFILE_WF_VERSION}" ]]; then
 fi
 
 if [[ ! -z "${DOCKER_USERNAME}" ]] && [[ ! -z "${DOCKER_PASSWORD}" ]]; then
+  docker build --build-arg WILDFLY_VERSION=${POM_WF_VERSION} -t jamesnetherton/wildfly:${POM_WF_VERSION} -f Dockerfile.wildfly .
   docker build --build-arg WILDFLY_LIQUIBASE_VERSION=${BUILD_TAG} -t jamesnetherton/wildfly-liquibase .
 
   echo "${DOCKER_PASSWORD}" | docker login -u "${DOCKER_USERNAME}" --password-stdin

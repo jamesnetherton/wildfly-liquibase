@@ -23,9 +23,9 @@
         <version.org.liquibase>4.1.1</version.org.liquibase>
         <version.org.slf4j>1.7.30</version.org.slf4j>
         <version.org.snakeyaml>1.26</version.org.snakeyaml>
-        <version.org.wildfly>20.0.1.Final</version.org.wildfly>
+        <version.org.wildfly>21.0.0.Final</version.org.wildfly>
         <version.org.wildfly.arquillian>2.2.0.Final</version.org.wildfly.arquillian>
-        <version.org.wildfly.core>12.0.3.Final</version.org.wildfly.core>
+        <version.org.wildfly.core>13.0.1.Final</version.org.wildfly.core>
         <version.org.wildfly.common>1.5.2.Final</version.org.wildfly.common>
 
         <!-- Plugin versions -->
@@ -43,7 +43,7 @@
         <version.resources.plugin>3.1.0</version.resources.plugin>
         <version.source.plugin>3.2.0</version.source.plugin>
         <version.surefire.plugin>3.0.0-M4</version.surefire.plugin>
-        <version.wildfly.galleon.plugin>4.2.7.Final</version.wildfly.galleon.plugin>
+        <version.wildfly.galleon.plugin>4.2.8.Final</version.wildfly.galleon.plugin>
     </properties>
 
     <scm>
