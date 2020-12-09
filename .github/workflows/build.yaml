@@ -46,7 +46,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        java: [ '8' , '11', '14' ]
+        java: [ '8' , '11', '15' ]
         provision: [ 'galleon-provision', 'distro-provision' ]
     steps:
       - name: Checkout wildfly-liquibase
