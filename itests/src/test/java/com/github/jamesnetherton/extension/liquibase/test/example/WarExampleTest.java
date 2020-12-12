@@ -47,7 +47,7 @@ public class WarExampleTest extends LiquibaseTestSupport {
     }
 
     @Test
-    public void testJarExample() throws Exception {
+    public void testWarExample() throws Exception {
         assertTableModified(tableName);
     }
 }

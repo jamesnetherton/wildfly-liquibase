@@ -61,7 +61,7 @@ import org.jboss.vfs.VirtualFileFilter;
  * {@link DeploymentUnitProcessor} which discovers Liquibase change log files within the deployment, reads their contents
  * and adds a {@link ChangeLogConfiguration} to the current deployment unit attachment list.
  */
-public class LiquibaseChangeLogParseProcessor implements DeploymentUnitProcessor{
+public class LiquibaseChangeLogParseProcessor implements DeploymentUnitProcessor {
 
     @Override
     public void deploy(DeploymentPhaseContext phaseContext) throws DeploymentUnitProcessingException {
@@ -127,6 +127,11 @@ public class LiquibaseChangeLogParseProcessor implements DeploymentUnitProcessor
 
                 deploymentUnit.addToAttachmentList(LiquibaseConstants.LIQUIBASE_CHANGELOGS, configuration);
             }
+
+            if (!deploymentUnit.hasAttachment(LiquibaseConstants.LIQUIBASE_SUBSYTEM_ACTIVATED)) {
+                boolean activated = !changeLogFiles.isEmpty() || changeLogContextParam.isPresent();
+                deploymentUnit.putAttachment(LiquibaseConstants.LIQUIBASE_SUBSYTEM_ACTIVATED, activated);
+            }
         } catch (IOException e) {
             throw new DeploymentUnitProcessingException(e);
         }
@@ -183,5 +188,4 @@ public class LiquibaseChangeLogParseProcessor implements DeploymentUnitProcessor
             Thread.currentThread().setContextClassLoader(oldTCCL);
         }
     }
-
 }

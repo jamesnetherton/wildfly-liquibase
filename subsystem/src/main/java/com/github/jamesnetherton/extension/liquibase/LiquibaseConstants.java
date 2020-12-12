@@ -37,6 +37,11 @@ public interface LiquibaseConstants {
     AttachmentKey<BuilderCollection> LIQUIBASE_CHANGELOG_BUILDERS = AttachmentKey.create(BuilderCollection.class);
 
     /**
+     * Attachment denoting whether the Liquibase subsystem was activated for a given deployment
+     */
+    AttachmentKey<Boolean> LIQUIBASE_SUBSYTEM_ACTIVATED = AttachmentKey.create(Boolean.class);
+
+    /**
      * Liquibase change log file pattern
      */
     String LIQUIBASE_CHANGELOG_PATTERN = ".*changelog.(json|sql|xml|yaml|yml)$";

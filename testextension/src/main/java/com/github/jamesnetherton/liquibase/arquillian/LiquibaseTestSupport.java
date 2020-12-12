@@ -21,6 +21,7 @@ package com.github.jamesnetherton.liquibase.arquillian;
 
 import java.io.File;
 import java.io.InputStream;
+import java.net.URL;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -35,6 +36,8 @@ import javax.naming.NamingException;
 import javax.sql.DataSource;
 
 import org.jboss.arquillian.test.api.ArquillianResource;
+import org.jboss.as.arquillian.container.ManagementClient;
+import org.jboss.as.controller.client.helpers.standalone.ServerDeploymentHelper;
 import org.junit.Assert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -50,6 +53,9 @@ public class LiquibaseTestSupport {
 
     @ArquillianResource
     private InitialContext context;
+
+    @ArquillianResource
+    private ManagementClient managementClient;
 
     @SuppressWarnings("unchecked")
     protected <T> T lookup(String name, Class<?> T) throws Exception {
@@ -146,6 +152,17 @@ public class LiquibaseTestSupport {
         } catch (NamingException e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    protected String deployChangeLog(String originalFileName, String runtimeName) throws Exception {
+        URL url = getClass().getResource("/" + originalFileName);
+        ServerDeploymentHelper server = new ServerDeploymentHelper(managementClient.getControllerClient());
+        return server.deploy(runtimeName, url.openStream());
+    }
+
+    protected void undeployChangeLog(String runtimeName) throws Exception {
+        ServerDeploymentHelper server = new ServerDeploymentHelper(managementClient.getControllerClient());
+        server.undeploy(runtimeName);
     }
 
     private boolean jbossCli(String command) throws Exception {

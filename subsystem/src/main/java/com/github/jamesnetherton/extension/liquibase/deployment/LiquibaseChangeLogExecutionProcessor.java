@@ -23,15 +23,18 @@ import java.util.List;
 
 import com.github.jamesnetherton.extension.liquibase.ChangeLogConfiguration;
 import com.github.jamesnetherton.extension.liquibase.LiquibaseConstants;
+import com.github.jamesnetherton.extension.liquibase.scope.WildFlyScopeManager;
 import com.github.jamesnetherton.extension.liquibase.service.ChangeLogConfigurationRegistryService;
 import com.github.jamesnetherton.extension.liquibase.service.ChangeLogExecutionService;
 
 import org.jboss.as.connector.subsystems.datasources.AbstractDataSourceService;
 import org.jboss.as.naming.deployment.ContextNames;
+import org.jboss.as.server.deployment.Attachments;
 import org.jboss.as.server.deployment.DeploymentPhaseContext;
 import org.jboss.as.server.deployment.DeploymentUnit;
 import org.jboss.as.server.deployment.DeploymentUnitProcessingException;
 import org.jboss.as.server.deployment.DeploymentUnitProcessor;
+import org.jboss.modules.Module;
 import org.jboss.msc.service.ServiceBuilder;
 import org.jboss.msc.service.ServiceName;
 import static com.github.jamesnetherton.extension.liquibase.LiquibaseLogger.MESSAGE_DUPLICATE_DATASOURCE;
@@ -81,11 +84,17 @@ public class LiquibaseChangeLogExecutionProcessor implements DeploymentUnitProce
 
     @Override
     public void undeploy(DeploymentUnit deploymentUnit) {
-        List<ChangeLogConfiguration> configurations = deploymentUnit.getAttachmentList(LiquibaseConstants.LIQUIBASE_CHANGELOGS);
-        if (!configurations.isEmpty()) {
-            for (ChangeLogConfiguration configuration : configurations) {
-                registryService.removeConfiguration(getConfigurationKey(deploymentUnit, configuration));
+        Boolean activated = deploymentUnit.getAttachment(LiquibaseConstants.LIQUIBASE_SUBSYTEM_ACTIVATED);
+        if (activated != null && activated) {
+            List<ChangeLogConfiguration> configurations = deploymentUnit.getAttachmentList(LiquibaseConstants.LIQUIBASE_CHANGELOGS);
+            if (!configurations.isEmpty()) {
+                for (ChangeLogConfiguration configuration : configurations) {
+                    registryService.removeConfiguration(getConfigurationKey(deploymentUnit, configuration));
+                }
             }
+
+            Module module = deploymentUnit.getAttachment(Attachments.MODULE);
+            WildFlyScopeManager.removeCurrentScope(module.getClassLoader());
         }
     }
 

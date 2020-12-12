@@ -19,16 +19,11 @@
  */
 package com.github.jamesnetherton.extension.liquibase.test.deployment;
 
-import java.net.URL;
-
 import com.github.jamesnetherton.liquibase.arquillian.LiquibaseTestSupport;
 import com.github.jamesnetherton.liquibase.arquillian.ChangeLogDefinition;
 
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
-import org.jboss.arquillian.test.api.ArquillianResource;
-import org.jboss.as.arquillian.container.ManagementClient;
-import org.jboss.as.controller.client.helpers.standalone.ServerDeploymentHelper;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.asset.StringAsset;
@@ -41,9 +36,6 @@ public class LiquibaseStandaloneChangeLogDeploymentTest extends LiquibaseTestSup
 
     @ChangeLogDefinition(format = "xml", fileName = "changes.xml")
     private String tableNameXML;
-
-    @ArquillianResource
-    private ManagementClient managementClient;
 
     @Deployment
     public static Archive<?> deployment() {
@@ -59,16 +51,5 @@ public class LiquibaseStandaloneChangeLogDeploymentTest extends LiquibaseTestSup
         } finally {
             undeployChangeLog(runtimeName);
         }
-    }
-
-    private String deployChangeLog(String originalFileName, String runtimeName) throws Exception {
-        URL url = getClass().getResource("/" + originalFileName);
-        ServerDeploymentHelper server = new ServerDeploymentHelper(managementClient.getControllerClient());
-        return server.deploy(runtimeName, url.openStream());
-    }
-
-    private void undeployChangeLog(String runtimeName) throws Exception {
-        ServerDeploymentHelper server = new ServerDeploymentHelper(managementClient.getControllerClient());
-        server.undeploy(runtimeName);
     }
 }

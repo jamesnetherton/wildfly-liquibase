@@ -39,6 +39,7 @@ import javax.sql.DataSource;
 import com.github.jamesnetherton.extension.liquibase.ChangeLogConfiguration;
 import com.github.jamesnetherton.extension.liquibase.LiquibaseLogger;
 import com.github.jamesnetherton.extension.liquibase.resource.WildFlyResourceAccessor;
+import com.github.jamesnetherton.extension.liquibase.scope.WildFlyScopeManager;
 
 import org.jboss.msc.service.AbstractService;
 import org.jboss.msc.service.ServiceName;
@@ -114,6 +115,9 @@ public final class ChangeLogExecutionService extends AbstractService<ChangeLogEx
                     LiquibaseLogger.ROOT_LOGGER.warn("Failed to close database connection", e);
                 }
             }
+
+            WildFlyScopeManager.removeCurrentScope();
+
             Thread.currentThread().setContextClassLoader(oldTCCL);
         }
     }

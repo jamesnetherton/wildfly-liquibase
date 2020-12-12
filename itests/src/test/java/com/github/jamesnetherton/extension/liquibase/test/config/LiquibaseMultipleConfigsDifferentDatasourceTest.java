@@ -27,11 +27,9 @@ import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
 import org.jboss.shrinkwrap.api.ShrinkWrap;
 import org.jboss.shrinkwrap.api.spec.JavaArchive;
-import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
-@Ignore("https://github.com/jamesnetherton/wildfly-liquibase/issues/82")
 @RunWith(Arquillian.class)
 public class LiquibaseMultipleConfigsDifferentDatasourceTest extends LiquibaseTestSupport {
 
