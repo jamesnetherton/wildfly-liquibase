@@ -14,8 +14,8 @@ Download one of the [release](https://github.com/jamesnetherton/wildfly-liquibas
 
 ```
 cd $JBOSS_HOME
-wget https://github.com/jamesnetherton/wildfly-liquibase/releases/download/2.0.0/wildfly-liquibase-distro-2.0.0.zip
-unzip wildfly-liquibase-distro-2.0.0.zip
+wget https://github.com/jamesnetherton/wildfly-liquibase/releases/download/2.1.0/wildfly-liquibase-distro-2.1.0.zip
+unzip wildfly-liquibase-distro-2.1.0.zip
 ```
 
 Check the release notes to ensure that the distribution is compatible with your WildFly version.
@@ -53,7 +53,7 @@ galleon.sh install wildfly:current --dir=wildfly
 Next install the Liquibase subsystem layer:
 
 ```
-galleon.sh install com.github.jamesnetherton:wildfly-liquibase-galleon-pack:2.0.0 --dir=wildfly --layers=liquibase
+galleon.sh install com.github.jamesnetherton:wildfly-liquibase-galleon-pack:2.1.0 --dir=wildfly --layers=liquibase
 ```
 
 ## Configuration

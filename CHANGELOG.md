@@ -1,5 +1,24 @@
 ### Changelog
 
+#### WildFly Liquibase 2.1.0
+
+**Enhancements**
+
+* [#83][83] Upgrade WildFly to 21.0.1.Final
+* [#86][86] Upgrade to Liquibase 4.2.2
+
+For details see [2.1.0 Enhancements](https://github.com/jamesnetherton/wildfly-liquibase/issues?q=milestone%3A"2.1.0"+label%3Aenhancement)
+
+**Bugs**
+
+* [#82][82] Scope & ScopeManager are not thread safe
+
+For details see [2.1.0 Bugs](https://github.com/jamesnetherton/wildfly-liquibase/issues?q=milestone%3A"2.1.0"+label%3Abug)
+
+[83]: https://github.com/jamesnetherton/wildfly-liquibase/issues/83
+[86]: https://github.com/jamesnetherton/wildfly-liquibase/issues/86
+[82]: https://github.com/jamesnetherton/wildfly-liquibase/issues/82
+
 #### WildFly Liquibase 2.0.0
 
 **Enhancements**
