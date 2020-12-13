@@ -19,10 +19,9 @@
  */
 package com.github.jamesnetherton.extension.liquibase.service;
 
+import com.github.jamesnetherton.extension.liquibase.ChangeLogConfiguration;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.github.jamesnetherton.extension.liquibase.ChangeLogConfiguration;
 
 public class ChangeLogConfigurationRegistryService {
 

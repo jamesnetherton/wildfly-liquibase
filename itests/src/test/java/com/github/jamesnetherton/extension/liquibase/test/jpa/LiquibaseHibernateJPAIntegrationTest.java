@@ -19,17 +19,15 @@
  */
 package com.github.jamesnetherton.extension.liquibase.test.jpa;
 
-import javax.annotation.Resource;
-import javax.persistence.EntityManager;
-import javax.persistence.PersistenceContext;
-import javax.transaction.UserTransaction;
-
 import com.github.jamesnetherton.extension.liquibase.test.jpa.init.DatabaseInitializer;
 import com.github.jamesnetherton.extension.liquibase.test.jpa.model.Order;
 import com.github.jamesnetherton.extension.liquibase.test.jpa.producer.LiquibaseConfigurationProducer;
 import com.github.jamesnetherton.liquibase.arquillian.LiquibaseTestSupport;
 import com.github.jamesnetherton.liquibase.arquillian.TestExtensionUtils;
-
+import javax.annotation.Resource;
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.transaction.UserTransaction;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;

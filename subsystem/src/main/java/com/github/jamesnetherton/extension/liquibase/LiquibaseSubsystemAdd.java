@@ -28,10 +28,8 @@ import com.github.jamesnetherton.extension.liquibase.scope.WildFlyScopeManager;
 import com.github.jamesnetherton.extension.liquibase.service.ChangeLogConfigurationRegistryService;
 import com.github.jamesnetherton.extension.liquibase.service.ChangeLogModelService;
 import com.github.jamesnetherton.extension.liquibase.service.ServiceHelper;
-
 import liquibase.Liquibase;
 import liquibase.Scope;
-
 import org.jboss.as.controller.AbstractBoottimeAddStepHandler;
 import org.jboss.as.controller.OperationContext;
 import org.jboss.as.controller.OperationFailedException;

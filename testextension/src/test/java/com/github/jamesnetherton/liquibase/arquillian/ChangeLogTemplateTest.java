@@ -19,16 +19,13 @@
  */
 package com.github.jamesnetherton.liquibase.arquillian;
 
+import com.github.jamesnetherton.extension.liquibase.ChangeLogParserFactory;
+import java.io.File;
 import liquibase.changelog.ChangeLogParameters;
 import liquibase.changelog.DatabaseChangeLog;
 import liquibase.exception.ChangeLogParseException;
 import liquibase.parser.ChangeLogParser;
 import liquibase.resource.FileSystemResourceAccessor;
-
-import java.io.File;
-
-import com.github.jamesnetherton.extension.liquibase.ChangeLogParserFactory;
-
 import org.junit.Assert;
 import org.junit.Test;
 

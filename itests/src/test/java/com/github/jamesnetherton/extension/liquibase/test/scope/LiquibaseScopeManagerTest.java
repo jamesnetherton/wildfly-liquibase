@@ -19,12 +19,11 @@ package com.github.jamesnetherton.extension.liquibase.test.scope;
  * limitations under the License.
  * #L%
  */
-
 import com.github.jamesnetherton.extension.liquibase.scope.WildFlyScopeManager;
 import com.github.jamesnetherton.extension.liquibase.test.scope.producer.LiquibaseConfigurationProducer;
 import com.github.jamesnetherton.liquibase.arquillian.ChangeLogDefinition;
 import com.github.jamesnetherton.liquibase.arquillian.LiquibaseTestSupport;
-
+import java.io.File;
 import org.jboss.arquillian.container.test.api.Deployer;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
@@ -38,8 +37,6 @@ import org.jboss.shrinkwrap.api.spec.WebArchive;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-
-import java.io.File;
 
 @RunWith(Arquillian.class)
 public class LiquibaseScopeManagerTest extends LiquibaseTestSupport {

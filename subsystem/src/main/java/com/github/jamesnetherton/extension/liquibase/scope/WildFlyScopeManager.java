@@ -1,5 +1,12 @@
 package com.github.jamesnetherton.extension.liquibase.scope;
 
+import com.github.jamesnetherton.extension.liquibase.LiquibaseLogger;
+import java.lang.reflect.Field;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 /*-
  * #%L
  * wildfly-liquibase-subsystem
@@ -19,22 +26,11 @@ package com.github.jamesnetherton.extension.liquibase.scope;
  * limitations under the License.
  * #L%
  */
-
 import liquibase.Scope;
 import liquibase.ScopeManager;
 import liquibase.resource.ClassLoaderResourceAccessor;
 import liquibase.resource.CompositeResourceAccessor;
 import liquibase.resource.ResourceAccessor;
-
-import java.lang.reflect.Field;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
-import com.github.jamesnetherton.extension.liquibase.LiquibaseLogger;
-
 import org.jboss.modules.ModuleClassLoader;
 
 /**

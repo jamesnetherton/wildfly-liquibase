@@ -20,7 +20,6 @@
 package com.github.jamesnetherton.extension.liquibase.test.listener;
 
 import com.github.jamesnetherton.liquibase.arquillian.LiquibaseTestSupport;
-
 import org.jboss.arquillian.container.test.api.Deployer;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;

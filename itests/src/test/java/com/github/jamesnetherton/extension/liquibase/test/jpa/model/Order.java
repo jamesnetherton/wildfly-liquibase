@@ -19,7 +19,6 @@ package com.github.jamesnetherton.extension.liquibase.test.jpa.model;
  * limitations under the License.
  * #L%
  */
-
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Id;

@@ -19,14 +19,12 @@
  */
 package com.github.jamesnetherton.extension.liquibase.test.jpa.init;
 
+import com.github.jamesnetherton.liquibase.arquillian.LiquibaseTestSupport;
 import java.io.InputStream;
-
 import javax.annotation.PostConstruct;
 import javax.ejb.Singleton;
 import javax.ejb.Startup;
 import javax.enterprise.context.ApplicationScoped;
-
-import com.github.jamesnetherton.liquibase.arquillian.LiquibaseTestSupport;
 
 @ApplicationScoped
 @Startup

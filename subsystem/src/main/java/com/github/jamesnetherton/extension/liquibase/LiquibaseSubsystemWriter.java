@@ -20,10 +20,8 @@
 package com.github.jamesnetherton.extension.liquibase;
 
 import java.util.TreeSet;
-
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
-
 import org.jboss.as.controller.persistence.SubsystemMarshallingContext;
 import org.jboss.dmr.ModelNode;
 import org.jboss.staxmapper.XMLElementWriter;

@@ -19,6 +19,15 @@
  */
 package com.github.jamesnetherton.extension.liquibase.service;
 
+import com.github.jamesnetherton.extension.liquibase.ChangeLogConfiguration;
+import com.github.jamesnetherton.extension.liquibase.LiquibaseLogger;
+import com.github.jamesnetherton.extension.liquibase.resource.WildFlyResourceAccessor;
+import com.github.jamesnetherton.extension.liquibase.scope.WildFlyScopeManager;
+import java.sql.SQLException;
+import java.util.concurrent.atomic.AtomicInteger;
+import javax.naming.InitialContext;
+import javax.naming.NamingException;
+import javax.sql.DataSource;
 import liquibase.Contexts;
 import liquibase.LabelExpression;
 import liquibase.Liquibase;
@@ -28,19 +37,6 @@ import liquibase.exception.LiquibaseException;
 import liquibase.resource.CompositeResourceAccessor;
 import liquibase.resource.FileSystemResourceAccessor;
 import liquibase.resource.ResourceAccessor;
-
-import java.sql.SQLException;
-import java.util.concurrent.atomic.AtomicInteger;
-
-import javax.naming.InitialContext;
-import javax.naming.NamingException;
-import javax.sql.DataSource;
-
-import com.github.jamesnetherton.extension.liquibase.ChangeLogConfiguration;
-import com.github.jamesnetherton.extension.liquibase.LiquibaseLogger;
-import com.github.jamesnetherton.extension.liquibase.resource.WildFlyResourceAccessor;
-import com.github.jamesnetherton.extension.liquibase.scope.WildFlyScopeManager;
-
 import org.jboss.msc.service.AbstractService;
 import org.jboss.msc.service.ServiceName;
 import org.jboss.msc.service.StartContext;

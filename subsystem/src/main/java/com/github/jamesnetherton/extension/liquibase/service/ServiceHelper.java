@@ -1,5 +1,9 @@
 package com.github.jamesnetherton.extension.liquibase.service;
 
+import com.github.jamesnetherton.extension.liquibase.ChangeLogConfiguration;
+import com.github.jamesnetherton.extension.liquibase.LiquibaseLogger;
+import java.net.SocketException;
+import java.net.UnknownHostException;
 /*-
  * #%L
  * wildfly-liquibase-subsystem
@@ -19,15 +23,7 @@ package com.github.jamesnetherton.extension.liquibase.service;
  * limitations under the License.
  * #L%
  */
-
 import liquibase.util.NetUtil;
-
-import java.net.SocketException;
-import java.net.UnknownHostException;
-
-import com.github.jamesnetherton.extension.liquibase.ChangeLogConfiguration;
-import com.github.jamesnetherton.extension.liquibase.LiquibaseLogger;
-
 import org.jboss.as.controller.OperationContext;
 import org.jboss.msc.service.AbstractService;
 import org.jboss.msc.service.ServiceBuilder;

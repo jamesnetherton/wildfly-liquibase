@@ -19,20 +19,6 @@
  */
 package com.github.jamesnetherton.extension.liquibase.deployment;
 
-import liquibase.changelog.ChangeLogParameters;
-import liquibase.changelog.DatabaseChangeLog;
-import liquibase.exception.ChangeLogParseException;
-import liquibase.parser.ChangeLogParser;
-import liquibase.resource.FileSystemResourceAccessor;
-
-import java.io.File;
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-
 import com.github.jamesnetherton.extension.liquibase.ChangeLogConfiguration;
 import com.github.jamesnetherton.extension.liquibase.ChangeLogConfiguration.Builder;
 import com.github.jamesnetherton.extension.liquibase.ChangeLogConfiguration.BuilderCollection;
@@ -42,7 +28,18 @@ import com.github.jamesnetherton.extension.liquibase.LiquibaseLogger;
 import com.github.jamesnetherton.extension.liquibase.ModelConstants;
 import com.github.jamesnetherton.extension.liquibase.resource.VFSResourceAccessor;
 import com.github.jamesnetherton.extension.liquibase.resource.WildFlyCompositeResourceAccessor;
-
+import java.io.File;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import liquibase.changelog.ChangeLogParameters;
+import liquibase.changelog.DatabaseChangeLog;
+import liquibase.exception.ChangeLogParseException;
+import liquibase.parser.ChangeLogParser;
+import liquibase.resource.FileSystemResourceAccessor;
 import org.jboss.as.ee.structure.DeploymentType;
 import org.jboss.as.ee.structure.DeploymentTypeMarker;
 import org.jboss.as.server.deployment.Attachments;

@@ -19,14 +19,14 @@
  */
 package com.github.jamesnetherton.extension.liquibase.deployment;
 
-import java.util.List;
+import static com.github.jamesnetherton.extension.liquibase.LiquibaseLogger.MESSAGE_DUPLICATE_DATASOURCE;
 
 import com.github.jamesnetherton.extension.liquibase.ChangeLogConfiguration;
 import com.github.jamesnetherton.extension.liquibase.LiquibaseConstants;
 import com.github.jamesnetherton.extension.liquibase.scope.WildFlyScopeManager;
 import com.github.jamesnetherton.extension.liquibase.service.ChangeLogConfigurationRegistryService;
 import com.github.jamesnetherton.extension.liquibase.service.ChangeLogExecutionService;
-
+import java.util.List;
 import org.jboss.as.connector.subsystems.datasources.AbstractDataSourceService;
 import org.jboss.as.naming.deployment.ContextNames;
 import org.jboss.as.server.deployment.Attachments;
@@ -37,7 +37,6 @@ import org.jboss.as.server.deployment.DeploymentUnitProcessor;
 import org.jboss.modules.Module;
 import org.jboss.msc.service.ServiceBuilder;
 import org.jboss.msc.service.ServiceName;
-import static com.github.jamesnetherton.extension.liquibase.LiquibaseLogger.MESSAGE_DUPLICATE_DATASOURCE;
 
 /**
  * {@link DeploymentUnitProcessor} which adds a {@link ChangeLogExecutionService} service dependency for

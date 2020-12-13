@@ -19,16 +19,14 @@
  */
 package com.github.jamesnetherton.extension.liquibase.resource;
 
-import liquibase.resource.InputStreamList;
-
+import com.github.jamesnetherton.extension.liquibase.ChangeLogConfiguration;
+import com.github.jamesnetherton.extension.liquibase.ChangeLogFormat;
 import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
-
-import com.github.jamesnetherton.extension.liquibase.ChangeLogConfiguration;
-import com.github.jamesnetherton.extension.liquibase.ChangeLogFormat;
+import liquibase.resource.InputStreamList;
 
 public final class WildFlyResourceAccessor extends VFSResourceAccessor {
 

@@ -19,15 +19,6 @@
  */
 package com.github.jamesnetherton.extension.liquibase;
 
-import java.util.Collections;
-import java.util.List;
-
-import javax.xml.stream.XMLStreamConstants;
-import javax.xml.stream.XMLStreamException;
-
-import org.jboss.dmr.ModelNode;
-import org.jboss.staxmapper.XMLElementReader;
-import org.jboss.staxmapper.XMLExtendedStreamReader;
 import static com.github.jamesnetherton.extension.liquibase.Namespace.VERSION_1_0;
 import static com.github.jamesnetherton.extension.liquibase.Namespace10.Element.DATABASE_CHANGELOG;
 import static org.jboss.as.controller.descriptions.ModelDescriptionConstants.ADD;
@@ -38,6 +29,14 @@ import static org.jboss.as.controller.parsing.ParseUtils.missingRequired;
 import static org.jboss.as.controller.parsing.ParseUtils.requireNoNamespaceAttribute;
 import static org.jboss.as.controller.parsing.ParseUtils.unexpectedAttribute;
 import static org.jboss.as.controller.parsing.ParseUtils.unexpectedElement;
+
+import java.util.Collections;
+import java.util.List;
+import javax.xml.stream.XMLStreamConstants;
+import javax.xml.stream.XMLStreamException;
+import org.jboss.dmr.ModelNode;
+import org.jboss.staxmapper.XMLElementReader;
+import org.jboss.staxmapper.XMLExtendedStreamReader;
 
 final class LiquibaseSubsystemParser implements Namespace10, XMLStreamConstants, XMLElementReader<List<ModelNode>> {
 

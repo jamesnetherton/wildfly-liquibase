@@ -22,7 +22,6 @@ package com.github.jamesnetherton.liquibase.arquillian;
 import java.util.Collections;
 import java.util.LinkedHashSet;
 import java.util.Set;
-
 import org.jboss.arquillian.container.test.spi.RemoteLoadableExtension;
 import org.jboss.arquillian.test.spi.TestEnricher;
 import org.jboss.as.arquillian.service.DependenciesProvider;

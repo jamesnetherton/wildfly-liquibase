@@ -19,17 +19,15 @@
  */
 package com.github.jamesnetherton.extension.liquibase.test.jpa.producer;
 
-import liquibase.integration.cdi.CDILiquibaseConfig;
-import liquibase.integration.cdi.annotations.LiquibaseType;
-import liquibase.resource.ClassLoaderResourceAccessor;
-import liquibase.resource.ResourceAccessor;
-
 import java.sql.SQLException;
-
 import javax.annotation.Resource;
 import javax.enterprise.context.ApplicationScoped;
 import javax.enterprise.inject.Produces;
 import javax.sql.DataSource;
+import liquibase.integration.cdi.CDILiquibaseConfig;
+import liquibase.integration.cdi.annotations.LiquibaseType;
+import liquibase.resource.ClassLoaderResourceAccessor;
+import liquibase.resource.ResourceAccessor;
 
 @ApplicationScoped
 public class LiquibaseConfigurationProducer {

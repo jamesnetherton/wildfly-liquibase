@@ -19,13 +19,11 @@
  */
 package com.github.jamesnetherton.liquibase.arquillian;
 
+import com.github.jamesnetherton.extension.liquibase.ChangeLogFormat;
+import com.github.jamesnetherton.extension.liquibase.LiquibaseLogger;
 import java.io.InputStream;
 import java.lang.reflect.Field;
 import java.util.concurrent.atomic.AtomicInteger;
-
-import com.github.jamesnetherton.extension.liquibase.ChangeLogFormat;
-import com.github.jamesnetherton.extension.liquibase.LiquibaseLogger;
-
 import org.jboss.arquillian.container.test.spi.client.deployment.ApplicationArchiveProcessor;
 import org.jboss.arquillian.test.spi.TestClass;
 import org.jboss.shrinkwrap.api.Archive;

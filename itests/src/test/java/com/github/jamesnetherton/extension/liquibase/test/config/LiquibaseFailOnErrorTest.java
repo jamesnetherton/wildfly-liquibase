@@ -19,10 +19,8 @@
  */
 package com.github.jamesnetherton.extension.liquibase.test.config;
 
-import java.util.Arrays;
-
 import com.github.jamesnetherton.liquibase.arquillian.LiquibaseTestSupport;
-
+import java.util.Arrays;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;

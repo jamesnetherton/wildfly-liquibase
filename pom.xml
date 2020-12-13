@@ -37,6 +37,7 @@
         <version.gmaven.plugin>2.1.1</version.gmaven.plugin>
         <version.gpg.plugin>1.6</version.gpg.plugin>
         <version.license.plugin>2.0.0</version.license.plugin>
+        <version.impsort.plugin>1.4.1</version.impsort.plugin>
         <version.javadoc.plugin>3.2.0</version.javadoc.plugin>
         <version.release.plugin>3.0.0-M1</version.release.plugin>
         <version.galleon.plugin>4.2.5.Final</version.galleon.plugin>
@@ -257,6 +258,22 @@
                     <version>${version.surefire.plugin}</version>
                 </plugin>
                 <plugin>
+                    <groupId>net.revelc.code</groupId>
+                    <artifactId>impsort-maven-plugin</artifactId>
+                    <version>${version.impsort.plugin}</version>
+                    <executions>
+                        <execution>
+                            <id>sort-imports</id>
+                            <goals>
+                                <goal>sort</goal>
+                            </goals>
+                            <configuration>
+                                <removeUnused>true</removeUnused>
+                            </configuration>
+                        </execution>
+                    </executions>
+                </plugin>
+                <plugin>
                     <groupId>org.codehaus.gmaven</groupId>
                     <artifactId>groovy-maven-plugin</artifactId>
                     <version>${version.gmaven.plugin}</version>
@@ -310,6 +327,13 @@
                 </plugin>
             </plugins>
         </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <groupId>net.revelc.code</groupId>
+                <artifactId>impsort-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
     </build>
 
     <profiles>

@@ -21,7 +21,6 @@ package com.github.jamesnetherton.extension.liquibase.test.cdi;
 
 import com.github.jamesnetherton.extension.liquibase.test.cdi.producer.LiquibaseConfigurationProducer;
 import com.github.jamesnetherton.liquibase.arquillian.LiquibaseTestSupport;
-
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;

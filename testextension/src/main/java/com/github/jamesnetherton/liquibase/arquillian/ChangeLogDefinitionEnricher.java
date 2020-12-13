@@ -21,7 +21,6 @@ package com.github.jamesnetherton.liquibase.arquillian;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
-
 import org.jboss.arquillian.test.spi.TestEnricher;
 
 /**

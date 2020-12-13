@@ -19,9 +19,7 @@
  */
 package com.github.jamesnetherton.extension.liquibase.resource;
 
-import liquibase.resource.ClassLoaderResourceAccessor;
-import liquibase.resource.InputStreamList;
-
+import com.github.jamesnetherton.extension.liquibase.ChangeLogConfiguration;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -29,9 +27,8 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.util.SortedSet;
 import java.util.TreeSet;
-
-import com.github.jamesnetherton.extension.liquibase.ChangeLogConfiguration;
-
+import liquibase.resource.ClassLoaderResourceAccessor;
+import liquibase.resource.InputStreamList;
 import org.jboss.vfs.VFS;
 import org.jboss.vfs.VirtualFile;
 

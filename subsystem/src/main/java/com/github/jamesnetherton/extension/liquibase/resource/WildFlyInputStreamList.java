@@ -1,5 +1,7 @@
 package com.github.jamesnetherton.extension.liquibase.resource;
 
+import java.io.InputStream;
+import java.net.URI;
 /*-
  * #%L
  * wildfly-liquibase-subsystem
@@ -19,11 +21,7 @@ package com.github.jamesnetherton.extension.liquibase.resource;
  * limitations under the License.
  * #L%
  */
-
 import liquibase.resource.InputStreamList;
-
-import java.io.InputStream;
-import java.net.URI;
 
 public class WildFlyInputStreamList extends InputStreamList {
 

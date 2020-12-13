@@ -19,20 +19,18 @@
  */
 package com.github.jamesnetherton.extension.liquibase.parser;
 
+import com.github.jamesnetherton.extension.liquibase.ModelConstants;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import liquibase.changelog.ChangeLogParameters;
 import liquibase.changelog.DatabaseChangeLog;
 import liquibase.exception.ChangeLogParseException;
 import liquibase.parser.core.formattedsql.FormattedSqlChangeLogParser;
 import liquibase.resource.ResourceAccessor;
 import liquibase.util.StreamUtil;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
-import com.github.jamesnetherton.extension.liquibase.ModelConstants;
 
 /**
  * Extended {@link FormattedSqlChangeLogParser} to extract the datasource reference property from an SQL comment.

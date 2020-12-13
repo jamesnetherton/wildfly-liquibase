@@ -19,12 +19,11 @@
  */
 package com.github.jamesnetherton.extension.liquibase;
 
+import com.github.jamesnetherton.extension.liquibase.parser.WildFlyFormattedSqlChangeLogParser;
 import liquibase.parser.ChangeLogParser;
 import liquibase.parser.core.json.JsonChangeLogParser;
 import liquibase.parser.core.xml.XMLChangeLogSAXParser;
 import liquibase.parser.core.yaml.YamlChangeLogParser;
-
-import com.github.jamesnetherton.extension.liquibase.parser.WildFlyFormattedSqlChangeLogParser;
 
 public enum ChangeLogFormat {
     JSON(".json"),

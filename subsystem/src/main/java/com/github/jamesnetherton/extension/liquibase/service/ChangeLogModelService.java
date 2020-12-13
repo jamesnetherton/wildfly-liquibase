@@ -19,13 +19,13 @@
  */
 package com.github.jamesnetherton.extension.liquibase.service;
 
-import liquibase.Liquibase;
+import static com.github.jamesnetherton.extension.liquibase.LiquibaseLogger.MESSAGE_DUPLICATE_DATASOURCE;
 
 import com.github.jamesnetherton.extension.liquibase.ChangeLogConfiguration;
 import com.github.jamesnetherton.extension.liquibase.ChangeLogFormat;
 import com.github.jamesnetherton.extension.liquibase.ChangeLogResource;
 import com.github.jamesnetherton.extension.liquibase.ModelConstants;
-
+import liquibase.Liquibase;
 import org.jboss.as.connector.subsystems.datasources.AbstractDataSourceService;
 import org.jboss.as.controller.OperationContext;
 import org.jboss.as.controller.OperationFailedException;
@@ -36,7 +36,6 @@ import org.jboss.msc.service.AbstractService;
 import org.jboss.msc.service.ServiceBuilder;
 import org.jboss.msc.service.ServiceName;
 import org.jboss.msc.service.ServiceTarget;
-import static com.github.jamesnetherton.extension.liquibase.LiquibaseLogger.MESSAGE_DUPLICATE_DATASOURCE;
 
 /**
  * Service which handles updates to the Liquibase subsystem DMR model.

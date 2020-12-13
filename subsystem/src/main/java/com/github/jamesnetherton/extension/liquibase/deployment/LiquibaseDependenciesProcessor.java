@@ -20,7 +20,6 @@
 package com.github.jamesnetherton.extension.liquibase.deployment;
 
 import java.util.List;
-
 import org.jboss.as.ee.weld.WeldDeploymentMarker;
 import org.jboss.as.server.deployment.Attachments;
 import org.jboss.as.server.deployment.DeploymentPhaseContext;

@@ -19,7 +19,6 @@ package com.github.jamesnetherton.liquibase.arquillian;
  * limitations under the License.
  * #L%
  */
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;

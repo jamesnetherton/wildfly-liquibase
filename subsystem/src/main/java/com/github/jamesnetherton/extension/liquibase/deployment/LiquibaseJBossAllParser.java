@@ -1,5 +1,7 @@
 package com.github.jamesnetherton.extension.liquibase.deployment;
 
+import com.github.jamesnetherton.extension.liquibase.ChangeLogConfiguration.Builder;
+import com.github.jamesnetherton.extension.liquibase.ChangeLogConfiguration.BuilderCollection;
 /*-
  * #%L
  * wildfly-liquibase-subsystem
@@ -19,19 +21,13 @@ package com.github.jamesnetherton.extension.liquibase.deployment;
  * limitations under the License.
  * #L%
  */
-
 import java.util.HashMap;
 import java.util.Map;
-
 import javax.xml.namespace.QName;
 import javax.xml.stream.Location;
 import javax.xml.stream.XMLStreamConstants;
 import javax.xml.stream.XMLStreamException;
 import javax.xml.stream.XMLStreamReader;
-
-import com.github.jamesnetherton.extension.liquibase.ChangeLogConfiguration.Builder;
-import com.github.jamesnetherton.extension.liquibase.ChangeLogConfiguration.BuilderCollection;
-
 import org.jboss.as.server.deployment.DeploymentUnit;
 import org.jboss.as.server.deployment.jbossallxml.JBossAllXMLParser;
 import org.jboss.staxmapper.XMLExtendedStreamReader;

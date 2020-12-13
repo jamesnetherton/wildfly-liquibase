@@ -1,5 +1,9 @@
 package com.github.jamesnetherton.extension.liquibase.resource;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.SortedSet;
+import java.util.TreeSet;
 /*-
  * #%L
  * wildfly-liquibase-subsystem
@@ -19,14 +23,8 @@ package com.github.jamesnetherton.extension.liquibase.resource;
  * limitations under the License.
  * #L%
  */
-
 import liquibase.resource.InputStreamList;
 import liquibase.resource.ResourceAccessor;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 public class WildFlyCompositeResourceAccessor implements ResourceAccessor {
 

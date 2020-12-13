@@ -1,5 +1,6 @@
 package com.github.jamesnetherton.extension.liquibase.deployment;
 
+import com.github.jamesnetherton.extension.liquibase.LiquibaseConstants;
 /*-
  * #%L
  * wildfly-liquibase-subsystem
@@ -19,11 +20,7 @@ package com.github.jamesnetherton.extension.liquibase.deployment;
  * limitations under the License.
  * #L%
  */
-
 import java.util.List;
-
-import com.github.jamesnetherton.extension.liquibase.LiquibaseConstants;
-
 import org.jboss.as.server.deployment.Attachments;
 import org.jboss.as.server.deployment.DeploymentPhaseContext;
 import org.jboss.as.server.deployment.DeploymentUnit;

@@ -21,7 +21,6 @@ package com.github.jamesnetherton.extension.liquibase;
 
 import com.github.jamesnetherton.extension.liquibase.service.ChangeLogModelService;
 import com.github.jamesnetherton.extension.liquibase.service.ServiceHelper;
-
 import org.jboss.as.controller.AbstractWriteAttributeHandler;
 import org.jboss.as.controller.OperationContext;
 import org.jboss.as.controller.OperationFailedException;

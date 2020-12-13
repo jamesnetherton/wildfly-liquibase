@@ -1,5 +1,7 @@
 package com.github.jamesnetherton.extension.liquibase.test.example;
 
+import com.github.jamesnetherton.liquibase.arquillian.ChangeLogDefinition;
+import com.github.jamesnetherton.liquibase.arquillian.LiquibaseTestSupport;
 /*-
  * #%L
  * wildfly-liquibase-itests
@@ -19,12 +21,7 @@ package com.github.jamesnetherton.extension.liquibase.test.example;
  * limitations under the License.
  * #L%
  */
-
 import java.io.File;
-
-import com.github.jamesnetherton.liquibase.arquillian.ChangeLogDefinition;
-import com.github.jamesnetherton.liquibase.arquillian.LiquibaseTestSupport;
-
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;

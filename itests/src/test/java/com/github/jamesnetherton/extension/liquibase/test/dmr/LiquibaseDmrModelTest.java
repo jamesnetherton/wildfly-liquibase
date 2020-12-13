@@ -19,14 +19,11 @@
  */
 package com.github.jamesnetherton.extension.liquibase.test.dmr;
 
-import liquibase.util.NetUtil;
-
+import com.github.jamesnetherton.liquibase.arquillian.LiquibaseTestSupport;
 import java.io.File;
 import java.util.Arrays;
 import java.util.Collections;
-
-import com.github.jamesnetherton.liquibase.arquillian.LiquibaseTestSupport;
-
+import liquibase.util.NetUtil;
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;

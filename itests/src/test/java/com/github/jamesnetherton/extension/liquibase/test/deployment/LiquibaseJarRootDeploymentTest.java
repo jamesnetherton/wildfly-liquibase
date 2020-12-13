@@ -22,7 +22,6 @@ package com.github.jamesnetherton.extension.liquibase.test.deployment;
 import com.github.jamesnetherton.liquibase.arquillian.ChangeLogDefinition;
 import com.github.jamesnetherton.liquibase.arquillian.LiquibaseTestSupport;
 import com.github.jamesnetherton.liquibase.arquillian.ResourceLocation;
-
 import org.jboss.arquillian.container.test.api.Deployment;
 import org.jboss.arquillian.junit.Arquillian;
 import org.jboss.shrinkwrap.api.Archive;
