@@ -322,6 +322,10 @@
                         <version>${version.gpg.plugin}</version>
                         <configuration>
                             <passphrase>${gpg.passphrase}</passphrase>
+                            <gpgArguments>
+                                <arg>--pinentry-mode</arg>
+                                <arg>loopback</arg>
+                            </gpgArguments>
                         </configuration>
                         <executions>
                             <execution>
