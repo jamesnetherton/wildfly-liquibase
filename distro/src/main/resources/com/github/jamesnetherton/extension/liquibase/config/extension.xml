@@ -1,1 +1,1 @@
-<extension xmlns="urn:jboss:domain:14.0" module="com.github.jamesnetherton.extension.liquibase"/>
+<extension xmlns="urn:jboss:domain:15.0" module="com.github.jamesnetherton.extension.liquibase"/>
