@@ -27,11 +27,12 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardOpenOption;
-import org.jdom.Document;
-import org.jdom.Element;
-import org.jdom.input.SAXBuilder;
-import org.jdom.output.Format;
-import org.jdom.output.XMLOutputter;
+import org.jdom2.Document;
+import org.jdom2.Element;
+import org.jdom2.Namespace;
+import org.jdom2.input.SAXBuilder;
+import org.jdom2.output.Format;
+import org.jdom2.output.XMLOutputter;
 
 public class WildFlyLiquibaseConfig {
 
@@ -83,7 +84,11 @@ public class WildFlyLiquibaseConfig {
         Element rootElement = document.getRootElement();
         Element extensions = rootElement.getChild("extensions", rootElement.getNamespace());
         extensions.addContent("    ");
-        extensions.addContent(readResource(WILDFLY_LIQUIBASE_EXTENSION_XML));
+
+        Element extension = readResource(WILDFLY_LIQUIBASE_EXTENSION_XML);
+        extension.setNamespace(Namespace.getNamespace(extensions.getNamespace().getURI()));
+
+        extensions.addContent(extension);
         extensions.addContent("\n    ");
     }
 
