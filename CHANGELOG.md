@@ -1,5 +1,17 @@
 ### Changelog
 
+#### WildFly Liquibase 2.2.0
+
+**Enhancements**
+
+* [#87][87] Upgrade WildFly to 23.0.1.Final
+* [#88][88] Upgrade Liquibase to 4.3.4
+
+For details see [2.2.0 Enhancements](https://github.com/jamesnetherton/wildfly-liquibase/issues?q=milestone%3A"2.2.0"+label%3Aenhancement)
+
+[87]: https://github.com/jamesnetherton/wildfly-liquibase/issues/87
+[88]: https://github.com/jamesnetherton/wildfly-liquibase/issues/88
+
 #### WildFly Liquibase 2.1.0
 
 **Enhancements**
