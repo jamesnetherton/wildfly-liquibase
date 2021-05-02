@@ -20,10 +20,10 @@
         <version.org.eclipse.egit.github>2.1.5</version.org.eclipse.egit.github>
         <version.org.jboss.arquillian>1.6.0.Final</version.org.jboss.arquillian>
         <version.org.jdom>2.0.6</version.org.jdom>
-        <version.org.liquibase>4.3.3</version.org.liquibase>
+        <version.org.liquibase>4.3.5</version.org.liquibase>
         <version.org.slf4j>1.7.30</version.org.slf4j>
         <version.org.snakeyaml>1.26</version.org.snakeyaml>
-        <version.org.wildfly>23.0.1.Final</version.org.wildfly>
+        <version.org.wildfly>23.0.2.Final</version.org.wildfly>
         <version.org.wildfly.arquillian>3.0.1.Final</version.org.wildfly.arquillian>
         <version.org.wildfly.core>15.0.1.Final</version.org.wildfly.core>
         <version.org.wildfly.common>1.5.2.Final</version.org.wildfly.common>
