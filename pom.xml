@@ -37,7 +37,7 @@
         <version.gmaven.plugin>2.1.1</version.gmaven.plugin>
         <version.gpg.plugin>1.6</version.gpg.plugin>
         <version.license.plugin>2.0.0</version.license.plugin>
-        <version.impsort.plugin>1.4.1</version.impsort.plugin>
+        <version.impsort.plugin>1.6.2</version.impsort.plugin>
         <version.javadoc.plugin>3.2.0</version.javadoc.plugin>
         <version.release.plugin>3.0.0-M1</version.release.plugin>
         <version.galleon.plugin>4.2.8.Final</version.galleon.plugin>
