@@ -25,7 +25,7 @@
         <version.org.snakeyaml>1.26</version.org.snakeyaml>
         <version.org.wildfly>24.0.0.Final</version.org.wildfly>
         <version.org.wildfly.arquillian>3.0.1.Final</version.org.wildfly.arquillian>
-        <version.org.wildfly.core>16.0.0.Final</version.org.wildfly.core>
+        <version.org.wildfly.core>18.0.0.Final</version.org.wildfly.core>
         <version.org.wildfly.common>1.5.2.Final</version.org.wildfly.common>
 
         <!-- Plugin versions -->
