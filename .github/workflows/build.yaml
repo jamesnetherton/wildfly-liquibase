@@ -3,22 +3,32 @@ name: WildFly Liquibase CI
 on:
   push:
     branches:
-      - '*'
+      - 'master'
     paths-ignore:
-      - '**.md'
       - '**.groovy'
+      - '**.md'
+      - '**.sh'
+      - '**.template'
       - 'LICENSE.txt'
       - 'Dockerfile'
+      - 'Dockerfile.wildfly'
     tags:
       - '*'
   pull_request:
     branches:
-      - '*'
+      - 'master'
     paths-ignore:
-      - '**.md'
       - '**.groovy'
+      - '**.md'
+      - '**.sh'
+      - '**.template'
       - 'LICENSE.txt'
       - 'Dockerfile'
+      - 'Dockerfile.wildfly'
+
+concurrency:
+  group: ${{ github.ref }}-${{ github.workflow }}
+  cancel-in-progress: true
 
 jobs:
   license-check:
